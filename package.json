@@ -27,7 +27,6 @@
   "bugs": {
     "url": "https://github.com/amarcher/doer-client/issues"
   },
-  "homepage": "https://github.com/amarcher/doer-client#readme",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
