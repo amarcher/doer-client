@@ -22,6 +22,7 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
     'client-version': '1.0.0',
   },
   resolvers: {},
+  connectToDevTools: true,
 });
 
 ReactDOM.render(
