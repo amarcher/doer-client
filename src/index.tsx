@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {
   ApolloClient,
@@ -9,7 +7,10 @@ import {
   ApolloProvider,
 } from '@apollo/client';
 
+import App from './App';
 import { cache } from './cache';
+
+import './index.css';
 
 // Set up our apollo-client to point at our server
 // this can be local or a remote endpoint

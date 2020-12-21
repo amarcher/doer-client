@@ -1,61 +1,19 @@
-import React, { useState } from 'react';
-import { gql, useQuery } from '@apollo/client';
-import PreloadedImage from './components/PreloadedImage';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-interface User {
-  id: number
-  username: string
-  email: string
-  firstName: string
-  lastName: string
-  bio: string | null,
-  followingIds: [number]
-}
-
-export const GET_USERS = gql`
-  query GetUsers($id: Int) {
-    users {
-      id
-      firstName
-    }
-    user(id: $id) {
-      firstName
-      lastName
-      email
-    }
-  }
-`;
+import Nav from './components/Nav';
+import Feed from './pages/Feed';
+import Profile from './pages/Profile';
 
 function App() {
-  const [id, setId] = useState(1);
-
-  const { data, loading, error } = useQuery<{ users: User[], user: User }>(
-    GET_USERS, {
-      variables: {
-        id,
-      },
-    }
-  );
-
   return (
-    <div className="App">
-      <div className="App__hero">
-        <PreloadedImage src="https://miro.medium.com/max/2438/1*TsArd-pBgSQqMXyFV5C-Wg.jpeg" height={500} width={500} />
-      </div>
-
-      <select onChange={(e) => setId(parseInt(e.target.value, 10))}>
-        {data?.users?.map(({ id, firstName }) => (
-          <option key={id} value={id}>{firstName}</option>
-        ))}
-      </select>
-
-      {loading && 'Loading ...'}
-      {error && `ERROR: ${error?.message}`}
-      <p>{data?.user?.firstName || null}</p>
-      <p>{data?.user?.lastName || null}</p>
-      <p>{data?.user?.email || null}</p>
-    </div>
+    <Router>
+      <Nav />
+      <main>
+        <Route exact path="/" component={Feed} />
+        <Route exact path="/profile" component={Profile} />
+      </main>
+    </Router>
   );
 }
 
