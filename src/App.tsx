@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
+import PreloadedImage from './components/PreloadedImage';
 import './App.css';
 
 interface User {
@@ -39,6 +40,10 @@ function App() {
 
   return (
     <div className="App">
+      <div className="App__hero">
+        <PreloadedImage src="https://miro.medium.com/max/2438/1*TsArd-pBgSQqMXyFV5C-Wg.jpeg" height={500} width={500} />
+      </div>
+
       <select onChange={(e) => setId(parseInt(e.target.value, 10))}>
         {data?.users?.map(({ id, firstName }) => (
           <option key={id} value={id}>{firstName}</option>

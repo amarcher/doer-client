@@ -1,0 +1,28 @@
+.preloaded-image__container {
+    position: relative;
+}
+
+.preloaded-image {
+    position: absolute;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 1;
+    transition: opacity 60ms cubic-bezier(0.215, 0.61, 0.355, 1);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.preloaded-image__img {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    opacity: 1;
+    transition: opacity 60ms cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.preloaded-image__preloading {
+    opacity: 0;
+}
