@@ -1,5 +1,18 @@
 .preloaded-image__container {
     position: relative;
+    overflow: hidden;
+}
+
+.preloaded-image__cover {
+    background-color: #e0e0e0;
+    transition: opacity 300ms ease-in-out;
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
 }
 
 .preloaded-image {
@@ -9,7 +22,6 @@
     background-size: cover;
     background-position: center;
     opacity: 1;
-    transition: opacity 60ms cubic-bezier(0.215, 0.61, 0.355, 1);
     top: 0;
     right: 0;
     bottom: 0;
@@ -17,12 +29,16 @@
 }
 
 .preloaded-image__img {
+    opacity: 1;
     background-color: transparent;
     background-repeat: no-repeat;
-    opacity: 1;
-    transition: opacity 60ms cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-.preloaded-image__preloading {
+.preloaded-image__preloading .preloaded-image,
+.preloaded-image__preloading .preloaded-image__img {
     opacity: 0;
+}
+
+.preloaded-image__preloading .preloaded-image__cover {
+    opacity: 1;
 }

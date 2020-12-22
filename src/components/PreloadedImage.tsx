@@ -49,19 +49,23 @@ function PreloadedImage({
     width,
   }), [height, width]);
 
-  const imgStyle = useMemo(() => ({
+  const imgCoverStyle = useMemo(() => ({
     borderRadius,
-    backgroundImage: useImg ? undefined : `url(${src})`,
-    height,
-    width,
+    height: useImg ? height : undefined,
+    width: useImg ? width : undefined,
   }), [borderRadius, height, src, useImg, width]);
 
+  const imgStyle = useMemo(() => ({
+    ...imgCoverStyle,
+    backgroundImage: useImg ? undefined : `url(${src})`,
+  }), [imgCoverStyle]);
+
   const containerClass = classNames('preloaded-image__container', {
+    'preloaded-image__preloading': !loaded,
     [className]: !!className,
   });
 
   const imgClass = classNames(`preloaded-image${useImg ? '__img' : ''}`, {
-    'preloaded-image__preloading': !loaded,
     [imageClassName]: !!imageClassName,
   });
 
@@ -76,6 +80,7 @@ function PreloadedImage({
           height={height}
           width={width}
         />
+        <div className="preloaded-image__cover" style={imgCoverStyle} />
       </div>
     );
   }
@@ -83,10 +88,7 @@ function PreloadedImage({
   return (
     <div
       className={containerClass}
-      style={{
-        height: height,
-        width: width,
-      }}
+      style={containerStyle}
     >
       <div
         className={imgClass}
@@ -94,6 +96,7 @@ function PreloadedImage({
         role="img"
         aria-label={alt}
       />
+      <div className="preloaded-image__cover" style={imgCoverStyle} />
     </div>
   );
 }
