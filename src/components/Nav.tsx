@@ -8,7 +8,7 @@ function Nav() {
     <div className="nav">
       <nav className="nav__content">
         <ul className="nav__list">
-          <li className="nav__list-item"><NavLink to="/" exact>Feed</NavLink></li>
+          <li className="nav__list-item"><NavLink to="/" exact>Main</NavLink></li>
           <li className="nav__list-item"><NavLink to="/profile">Profile</NavLink></li>
         </ul>
       </nav>
