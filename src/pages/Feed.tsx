@@ -16,7 +16,7 @@ interface User {
 }
 
 export const GET_USERS = gql`
-  query GetUsers($id: Int) {
+  query GetUsers($id: ID!) {
     users {
       id
       firstName
@@ -24,7 +24,6 @@ export const GET_USERS = gql`
     user(id: $id) {
       firstName
       lastName
-      email
     }
   }
 `;
@@ -56,7 +55,6 @@ function Feed() {
       {error && `ERROR: ${error?.message}`}
       <p>{data?.user?.firstName || null}</p>
       <p>{data?.user?.lastName || null}</p>
-      <p>{data?.user?.email || null}</p>
     </>
   );
 }

@@ -46,12 +46,12 @@ function PreloadedImage({
     borderRadius,
     height: useImg ? height : undefined,
     width: useImg ? width : undefined,
-  }), [borderRadius, height, src, useImg, width]);
+  }), [borderRadius, height, useImg, width]);
 
   const imgStyle = useMemo(() => ({
     ...imgCoverStyle,
     backgroundImage: useImg ? undefined : `url(${src})`,
-  }), [imgCoverStyle]);
+  }), [imgCoverStyle, src, useImg]);
 
   const containerClass = classNames('preloaded-image__container', {
     'preloaded-image__preloading': !loaded,

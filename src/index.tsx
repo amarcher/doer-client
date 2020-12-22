@@ -16,7 +16,7 @@ import './index.css';
 // this can be local or a remote endpoint
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   cache,
-  uri: 'http://localhost:4000/graphql',
+  uri: 'http://52.13.54.231:4000/graphql' || 'http://localhost:4000/graphql',
   headers: {
     authorization: localStorage.getItem('token') || '',
     'client-name': 'Doer [Web]',
