@@ -32,28 +32,29 @@ function PreloadedImage({
   const onLoad = useCallback(() => {
     setLoaded(true);
     onReady(src);
-  }, [onReady, setLoaded])
+  }, [src, onReady, setLoaded])
 
   useEffect(() => {
-    preloader.current.onload = onLoad;
-    preloader.current.src = src;
+    const { current } = preloader;
+    current.onload = onLoad;
+    current.src = src;
 
     return () => {
-      preloader.current.onload = null;
+      current.onload = null;
     }
-  }, []);
+  }, [src, onLoad]);
 
   const containerStyle = useMemo(() => ({
     height,
     width,
-  }), [borderRadius, height, width]);
+  }), [height, width]);
 
   const imgStyle = useMemo(() => ({
     borderRadius,
     backgroundImage: useImg ? undefined : `url(${src})`,
     height,
     width,
-  }), [borderRadius, height, width]);
+  }), [borderRadius, height, src, useImg, width]);
 
   const containerClass = classNames('preloaded-image__container', {
     [className]: !!className,
