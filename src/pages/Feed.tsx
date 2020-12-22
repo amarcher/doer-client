@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
+import FlipPage from 'react-flip-page';
 
 import PreloadedImage from '../components/PreloadedImage';
 
@@ -57,6 +58,11 @@ function Feed() {
       <p>{data?.user?.firstName || null}</p>
       <p>{data?.user?.lastName || null}</p>
       <p>{data?.user?.email || null}</p>
+
+      <FlipPage style={{ borderRadius: 10, margin: '10px auto' }} orientation="horizontal" flipOnTouch height={500} width={500} uncutPages showHint loopForever>
+        <PreloadedImage src="https://miro.medium.com/max/2438/1*TsArd-pBgSQqMXyFV5C-Wg.jpeg" height={500} width={500} />
+        <PreloadedImage src="https://embark.com/wp-content/uploads/2019/08/Derick-Yang.png" height={500} width={500} />
+      </FlipPage>
     </>
   );
 }
