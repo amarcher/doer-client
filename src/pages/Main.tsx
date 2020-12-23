@@ -1,10 +1,10 @@
 import React from 'react';
 import { gql, useQuery } from '@apollo/client';
-import { NavLink } from 'react-router-dom';
 
 import usePageTitle from '../hooks/usePageTitle';
 import { APP_NAME } from '../constants';
 import PreloadedImage from '../components/PreloadedImage';
+import Button from '../components/Button';
 import Title from '../components/Title';
 
 import './Main.css';
@@ -48,7 +48,7 @@ export default function Main() {
         <p>Choose a category:</p>
       )}
       {data?.categories && data.categories.map(({ name, id, projects }) => (
-        <p key={id}><NavLink to={`/category/${id}`}>{name} ({projects.length})</NavLink></p>
+        <p key={id}><Button href={`/category/${id}`}>{name} ({projects.length})</Button></p>
       ))}
     </>
   );

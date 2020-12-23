@@ -6,7 +6,6 @@
 }
 
 .nav__content {
-  background-color: $white;
   height: 40px;
   display: flex;
   justify-content: center;
@@ -18,7 +17,6 @@
   white-space: nowrap;
   font-family: 'baskerville_small_casmallcaps', 'Laila', serif;
   font-size: 24px;
-  color: $darkBlue;
   user-select: none;
 }
 
