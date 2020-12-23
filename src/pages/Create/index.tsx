@@ -15,7 +15,8 @@ import './Create.css';
 type Props = RouteComponentProps;
 
 export default function Create({ history, location: { search} }: Props) {
-  const { projectId } = decode(search?.substr(1));
+  const { projectId: projectIdStr } = decode(search?.substr(1));
+  const projectId = parseInt(projectIdStr as string, 10);
 
   const [projectExecutionInput, setProjectExecutionInput] = useState({ projectId, title: '', startedAt: Date.now() });
 
@@ -43,18 +44,18 @@ export default function Create({ history, location: { search} }: Props) {
         const newProjectExecution = data?.createProjectExecution;
         const existingProject = cache.readQuery<GetProjectResponse>({
           query: GetProject,
-          variables: { projectId }
+          variables: { id: projectId },
         });
 
         if (existingProject && newProjectExecution) {
-          cache.writeQuery({
+          cache.writeQuery<GetProjectResponse>({
             query: GetProject,
             data: {
               project: {
                 ...existingProject.project,
                 projectExecutions: [
-                  newProjectExecution,
                   ...existingProject.project.projectExecutions,
+                  newProjectExecution,
                 ],
               },
             },
