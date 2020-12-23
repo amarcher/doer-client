@@ -1,74 +1,14 @@
 import React from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { RouteComponentProps } from 'react-router';
 
-import usePageTitle from '../hooks/usePageTitle';
-import Button from '../components/Button';
-import Title from '../components/Title';
-import Carousel from '../components/Carousel';
+import usePageTitle from '../../hooks/usePageTitle';
+import Button from '../../components/Button';
+import Title from '../../components/Title';
+import Carousel from '../../components/Carousel';
+import GetProject, { GetProjectResponse, ProjectExecutionImage } from '../../queries/GetProject';
 
 import './Project.css';
-
-interface Image {
-  id: number
-  s3Location: string
-  timeTaken: string
-}
-
-interface ProjectExecutionImage {
-  id: number
-  caption: string
-  image: Image
-}
-
-interface User {
-  firstName: string
-  lastName: string
-  id: number
-}
-
-interface ProjectExecution {
-  title: string
-  user: User
-  images: ProjectExecutionImage[]
-  id: number
-  startedAt: string | null
-  completedAt: string | null
-}
-
-interface ProjectInterface {
-  id: number
-  name: string
-  projectExecutions: ProjectExecution[]
-}
-
-export const GET_PROJECT = gql`
-  query GetProject($id: ID!) {
-    project(id: $id) {
-      id
-      name
-      projectExecutions {
-        id
-        title
-        startedAt
-        completedAt
-        user {
-          firstName
-          lastName
-          id
-        }
-        images {
-          caption
-          image {
-            id
-            s3Location
-            timeTaken
-          }
-        }
-      }
-    }
-  }
-`;
 
 type Props = RouteComponentProps<{ projectId: string }>;
 
@@ -85,8 +25,8 @@ function getImagesForCarousel(images: ProjectExecutionImage[]) {
 }
 
 export default function Project({ match: { params: { projectId } } }: Props) {
-  const { data, loading, error } = useQuery<{ project: ProjectInterface }>(
-    GET_PROJECT, {
+  const { data, loading, error } = useQuery<GetProjectResponse>(
+    GetProject, {
       variables: {
         id: parseInt(projectId, 10),
       },

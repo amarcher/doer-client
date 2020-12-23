@@ -1,35 +1,18 @@
 import React from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
-import usePageTitle from '../hooks/usePageTitle';
-import { APP_NAME } from '../constants';
-import PreloadedImage from '../components/PreloadedImage';
-import Button from '../components/Button';
-import Title from '../components/Title';
+import usePageTitle from '../../hooks/usePageTitle';
+import { APP_NAME } from '../../constants';
+import PreloadedImage from '../../components/PreloadedImage';
+import Button from '../../components/Button';
+import Title from '../../components/Title';
+import GetCategories, { GetCategoriesResponse } from '../../queries/GetCategories';
 
 import './Main.css';
 
-interface Category {
-  id: number
-  name: string
-  projects: number[]
-}
-
-export const GET_CATEGORIES = gql`
-  query GetCategories {
-    categories {
-      id
-      name
-      projects {
-        id
-      }
-    }
-  }
-`;
-
 export default function Main() {
-  const { data, loading, error } = useQuery<{ categories: Category[] }>(
-    GET_CATEGORIES
+  const { data, loading, error } = useQuery<GetCategoriesResponse>(
+    GetCategories
   );
   
   usePageTitle();

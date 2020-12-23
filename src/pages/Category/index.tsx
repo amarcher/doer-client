@@ -1,37 +1,20 @@
 import React from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { RouteComponentProps } from 'react-router';
 
-import usePageTitle from '../hooks/usePageTitle';
-import Button from '../components/Button';
-import PreloadedImage from '../components/PreloadedImage';
-import Title from '../components/Title';
+import usePageTitle from '../../hooks/usePageTitle';
+import Button from '../../components/Button';
+import PreloadedImage from '../../components/PreloadedImage';
+import Title from '../../components/Title';
+import GetCategory, { GetCategoryResponse } from '../../queries/GetCategory';
 
 import './Category.css';
-
-interface Project {
-  id: number
-  name: string
-}
-
-export const GET_CATEGORY = gql`
-  query GetCategory($id: ID!) {
-    category(id: $id) {
-      name
-      projects {
-        id
-        name
-      }
-    }
-  }
-`;
-
 
 type Props = RouteComponentProps<{ categoryId: string }>;
 
 export default function Category({ match: { params: { categoryId } } }: Props) {
-  const { data, loading, error } = useQuery<{ category: { name: string; projects: Project[] } }>(
-    GET_CATEGORY, {
+  const { data, loading, error } = useQuery<GetCategoryResponse>(
+    GetCategory, {
       variables: {
         id: parseInt(categoryId, 10),
       },

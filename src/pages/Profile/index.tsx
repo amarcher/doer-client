@@ -1,37 +1,19 @@
 import React from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { RouteComponentProps } from 'react-router';
 
-import PreloadedImage from '../components/PreloadedImage';
-import Title from '../components/Title';
-import usePageTitle from '../hooks/usePageTitle';
+import PreloadedImage from '../../components/PreloadedImage';
+import Title from '../../components/Title';
+import usePageTitle from '../../hooks/usePageTitle';
+import GetUser, { GetUserResponse } from '../../queries/GetUser';
 
 import './Profile.css';
-
-interface User {
-  id: number
-  username: string
-  firstName: string
-  lastName: string
-  bio: string | null,
-  followingIds: [number]
-}
-
-export const GET_USER = gql`
-  query GetUser($id: ID!) {
-    user(id: $id) {
-      firstName
-      lastName
-      bio
-    }
-  }
-`;
 
 type Props = RouteComponentProps<{ id?: string }>;
 
 export default function Profile({ match: { params: { id = '1' } } }: Props) {
-  const { data, loading, error } = useQuery<{ user: User }>(
-    GET_USER, {
+  const { data, loading, error } = useQuery<GetUserResponse>(
+    GetUser, {
       variables: {
         id: id ? parseInt(id, 10) : 1,
       },
@@ -53,6 +35,7 @@ export default function Profile({ match: { params: { id = '1' } } }: Props) {
       <p>{data?.user?.firstName || null}</p>
       <p>{data?.user?.lastName || null}</p>
       <p>{data?.user?.bio || null}</p>
+      <p>{data?.user?.username || null}</p>
     </>
   );
 }

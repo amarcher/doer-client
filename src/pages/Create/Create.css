@@ -4,3 +4,8 @@
   justify-content: center;
   margin: 10px 0;
 }
+
+.Create__label {
+  display: block;
+  margin: 10px;
+}
