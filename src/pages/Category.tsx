@@ -3,6 +3,7 @@ import { gql, useQuery } from '@apollo/client';
 import { RouteComponentProps } from 'react-router';
 
 import usePageTitle from '../hooks/usePageTitle';
+import Button from '../components/Button';
 import PreloadedImage from '../components/PreloadedImage';
 import Title from '../components/Title';
 
@@ -49,7 +50,13 @@ export default function Category({ match: { params: { categoryId } } }: Props) {
 
       {loading && 'Loading ...'}
       {error && `ERROR: ${error?.message}`}
-      {data?.category?.projects?.map(({ id, name }) => <p key={id}>{name}</p>)}
+      {data?.category?.projects?.map(({ id, name }) => (
+        <p key={id}>
+          <Button href={`/project/${id}`}>
+            {name}
+          </Button>
+        </p>
+      ))}
     </>
   );
 }
