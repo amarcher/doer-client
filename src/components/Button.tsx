@@ -14,8 +14,6 @@ export default function Button({ disabled, children, onPress, href }: Props) {
   const history = useHistory();
 
   const onClick = useCallback(() => {
-    console.log({ href, history });
-
     if (href) {
       history.push(href);
     }
