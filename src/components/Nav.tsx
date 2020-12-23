@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import './Nav.css';
 
-function Nav() {
+export default function Nav() {
   return (
     <div className="nav">
       <nav className="nav__content">
@@ -16,5 +16,3 @@ function Nav() {
     </div>
   );
 }
-
-export default Nav;

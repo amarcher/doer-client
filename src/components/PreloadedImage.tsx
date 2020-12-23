@@ -15,7 +15,7 @@ type Props = {
   useImg?: boolean;
 };
 
-function PreloadedImage({
+export default function PreloadedImage({
   alt = '',
   borderRadius = 10,
   className = '',
@@ -93,5 +93,3 @@ function PreloadedImage({
     </div>
   );
 }
-
-export default PreloadedImage;

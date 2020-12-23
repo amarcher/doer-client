@@ -6,7 +6,7 @@ import Main from './pages/Main';
 import Category from './pages/Category';
 import Profile from './pages/Profile';
 
-function App() {
+export default function App() {
   return (
     <Router>
       <Nav />
@@ -18,5 +18,3 @@ function App() {
     </Router>
   );
 }
-
-export default App;

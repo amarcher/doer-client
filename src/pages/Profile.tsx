@@ -3,6 +3,8 @@ import { gql, useQuery } from '@apollo/client';
 import { RouteComponentProps } from 'react-router';
 
 import PreloadedImage from '../components/PreloadedImage';
+import Title from '../components/Title';
+import usePageTitle from '../hooks/usePageTitle';
 
 import './Profile.css';
 
@@ -27,7 +29,7 @@ export const GET_USER = gql`
 
 type Props = RouteComponentProps<{ id?: string }>;
 
-function Profile({ match: { params: { id = '1' } } }: Props) {
+export default function Profile({ match: { params: { id = '1' } } }: Props) {
   const { data, loading, error } = useQuery<{ user: User }>(
     GET_USER, {
       variables: {
@@ -36,8 +38,12 @@ function Profile({ match: { params: { id = '1' } } }: Props) {
     }
   );
 
+  usePageTitle(data?.user.firstName);
+
   return (
     <>
+      <Title>{data?.user?.firstName}</Title>
+
       <div className="Profile__hero">
         <PreloadedImage src="https://embark.com/wp-content/uploads/2019/08/Derick-Yang.png" height={500} width={500} />
       </div>
@@ -50,5 +56,3 @@ function Profile({ match: { params: { id = '1' } } }: Props) {
     </>
   );
 }
-
-export default Profile;
