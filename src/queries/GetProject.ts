@@ -19,7 +19,7 @@ interface User {
   id: number
 }
 
-interface ProjectExecution {
+export interface ProjectExecution {
   title: string
   user: User
   images: ProjectExecutionImage[]

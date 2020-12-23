@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { RouteComponentProps } from 'react-router';
 import { decode } from 'querystring';
 
@@ -7,17 +7,10 @@ import usePageTitle from '../../hooks/usePageTitle';
 import Button from '../../components/Button';
 import ImageUploader from '../../components/ImageUploader';
 import Title from '../../components/Title';
+import CreateProjectExecution, { CreateProjectExecutionResult } from '../../mutations/CreateProjectExecution';
+import GetProject, { GetProjectResponse } from '../../queries/GetProject';
 
 import './Create.css';
-
-export const CREATE_PROJECT_EXECUTION = gql`
-  mutation CreateProjectExecution($projectExecutionInput: CreateProjectExecutionInput!) {
-    createProjectExecution(projectExecutionInput: $projectExecutionInput) {
-      title
-      id
-    }
-  }
-`;
 
 type Props = RouteComponentProps;
 
@@ -35,8 +28,9 @@ export default function Create({ history, location: { search} }: Props) {
     }
   }, [projectExecutionInput]);
 
-  const [createProjectExecution, { /* data, */ error, loading }] = useMutation<any>(
-    CREATE_PROJECT_EXECUTION, {
+  const [createProjectExecution, { error, loading }] = useMutation<CreateProjectExecutionResult>(
+    CreateProjectExecution,
+    {
       variables: {
         projectExecutionInput: {
           ...projectExecutionInput,
@@ -44,6 +38,30 @@ export default function Create({ history, location: { search} }: Props) {
           startedAt: Date.now(),
         },
       },
+
+      update: (cache, { data }) => {
+        const newProjectExecution = data?.createProjectExecution;
+        const existingProject = cache.readQuery<GetProjectResponse>({
+          query: GetProject,
+          variables: { projectId }
+        });
+
+        if (existingProject && newProjectExecution) {
+          cache.writeQuery({
+            query: GetProject,
+            data: {
+              project: {
+                ...existingProject.project,
+                projectExecutions: [
+                  newProjectExecution,
+                  ...existingProject.project.projectExecutions,
+                ],
+              },
+            },
+          });
+        }
+      },
+
       onCompleted: () => {
         history.push(`/project/${projectId}`);
       },
