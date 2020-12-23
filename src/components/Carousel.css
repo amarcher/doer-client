@@ -1,3 +1,16 @@
-.Carousel {
-  display: block;
+.Carousel__image {
+  position: relative;
+}
+
+.Carousel__caption {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding: 10px;
 }

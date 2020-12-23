@@ -2,6 +2,7 @@ import React from 'react';
 import { CarouselProvider, Slider, Slide } from 'pure-react-carousel';
 
 import 'pure-react-carousel/dist/react-carousel.es.css';
+import './Carousel.css';
 
 import PreloadedImage from './PreloadedImage';
 
@@ -43,7 +44,7 @@ export default function CarouselContainer({ height = 500, images, width = 500 }:
   return (
     <Carousel height={height} width={width}>
       {images.map(({ caption, src, key }) =>
-        <div key={key}>
+        <div key={key} className="Carousel__image">
           <PreloadedImage src={src} height={height} width={width}></PreloadedImage>
           {caption && <div className="Carousel__caption">{caption}</div>}
         </div>
