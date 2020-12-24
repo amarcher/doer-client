@@ -25,8 +25,19 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Doer</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="265278411016-t8k5660som1regreqb8p2rrd2ctlee79.apps.googleusercontent.com">
+    <script>
+      function onSignIn (stuff, things) {
+        console.log('In on sign in')
+        console.log(stuff, things)
+        console.log('logged stuff')
+      }
+    </script>
   </head>
   <body>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
