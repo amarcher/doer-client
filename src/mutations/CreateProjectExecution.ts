@@ -7,8 +7,8 @@ export interface CreateProjectExecutionResult {
 }
 
 export default gql`
-  mutation CreateProjectExecution($projectExecutionInput: CreateProjectExecutionInput!) {
-    createProjectExecution(projectExecutionInput: $projectExecutionInput) {
+  mutation CreateProjectExecution($projectExecutionInput: CreateProjectExecutionInput!, $imageUploadInputs: [ImageUploadInput]) {
+    createProjectExecution(projectExecutionInput: $projectExecutionInput, imageUploadInputs: $imageUploadInputs) {
       ...ProjectExecutionFragment
     }
   }

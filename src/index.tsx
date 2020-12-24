@@ -6,7 +6,6 @@ import {
   NormalizedCacheObject,
   ApolloProvider,
 } from '@apollo/client';
-import { CloudinaryContext } from 'cloudinary-react';
 
 import App from './App';
 import { cache } from './cache';
@@ -29,12 +28,7 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <CloudinaryContext
-      cloudName={'dvpj3g082'}
-      uploadPreset={'oq1lpyoe'}
-    >
-      <App />
-    </CloudinaryContext>
+    <App />
   </ApolloProvider>,
   document.getElementById('root')
 );

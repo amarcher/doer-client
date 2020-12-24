@@ -13,19 +13,30 @@ import GetProject, { GetProjectResponse } from '../../queries/GetProject';
 import './Create.css';
 
 type Props = RouteComponentProps;
+interface ProjecteExecutionInput {
+  projectId: number
+  title: string
+  startedAt: number,
+}
+interface ImageUploadInput {
+  hostedUrl: string
+  caption?: string
+  timeTaken: number,
+}
 
 export default function Create({ history, location: { search} }: Props) {
   const { projectId: projectIdStr } = decode(search?.substr(1));
   const projectId = parseInt(projectIdStr as string, 10);
 
-  const [projectExecutionInput, setProjectExecutionInput] = useState({ projectId, title: '', startedAt: Date.now() });
+  const [projectExecutionInput, setProjectExecutionInput] = useState({ projectId, title: '', startedAt: Date.now() } as ProjecteExecutionInput);
+  const [imageUploadInputs, setImageUploadInputs] = useState([] as ImageUploadInput[]);
 
   const onChange = useCallback(({ target }: React.ChangeEvent<HTMLInputElement>) => {
     if (target && target.name) {
       setProjectExecutionInput({
         ...projectExecutionInput,
         [target.name]: target.value,
-      })
+      });
     }
   }, [projectExecutionInput]);
 
@@ -38,6 +49,7 @@ export default function Create({ history, location: { search} }: Props) {
           userId: 1,
           startedAt: Date.now(),
         },
+        imageUploadInputs,
       },
 
       update: (cache, { data }) => {
@@ -73,6 +85,27 @@ export default function Create({ history, location: { search} }: Props) {
     e.preventDefault();
     createProjectExecution();
   }, [createProjectExecution])
+
+  const onPhotoUploaded = useCallback(({ publicId: caption, url: hostedUrl }: { publicId: string, url: string }) => {
+    setImageUploadInputs([
+      ...imageUploadInputs,
+      {
+        caption,
+        hostedUrl,
+        timeTaken: Date.now(),
+      },
+    ]);
+  }, [setImageUploadInputs, imageUploadInputs]);
+
+  const onPhotoRemoved = useCallback((removedPublicId) => {
+    const activeIndex = imageUploadInputs.findIndex(({ caption }) => caption === removedPublicId);
+    if (activeIndex >= 0) {
+      setImageUploadInputs([
+        ...imageUploadInputs.slice(0, activeIndex),
+        ...imageUploadInputs.slice(activeIndex),
+      ]);
+    }
+  }, [setImageUploadInputs, imageUploadInputs]);
   
   usePageTitle('Start Your Own Attempt');
 
@@ -81,7 +114,7 @@ export default function Create({ history, location: { search} }: Props) {
       <Title>Start Your Own Attempt</Title>
 
       <div className="Create__hero">
-        <ImageUploader height={500} width={500} />
+        <ImageUploader onPhotoUploaded={onPhotoUploaded} onPhotoRemoved={onPhotoRemoved} height={500} width={500} />
       </div>
 
       {loading && 'Loading ...'}

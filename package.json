@@ -16,15 +16,17 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.6",
     "classnames": "^2.2.6",
-    "cloudinary-react": "^1.6.8",
     "graphql": "^15.4.0",
     "pure-react-carousel": "^1.27.6",
     "querystring": "^0.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-dropzone": "^11.2.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "superagent": "^6.1.0",
     "typescript": "^4.0.3",
+    "uuid": "^8.3.2",
     "web-vitals": "^0.2.4"
   },
   "engines": {
