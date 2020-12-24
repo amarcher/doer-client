@@ -14,8 +14,8 @@ export default gql`
     images {
       caption
       image {
+        hostedUrl
         id
-        s3Location
         timeTaken
       }
     }

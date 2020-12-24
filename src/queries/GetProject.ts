@@ -3,7 +3,7 @@ import ProjectFragment from '../fragments/ProjectFragment';
 
 interface Image {
   id: number
-  s3Location: string
+  hostedUrl: string
   timeTaken: string
 }
 

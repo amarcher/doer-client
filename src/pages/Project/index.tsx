@@ -12,14 +12,14 @@ import './Project.css';
 
 type Props = RouteComponentProps<{ projectId: string }>;
 
-function getImgUrl(_s3Location?: string) {
+function getImgUrl(_hostedUrl?: string) {
   return 'https://cataas.com/cat/gif';
 }
 
 function getImagesForCarousel(images: ProjectExecutionImage[]) {
   return images.map(({ image, caption }) => ({
     key: image.id,
-    src: getImgUrl(image.s3Location),
+    src: getImgUrl(image.hostedUrl),
     caption,
   }));
 }
