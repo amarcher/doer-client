@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 import UserFragment from '../fragments/UserFragment';
 
 interface User {
-  id: number
+  id: string
   username: string
   firstName: string
   lastName: string

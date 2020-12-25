@@ -46,7 +46,7 @@ export default function Create({ history, location: { search} }: Props) {
       variables: {
         projectExecutionInput: {
           ...projectExecutionInput,
-          userId: 1,
+          userId: '1',
           startedAt: Date.now(),
         },
         imageUploadInputs,

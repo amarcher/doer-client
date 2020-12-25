@@ -15,11 +15,10 @@ export default function Profile({ match: { params: { id = '1' } } }: Props) {
   const { data, loading, error } = useQuery<GetUserResponse>(
     GetUser, {
       variables: {
-        id: id ? parseInt(id, 10) : 1,
+        id: id ? id : '1',
       },
     }
   );
-
   usePageTitle(data?.user.firstName);
 
   return (
