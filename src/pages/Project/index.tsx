@@ -12,8 +12,8 @@ import './Project.css';
 
 type Props = RouteComponentProps<{ projectId: string }>;
 
-function getImgUrl(_hostedUrl?: string) {
-  return 'https://cataas.com/cat/gif';
+function getImgUrl(hostedUrl?: string) {
+  return hostedUrl && !hostedUrl.includes('s3:') ? hostedUrl : 'https://cataas.com/cat/gif';
 }
 
 function getImagesForCarousel(images: ProjectExecutionImage[]) {

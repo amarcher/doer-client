@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import ProjectFragment from '../fragments/ProjectFragment';
 
-interface Image {
+export interface Image {
   id: number
   hostedUrl: string
   timeTaken: string
