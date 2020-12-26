@@ -29,16 +29,16 @@ export default function Create({ history, location: { search} }: Props) {
   const projectId = parseInt(projectIdStr as string, 10);
 
   const [projectExecutionInput, setProjectExecutionInput] = useState({ projectId, title: '', startedAt: Date.now() } as ProjecteExecutionInput);
-  const [imageUploadInputs, setImageUploadInputs] = useState([] as ImageUploadInput[]);
+  const [imageUploadInputs, setImageUploadInputs] = useState({} as { [publicId: string]: ImageUploadInput });
 
   const onChange = useCallback(({ target }: React.ChangeEvent<HTMLInputElement>) => {
     if (target && target.name) {
-      setProjectExecutionInput({
-        ...projectExecutionInput,
+      setProjectExecutionInput((prevProjectExecutionInput) => ({
+        ...prevProjectExecutionInput,
         [target.name]: target.value,
-      });
+      }));
     }
-  }, [projectExecutionInput]);
+  }, []);
 
   const [createProjectExecution, { error, loading }] = useMutation<CreateProjectExecutionResult>(
     CreateProjectExecution,
@@ -49,7 +49,7 @@ export default function Create({ history, location: { search} }: Props) {
           userId: 1,
           startedAt: Date.now(),
         },
-        imageUploadInputs,
+        imageUploadInputs: Object.values(imageUploadInputs),
       },
 
       update: (cache, { data }) => {
@@ -86,26 +86,23 @@ export default function Create({ history, location: { search} }: Props) {
     createProjectExecution();
   }, [createProjectExecution])
 
-  const onPhotoUploaded = useCallback(({ publicId: caption, url: hostedUrl }: { publicId: string, url: string }) => {
-    setImageUploadInputs([
-      ...imageUploadInputs,
-      {
-        caption,
-        hostedUrl,
+  const onPhotoUploaded = useCallback(({ publicId, url: hostedUrl, caption }: { publicId: string, url?: string, caption?: string }) => {
+    setImageUploadInputs((prevImageUploadInputs) => ({
+      ...prevImageUploadInputs,
+      [publicId]: {
+        hostedUrl: hostedUrl || prevImageUploadInputs[publicId]?.hostedUrl || '',
+        caption: caption || publicId,
         timeTaken: Date.now(),
       },
-    ]);
-  }, [setImageUploadInputs, imageUploadInputs]);
+    }));
+  }, []);
 
   const onPhotoRemoved = useCallback((removedPublicId) => {
-    const activeIndex = imageUploadInputs.findIndex(({ caption }) => caption === removedPublicId);
-    if (activeIndex >= 0) {
-      setImageUploadInputs([
-        ...imageUploadInputs.slice(0, activeIndex),
-        ...imageUploadInputs.slice(activeIndex),
-      ]);
-    }
-  }, [setImageUploadInputs, imageUploadInputs]);
+    setImageUploadInputs((prevImageUploadInputs) => {
+      const { [removedPublicId]: _omitted, ...remaining } = prevImageUploadInputs;
+      return remaining;
+    });
+  }, []);
   
   usePageTitle('Start Your Own Attempt');
 
@@ -114,7 +111,7 @@ export default function Create({ history, location: { search} }: Props) {
       <Title>Start Your Own Attempt</Title>
 
       <div className="Create__hero">
-        <ImageUploader onPhotoUploaded={onPhotoUploaded} onPhotoRemoved={onPhotoRemoved} height={500} width={500} />
+        <ImageUploader onPhotoUploaded={onPhotoUploaded} onPhotoRemoved={onPhotoRemoved} height={100} width={100} />
       </div>
 
       {loading && 'Loading ...'}

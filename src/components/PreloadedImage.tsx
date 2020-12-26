@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import classNames from 'classnames';
 
 import './PreloadedImage.css';
@@ -21,7 +21,7 @@ export default function PreloadedImage({
   className = '',
   height = '',
   imageClassName = '',
-  onReady = () => {},
+  onReady,
   src,
   useImg = false,
   width = '',
@@ -32,10 +32,20 @@ export default function PreloadedImage({
 
   const onLoad = useCallback(() => {
     setLoaded(true);
-    onReady(src);
-  }, [src, onReady, setLoaded])
+    if (onReady) onReady(src);
+    if (preloader.current.onload) {
+      preloader.current.onload = null;
+    }
+  }, [src, onReady])
 
   preloader.current.onload = onLoad;
+
+  useEffect(() => {
+    if (src) {
+      setLoaded(false);
+      preloader.current.src = src;
+    }
+  }, [src]);
 
   const containerStyle = useMemo(() => ({
     height,

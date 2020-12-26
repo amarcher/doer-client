@@ -31,7 +31,7 @@ export default function Category({ match: { params: { categoryId } } }: Props) {
         <PreloadedImage src="https://miro.medium.com/max/2438/1*TsArd-pBgSQqMXyFV5C-Wg.jpeg" height={500} width={500} />
       </div>
 
-      {loading && 'Loading ...'}
+      {loading && 'Loading...'}
       {error && `ERROR: ${error?.message}`}
       {data?.category?.projects?.map(({ id, name }) => (
         <p key={id}>

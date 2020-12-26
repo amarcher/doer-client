@@ -1,154 +1,138 @@
-import React, { useCallback, useState, createRef } from 'react';
-import request from 'superagent';
+import React, { useCallback, useState } from 'react';
+import { useDropzone, FileRejection, FileError } from 'react-dropzone';
+import { uploadPhoto, deletePhoto, OnPhotoUploadProgressInputs } from '../api/cloudinary';
 import { v4 as uuidv4 } from 'uuid';
-import { useDropzone } from 'react-dropzone';
 import { CLOUDINARY } from '../constants';
-import Button from './Button';
-import PreloadedImage from './PreloadedImage';
+import ImageUploadThumbnail from './ImageUploadThumbnail';
 
-export interface UploadedPhoto {
-  id: number,
-  fileName: string,
-  response: {
-    body: {
-      url: string,
-      public_id: string,
-      delete_token?: string,
-      [key: string]: any,
-    }
-    status: string,
-  },
-  progress: {
-    percent: number,
-  },
-}
-
-interface UploadedPhotoStatusProps {
-	uploadedPhoto: UploadedPhoto,
-	onDeletePhoto?: (publicId: string) => void,
-	height?: number
-	width?: number
-}
-
-function UploadedPhotoStatus({ uploadedPhoto, onDeletePhoto, width = 500, height = 500 }: UploadedPhotoStatusProps) {
-	const response = uploadedPhoto.response;
-	const data = response && response.body;
-	const percent = Math.floor(uploadedPhoto.progress.percent);
-
-	const deletePhoto = useCallback(() =>
-		request
-			.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY.CLOUD_NAME}/delete_by_token`)
-			.set('Content-Type', 'application/json')
-			.set('X-Requested-With', 'XMLHttpRequest')
-			.send({ token: uploadedPhoto.response.body.delete_token })
-			.then(() => {
-				if (onDeletePhoto) {
-					onDeletePhoto(data.public_id)
-				}
-			}),
-		[uploadedPhoto, onDeletePhoto, data.public_id]
-	);
-
-	return (
-		<div>
-			{data?.delete_token && (<Button onPress={deletePhoto}>Delete</Button>)}
-			<div className="status">
-				{!response && <div>Uploading... {percent}%</div>}
-				{!response && <div>In progress</div>}
-				{data && data.url && (
-					<PreloadedImage src={data.url} height={height} width={width} />
-				)}
-			</div>
-			<div className="progress-bar">
-				<div
-					className="progress"
-					role="progressbar"
-					style={{ width: percent + '%' }}
-				/>
-			</div>
-		</div>
-	);
-}
+import './ImageUploader.css';
 
 interface Props {
-	onPhotoUploaded: ({ url, publicId }: { url: string, publicId: string }) => void;
+	onPhotoUploaded: ({ url, publicId, caption }: { caption?: string, url?: string, publicId: string }) => void;
 	onPhotoRemoved?: (publicId: string) => void;
 	height?: number;
 	width?: number;
 }
 
-export default function PhotosUploader({ onPhotoUploaded, onPhotoRemoved, height = 500, width = 500 }: Props) {
-	const titleEl = createRef();
-	const [uploadedPhotos, setUploadedPhotos] = useState([] as UploadedPhoto[]);
+function getFileErrorMessage(code: FileError['code']) {
+	return {
+		'file-too-large': 'Image too large',
+		'file-too-small': 'Image too small',
+		'too-many-files': 'Too many files',
+		'file-invalid-type': 'Invalid file type',
+	}[code]
+}
 
-  const onResponse = useCallback(({ body: { url, public_id: publicId } }: UploadedPhoto['response']) => {
-		onPhotoUploaded({
-				publicId,
-				url,
+function stopPropagation(e: React.SyntheticEvent) {
+	e.stopPropagation();
+}
+
+export default function ImageUploader({ onPhotoUploaded, onPhotoRemoved, height = 500, width = 500 }: Props) {
+	const [photos, setPhotos] = useState({} as { [photoId: string]: OnPhotoUploadProgressInputs });
+	const [captions, setCaptions] = useState({} as { [photoId: string]: string });
+	const [errors, setErrors] = useState({} as { [photoId: string]: FileRejection });
+
+	const onPhotoUploadProgress = useCallback(({ photoId, percent, response }: OnPhotoUploadProgressInputs) => {
+		setPhotos((prevPhotos) => {
+			const oldPhoto = prevPhotos[photoId] || {};
+			const newPhoto = { photoId, percent: percent != null ? percent : oldPhoto.percent, response: response || oldPhoto.response };
+		
+			return {
+				...prevPhotos,
+				[photoId]: newPhoto,
+			};
 		});
+		
+		if (response) {
+			const { body: { url, public_id: publicId }} = response;
+			onPhotoUploaded({ publicId, url });
+		}
 	}, [onPhotoUploaded]);
 
-	const onPhotoUploadProgress = useCallback((photoId: number, fileName: string, progress: UploadedPhoto['progress']) => {
-    const activeIndex = uploadedPhotos.findIndex(({ id }: UploadedPhoto) => id === photoId);
+	const onChangeCaption = useCallback(({ target: { name, value }}: React.ChangeEvent<HTMLInputElement>) => {
+		setCaptions(prevCaptions => ({
+			...prevCaptions,
+			[name]: value,
+		}));
 
-    if (activeIndex >= 0) {
-			setUploadedPhotos([
-				...uploadedPhotos.slice(0, activeIndex),
-				{ ...uploadedPhotos[activeIndex], progress },
-				...uploadedPhotos.slice(activeIndex),
-			]);
+		const publicId = photos[name].response?.body.public_id;
+		if (publicId) onPhotoUploaded({ publicId, caption: value })
+	}, [onPhotoUploaded, photos]);
+
+	const onDelete = useCallback((photoId: string) => {
+		const deleteToken = photos[photoId]?.response?.body.delete_token;
+		const { [photoId]: removedPhoto, ...remainingPhotos } = photos;
+		const { [photoId]: _removedCaption, ...remainingCaptions } = captions;
+		const { [photoId]: _removedError, ...remainingErrors } = errors;
+		const removedPublicId = removedPhoto?.response?.body.public_id;
+
+		if (deleteToken) {
+			deletePhoto(deleteToken);
 		}
-	}, [uploadedPhotos, setUploadedPhotos]);
+
+		if (onPhotoRemoved && removedPublicId) onPhotoRemoved(removedPublicId);
+		setErrors(remainingErrors);
+		setPhotos(remainingPhotos);
+		setCaptions(remainingCaptions)
+	}, [photos, errors, captions, onPhotoRemoved]);
+
+	const onPhotoUploadError = useCallback(({ photoId, fileRejection }: { photoId: string, fileRejection: FileRejection }) => {
+		setErrors((prevErrors) => ({
+			...prevErrors,
+			[photoId]: fileRejection,
+		}));
+	}, []);
 	
-	const onDrop = useCallback((files: any) => {
-		const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY.CLOUD_NAME}/upload`;
-		const title = titleEl?.current;
+	const onDrop = useCallback((acceptedFiles: File[], fileRejections: FileRejection[]) => {		
+		acceptedFiles.forEach((file) => uploadPhoto(file, onPhotoUploadProgress));
+		fileRejections.forEach((fileRejection) => {
+			onPhotoUploadError({
+				photoId: uuidv4(),
+				fileRejection
+			});
+		});
+	}, [onPhotoUploadProgress, onPhotoUploadError]);
 
-		for (let file of files) {
-			const photoId = uuidv4();
-			const fileName = file.name;
-			request.post(url)
-				.field('upload_preset', CLOUDINARY.UPLOAD_PRESET)
-				.field('file', file)
-				.field('multiple', true)
-				.field('tags', title ? title : 'myphotoalbum')
-				.field('context', title ? `photo=${title}` : '')
-				.on('progress', (progress: any) => onPhotoUploadProgress(photoId, file.name, progress))
-				.end((_error: any, response: any) => {
-						setUploadedPhotos([
-							...uploadedPhotos,
-							{
-								id: photoId,
-								fileName,
-								response,
-								progress: {
-									percent: 100,
-								},
-							},
-						]);
-						if (response) onResponse(response);
-				});
-		}
-  }, [onResponse, setUploadedPhotos, uploadedPhotos, onPhotoUploadProgress, titleEl]);
-
-	const {getRootProps, getInputProps, isDragActive} = useDropzone({ onDrop })
+	const {getRootProps, getInputProps, isDragActive} = useDropzone({ onDrop, maxSize: CLOUDINARY.MAX_SIZE })
 
 	return (
 		<div>
-			<div {...getRootProps()}>
-				<input {...getInputProps()} />
-				<p>{isDragActive ? 'Drop the files here ...' : 'Drag files here, or click to select files'}</p>
-			</div>
-			<div>
-				{uploadedPhotos.map((uploadedPhoto: UploadedPhoto, index: number) => {
-					return (
-						<UploadedPhotoStatus
-							key={index}
-							uploadedPhoto={uploadedPhoto}
-							onDeletePhoto={onPhotoRemoved}
-						/>
-					);
-				})}
+			<div {...getRootProps()} className="ImageUploader__root">
+				<input className="ImageUploader" {...getInputProps()} />
+				<p>{isDragActive ? 'Drop the files here...' : 'Drag files here, or click to select files'}</p>
+				<div className="ImageUploader__thumbnails">
+					{Object.values(photos).map(({ photoId, percent, response }) => (
+						<div key={photoId} className="ImageUploader__thumbnail">
+							<ImageUploadThumbnail
+								id={photoId}
+								src={response?.body.url}
+								percent={percent}
+								onDeletePhoto={onDelete}
+								height={height}
+								width={width}
+							/>
+							{response?.body.url && (
+								<input className="ImageUploader__caption" type="text" name={photoId} placeholder="caption" value={captions[photoId] || ''} onClick={stopPropagation} onChange={onChangeCaption} />
+							)}
+						</div>
+					))}
+					{Object.keys(errors).map((photoId) => (
+						<div key={photoId} className="ImageUploader__thumbnail">
+							<ImageUploadThumbnail
+								id={photoId}
+								src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Blank-document-broken.svg/1024px-Blank-document-broken.svg.png"
+								percent={100}
+								onDeletePhoto={onDelete}
+								height={height}
+								width={width}
+							/>
+							<div className="ImageUploader__error">
+								<p>{getFileErrorMessage(errors[photoId].errors[0].code)}</p>
+								<p>{errors[photoId].file.name}</p>
+							</div>
+						</div>
+					))}
+				</div>
 			</div>
 		</div>
 	);
