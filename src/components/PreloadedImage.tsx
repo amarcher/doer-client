@@ -1,4 +1,10 @@
-import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+  useEffect,
+} from 'react';
 import classNames from 'classnames';
 
 import './PreloadedImage.css';
@@ -28,7 +34,7 @@ export default function PreloadedImage({
 }: Props) {
   const preloader = useRef(new Image());
   preloader.current.src = src;
-  const [loaded, setLoaded] = useState(preloader.current.complete)
+  const [loaded, setLoaded] = useState(preloader.current.complete);
 
   const onLoad = useCallback(() => {
     setLoaded(true);
@@ -36,7 +42,7 @@ export default function PreloadedImage({
     if (preloader.current.onload) {
       preloader.current.onload = null;
     }
-  }, [src, onReady])
+  }, [src, onReady]);
 
   preloader.current.onload = onLoad;
 
@@ -47,21 +53,30 @@ export default function PreloadedImage({
     }
   }, [src]);
 
-  const containerStyle = useMemo(() => ({
-    height,
-    width,
-  }), [height, width]);
+  const containerStyle = useMemo(
+    () => ({
+      height,
+      width,
+    }),
+    [height, width]
+  );
 
-  const imgCoverStyle = useMemo(() => ({
-    borderRadius,
-    height: useImg ? height : undefined,
-    width: useImg ? width : undefined,
-  }), [borderRadius, height, useImg, width]);
+  const imgCoverStyle = useMemo(
+    () => ({
+      borderRadius,
+      height: useImg ? height : undefined,
+      width: useImg ? width : undefined,
+    }),
+    [borderRadius, height, useImg, width]
+  );
 
-  const imgStyle = useMemo(() => ({
-    ...imgCoverStyle,
-    backgroundImage: useImg ? undefined : `url(${src})`,
-  }), [imgCoverStyle, src, useImg]);
+  const imgStyle = useMemo(
+    () => ({
+      ...imgCoverStyle,
+      backgroundImage: useImg ? undefined : `url(${src})`,
+    }),
+    [imgCoverStyle, src, useImg]
+  );
 
   const containerClass = classNames('preloaded-image__container', {
     'preloaded-image__preloading': !loaded,
@@ -89,16 +104,8 @@ export default function PreloadedImage({
   }
 
   return (
-    <div
-      className={containerClass}
-      style={containerStyle}
-    >
-      <div
-        className={imgClass}
-        style={imgStyle}
-        role="img"
-        aria-label={alt}
-      />
+    <div className={containerClass} style={containerStyle}>
+      <div className={imgClass} style={imgStyle} role="img" aria-label={alt} />
       <div className="preloaded-image__cover" style={imgCoverStyle} />
     </div>
   );

@@ -2,19 +2,19 @@ import { gql } from '@apollo/client';
 import CategoryFragment from '../fragments/CategoryFragment';
 
 interface Project {
-  id: number
-  name: string
+  id: number;
+  name: string;
 }
 
 export interface Category {
-  id: number
-  name: string
-  projects: Project[]
+  id: number;
+  name: string;
+  projects: Project[];
 }
 
 export interface GetCategoryResponse {
-  category: Category
-} 
+  category: Category;
+}
 
 export default gql`
   query GetCategory($id: ID!) {

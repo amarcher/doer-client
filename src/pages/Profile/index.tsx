@@ -11,14 +11,16 @@ import './Profile.css';
 
 type Props = RouteComponentProps<{ id?: string }>;
 
-export default function Profile({ match: { params: { id = '1' } } }: Props) {
-  const { data, loading, error } = useQuery<GetUserResponse>(
-    GetUser, {
-      variables: {
-        id: id ? parseInt(id, 10) : 1,
-      },
-    }
-  );
+export default function Profile({
+  match: {
+    params: { id = '1' },
+  },
+}: Props) {
+  const { data, loading, error } = useQuery<GetUserResponse>(GetUser, {
+    variables: {
+      id: id ? parseInt(id, 10) : 1,
+    },
+  });
 
   usePageTitle(data?.user.firstName);
 
@@ -27,7 +29,11 @@ export default function Profile({ match: { params: { id = '1' } } }: Props) {
       <Title>{data?.user?.firstName}</Title>
 
       <div className="Profile__hero">
-        <PreloadedImage src="https://embark.com/wp-content/uploads/2019/08/Derick-Yang.png" height={500} width={500} />
+        <PreloadedImage
+          src="https://embark.com/wp-content/uploads/2019/08/Derick-Yang.png"
+          height={500}
+          width={500}
+        />
       </div>
 
       {loading && 'Loading ...'}
