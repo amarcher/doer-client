@@ -49,11 +49,7 @@ export default function CarouselContainer({
     <Carousel height={height} width={width}>
       {images.map(({ caption, src, key }) => (
         <div key={key} className="Carousel__image">
-          <PreloadedImage
-            src={src}
-            height={height}
-            width={width}
-          />
+          <PreloadedImage src={src} height={height} width={width} />
           {caption && <div className="Carousel__caption">{caption}</div>}
         </div>
       ))}
