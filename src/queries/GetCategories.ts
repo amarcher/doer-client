@@ -3,8 +3,8 @@ import CategoryFragment from '../fragments/CategoryFragment';
 import { Category } from './GetCategory';
 
 export interface GetCategoriesResponse {
-  categories: Category[]
-} 
+  categories: Category[];
+}
 
 export default gql`
   query GetCategories {

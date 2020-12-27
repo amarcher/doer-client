@@ -10,7 +10,7 @@ type CarouselProps = {
   children: React.ReactNode;
   width?: number;
   height?: number;
-}
+};
 
 function Carousel({ children, height = 500, width = 500 }: CarouselProps) {
   return (
@@ -38,17 +38,25 @@ type CarouselContainerProps = {
     src: string;
     key: string | number;
   }[];
-}
+};
 
-export default function CarouselContainer({ height = 500, images, width = 500 }: CarouselContainerProps) {
+export default function CarouselContainer({
+  height = 500,
+  images,
+  width = 500,
+}: CarouselContainerProps) {
   return (
     <Carousel height={height} width={width}>
-      {images.map(({ caption, src, key }) =>
+      {images.map(({ caption, src, key }) => (
         <div key={key} className="Carousel__image">
-          <PreloadedImage src={src} height={height} width={width}></PreloadedImage>
+          <PreloadedImage
+            src={src}
+            height={height}
+            width={width}
+          />
           {caption && <div className="Carousel__caption">{caption}</div>}
         </div>
-      )}
+      ))}
     </Carousel>
   );
 }

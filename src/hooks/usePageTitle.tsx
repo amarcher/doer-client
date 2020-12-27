@@ -3,7 +3,7 @@ import { APP_NAME } from '../constants';
 
 function getPageTitle(substring?: string) {
   return substring ? `${APP_NAME}: ${substring}` : APP_NAME;
-};
+}
 
 export default function usePageTitle(substring?: string) {
   const pageTitle = getPageTitle(substring);
