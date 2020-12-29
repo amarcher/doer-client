@@ -13,6 +13,7 @@ import CreateProjectExecution, {
 import GetProject, { GetProjectResponse } from '../../queries/GetProject';
 
 import './Create.css';
+import { currentUserIdVar } from '../../cache';
 
 type Props = RouteComponentProps;
 interface ProjecteExecutionInput {
@@ -58,7 +59,7 @@ export default function Create({ history, location: { search } }: Props) {
     variables: {
       projectExecutionInput: {
         ...projectExecutionInput,
-        userId: 1,
+        userId: currentUserIdVar(),
         startedAt: Date.now(),
       },
       imageUploadInputs: Object.values(imageUploadInputs),
@@ -145,6 +146,7 @@ export default function Create({ history, location: { search } }: Props) {
           onPhotoRemoved={onPhotoRemoved}
           height={100}
           width={100}
+          withCaption
         />
       </div>
 

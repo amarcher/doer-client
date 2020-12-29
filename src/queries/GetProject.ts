@@ -13,7 +13,7 @@ export interface ProjectExecutionImage {
   image: Image;
 }
 
-interface User {
+interface ProjectUser {
   firstName: string;
   lastName: string;
   id: number;
@@ -21,7 +21,7 @@ interface User {
 
 export interface ProjectExecution {
   title: string;
-  user: User;
+  user: ProjectUser;
   images: ProjectExecutionImage[];
   id: number;
   startedAt: string | null;

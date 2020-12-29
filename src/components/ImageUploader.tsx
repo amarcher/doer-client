@@ -23,7 +23,9 @@ interface Props {
   }) => void;
   onPhotoRemoved?: (publicId: string) => void;
   height?: number;
+  maxFiles?: number;
   width?: number;
+  withCaption?: boolean;
 }
 
 function getFileErrorMessage(code: FileError['code']) {
@@ -44,6 +46,8 @@ export default function ImageUploader({
   onPhotoRemoved,
   height = 500,
   width = 500,
+  withCaption,
+  maxFiles,
 }: Props) {
   const [photos, setPhotos] = useState(
     {} as { [photoId: string]: OnPhotoUploadProgressInputs }
@@ -141,20 +145,26 @@ export default function ImageUploader({
     [onPhotoUploadProgress, onPhotoUploadError]
   );
 
+  const disabled = !!maxFiles && Object.keys(photos).length >= maxFiles;
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxSize: CLOUDINARY.MAX_SIZE,
+    maxFiles,
+    disabled,
   });
 
   return (
     <div>
       <div {...getRootProps()} className="ImageUploader__root">
         <input className="ImageUploader" {...getInputProps()} />
-        <p>
-          {isDragActive
-            ? 'Drop the files here...'
-            : 'Drag files here, or click to select files'}
-        </p>
+        {!disabled && (
+          <p>
+            {isDragActive
+              ? 'Drop the files here...'
+              : 'Drag files here, or click to select files'}
+          </p>
+        )}
         <div className="ImageUploader__thumbnails">
           {Object.values(photos).map(({ photoId, percent, response }) => (
             <div key={photoId} className="ImageUploader__thumbnail">
@@ -166,7 +176,7 @@ export default function ImageUploader({
                 height={height}
                 width={width}
               />
-              {response?.body.url && (
+              {withCaption && response?.body.url && (
                 <input
                   className="ImageUploader__caption"
                   type="text"
