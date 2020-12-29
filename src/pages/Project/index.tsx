@@ -10,6 +10,7 @@ import GetProject, {
   GetProjectResponse,
   ProjectExecutionImage,
 } from '../../queries/GetProject';
+import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 
 import './Project.css';
 
@@ -41,12 +42,14 @@ export default function Project({
   });
 
   usePageTitle(data?.project.name);
+  const currentUserId = useCurrentUserId();
+  const projectExecutions = data?.project?.projectExecutions;
 
   return (
     <>
       <Title>{data?.project.name}</Title>
 
-      {data?.project?.projectExecutions?.map(({ id, title, images, user }) => (
+      {projectExecutions?.map(({ id, title, images, user }) => (
         <div className="Project__execution" key={id}>
           <div className="Project__title">
             "{title}" by{' '}
@@ -56,14 +59,20 @@ export default function Project({
         </div>
       ))}
 
+      {projectExecutions?.length === 0 && (
+        <div className="Project__title">No projects yet</div>
+      )}
+
       {loading && 'Loading ...'}
       {error && `ERROR: ${error?.message}`}
 
-      <div>
-        <Button href={`/create?projectId=${projectId}`}>
-          Start Your Own Attempt
-        </Button>
-      </div>
+      {currentUserId && data?.project?.projectExecutions && (
+        <div>
+          <Button href={`/create?projectId=${projectId}`}>
+            Start Your Own Attempt
+          </Button>
+        </div>
+      )}
     </>
   );
 }

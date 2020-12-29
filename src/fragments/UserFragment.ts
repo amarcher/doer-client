@@ -5,6 +5,11 @@ export default gql`
     firstName
     lastName
     username
+    email
     bio
+    id
+    profilePic {
+      hostedUrl
+    }
   }
 `;

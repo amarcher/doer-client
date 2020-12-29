@@ -1,25 +1,16 @@
 import { gql } from '@apollo/client';
-import UserFragment from '../fragments/UserFragment';
-
-interface User {
-  id: number;
-  username: string;
-  firstName: string;
-  lastName: string;
-  bio: string | null;
-  // email: string
-  // followingIds: [number]
-}
+import UserWithFollowsFragment from '../fragments/UserWithFollowsFragment';
+import { UserWithFollows } from '../mutations/CreateUser';
 
 export interface GetUserResponse {
-  user: User;
+  user: UserWithFollows;
 }
 
 export default gql`
   query GetUser($id: ID!) {
     user(id: $id) {
-      ...UserFragment
+      ...UserWithFollowsFragment
     }
   }
-  ${UserFragment}
+  ${UserWithFollowsFragment}
 `;
