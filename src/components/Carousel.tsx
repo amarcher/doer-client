@@ -1,5 +1,5 @@
 import React from 'react';
-import { CarouselProvider, Slider, Slide } from 'pure-react-carousel';
+import { CarouselProvider, DotGroup, Slider, Slide } from 'pure-react-carousel';
 
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import './Carousel.css';
@@ -13,12 +13,15 @@ type CarouselProps = {
 };
 
 function Carousel({ children, height = 500, width = 500 }: CarouselProps) {
+  const totalSlides = React.Children.count(children);
+
   return (
     <CarouselProvider
       naturalSlideWidth={width}
       naturalSlideHeight={height}
-      totalSlides={React.Children.count(children)}
+      totalSlides={totalSlides}
     >
+      {totalSlides > 1 && <DotGroup />}
       <Slider>
         {React.Children.map(children, (child, index) => (
           <Slide index={index} key={index}>
