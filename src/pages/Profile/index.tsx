@@ -6,9 +6,9 @@ import PreloadedImage from '../../components/PreloadedImage';
 import Title from '../../components/Title';
 import usePageTitle from '../../hooks/usePageTitle';
 import GetUser, { GetUserResponse } from '../../queries/GetUser';
-import { currentUserIdVar } from '../../cache';
 
 import './Profile.css';
+import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 
 type Props = RouteComponentProps<{ id?: string }>;
 
@@ -17,9 +17,10 @@ export default function Profile({
     params: { id },
   },
 }: Props) {
+  const currentUserId = useCurrentUserId();
   const { data, loading, error } = useQuery<GetUserResponse>(GetUser, {
     variables: {
-      id: id || currentUserIdVar(),
+      id: id || currentUserId,
     },
   });
 

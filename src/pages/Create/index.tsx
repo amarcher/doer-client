@@ -13,7 +13,7 @@ import CreateProjectExecution, {
 import GetProject, { GetProjectResponse } from '../../queries/GetProject';
 
 import './Create.css';
-import { currentUserIdVar } from '../../cache';
+import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 
 type Props = RouteComponentProps;
 interface ProjecteExecutionInput {
@@ -30,6 +30,7 @@ interface ImageUploadInput {
 export default function Create({ history, location: { search } }: Props) {
   const { projectId: projectIdStr } = decode(search?.substr(1));
   const projectId = parseInt(projectIdStr as string, 10);
+  const currentUserId = useCurrentUserId();
 
   const [projectExecutionInput, setProjectExecutionInput] = useState({
     projectId,
@@ -59,7 +60,7 @@ export default function Create({ history, location: { search } }: Props) {
     variables: {
       projectExecutionInput: {
         ...projectExecutionInput,
-        userId: currentUserIdVar(),
+        userId: currentUserId,
         startedAt: Date.now(),
       },
       imageUploadInputs: Object.values(imageUploadInputs),
