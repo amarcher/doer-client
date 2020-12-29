@@ -14,3 +14,32 @@
   border-bottom-right-radius: 10px;
   padding: 10px;
 }
+
+.carousel {
+  position: relative;
+}
+
+.carousel__dot-group {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel__dot {
+  margin: 3px;
+  background-color: white;
+  border-radius: 50%;
+  width: 5px;
+  height: 5px;
+  transform: scale(1);
+  transition: transform 200ms ease-in-out;
+}
+
+.carousel__dot--selected {
+  transform: scale(1.5);
+}
