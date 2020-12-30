@@ -3,8 +3,10 @@ import { UserWithFollows } from '../mutations/CreateUser';
 import UserWithFollowsFragment from '../fragments/UserWithFollowsFragment';
 
 export interface LoginResponse {
-  user: UserWithFollows;
-  sessionToken: string;
+  login: {
+    user: UserWithFollows;
+    sessionToken: string;
+  };
 }
 
 export default gql`

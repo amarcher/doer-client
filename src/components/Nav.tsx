@@ -11,23 +11,34 @@ import Login, { LoginResponse } from '../queries/Login';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../constants';
 
 import './Nav.css';
+import GetUser, { GetUserResponse } from '../queries/GetUser';
 
 export default function Nav() {
   const history = useHistory();
   const location = useLocation();
   const currentUserId = useCurrentUserId();
+  const tokenId = useReactiveVar(tokenIdVar);
   const googleId = useReactiveVar(googleIdVar);
   const isSignup = location.pathname.includes('signup');
 
   const { client } = useQuery<LoginResponse>(Login, {
-    skip: !googleId || !!currentUserId,
+    skip: !tokenId || !googleId || !!currentUserId,
 
-    onCompleted: ({ user, sessionToken }) => {
-      if (googleId && user && !currentUserId) {
+    onCompleted: ({ login: { user, sessionToken } }) => {
+      if (tokenId && user && !currentUserId) {
         currentUserIdVar(user.id);
-        tokenIdVar(sessionToken);
+        tokenIdVar(`Bearer ${sessionToken}`);
         localStorage.setItem(`${PREFIX}currentUserId`, user.id);
-        localStorage.setItem(`${PREFIX}tokenId`, sessionToken);
+        localStorage.setItem(`${PREFIX}tokenId`, `Bearer ${sessionToken}`);
+        client.writeQuery<GetUserResponse>({
+          query: GetUser,
+          variables: {
+            id: user.id,
+          },
+          data: {
+            user,
+          },
+        });
       }
     },
 
@@ -47,6 +58,7 @@ export default function Nav() {
       googleIdVar(googleId);
       tokenIdVar(tokenId);
       currentUserIdVar(undefined);
+      localStorage.removeItem(`${PREFIX}currentUserId`);
 
       if (tokenId && googleId) {
         localStorage.setItem(`${PREFIX}tokenId`, tokenId);
@@ -54,7 +66,6 @@ export default function Nav() {
       } else {
         localStorage.removeItem(`${PREFIX}tokenId`);
         localStorage.removeItem(`${PREFIX}googleId`);
-        localStorage.removeItem(`${PREFIX}currentUserId`);
         client.resetStore();
         history.push('/');
       }
@@ -71,7 +82,7 @@ export default function Nav() {
       <nav className="nav__content">
         <ul className="nav__list">
           <li className="nav__list-item">
-            {(currentUserId || (!currentUserId && googleId && isSignup)) && (
+            {(currentUserId || (!currentUserId && tokenId && isSignup)) && (
               <GoogleLogout
                 clientId={GOOGLE.CLIENT_ID}
                 onLogoutSuccess={onGoogleResponse}
@@ -82,7 +93,7 @@ export default function Nav() {
                 )}
               />
             )}
-            {!currentUserId && !googleId && (
+            {!currentUserId && !tokenId && (
               <GoogleLogin
                 clientId={GOOGLE.CLIENT_ID}
                 render={({ onClick, disabled }) => (

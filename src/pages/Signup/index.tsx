@@ -72,21 +72,26 @@ export default function Signup({ history, location: { search } }: Props) {
       },
 
       update: (cache, { data }) => {
-        if (data?.user) {
+        if (data?.createUser?.user) {
           cache.writeQuery<GetUserResponse>({
             query: GetUser,
             data: {
-              user: data?.user,
+              user: data?.createUser?.user,
             },
           });
         }
       },
 
-      onCompleted({ user: { id }, sessionToken }) {
+      onCompleted({
+        createUser: {
+          user: { id },
+          sessionToken,
+        },
+      }) {
         currentUserIdVar(id);
-        tokenIdVar(sessionToken);
+        tokenIdVar(`Bearer ${sessionToken}`);
         localStorage.setItem(`${PREFIX}currentUserId`, id);
-        localStorage.setItem(`${PREFIX}tokenId`, sessionToken);
+        localStorage.setItem(`${PREFIX}tokenId`, `Bearer ${sessionToken}`);
         history.push('/profile');
       },
     }

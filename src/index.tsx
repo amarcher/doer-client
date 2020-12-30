@@ -11,7 +11,7 @@ import {
 } from '@apollo/client';
 
 import App from './App';
-import { cache, typeDefs } from './cache';
+import { cache, tokenIdVar, typeDefs } from './cache';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from './constants';
 
 import './index.css';
@@ -25,7 +25,8 @@ const authMiddleware = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => ({
     headers: {
       ...headers,
-      authorization: localStorage.getItem(`${PREFIX}tokenId`) || '',
+      authorization:
+        localStorage.getItem(`${PREFIX}tokenId`) || tokenIdVar() || '',
     },
   }));
 
