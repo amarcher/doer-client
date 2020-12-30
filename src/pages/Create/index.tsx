@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { RouteComponentProps } from 'react-router';
 import { decode } from 'querystring';
 
@@ -31,6 +31,12 @@ export default function Create({ history, location: { search } }: Props) {
   const { projectId: projectIdStr } = decode(search?.substr(1));
   const projectId = parseInt(projectIdStr as string, 10);
   const currentUserId = useCurrentUserId();
+
+  const { data } = useQuery<GetProjectResponse>(GetProject, {
+    variables: {
+      id: projectId,
+    },
+  });
 
   const [projectExecutionInput, setProjectExecutionInput] = useState({
     projectId,
@@ -148,6 +154,7 @@ export default function Create({ history, location: { search } }: Props) {
           height={100}
           width={100}
           withCaption
+          tags={data?.project.name ? [data?.project.name] : undefined}
         />
       </div>
 

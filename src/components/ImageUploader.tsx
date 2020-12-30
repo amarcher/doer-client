@@ -26,6 +26,7 @@ interface Props {
   maxFiles?: number;
   width?: number;
   withCaption?: boolean;
+  tags?: string[];
 }
 
 function getFileErrorMessage(code: FileError['code']) {
@@ -48,6 +49,7 @@ export default function ImageUploader({
   width = 500,
   withCaption,
   maxFiles,
+  tags,
 }: Props) {
   const [photos, setPhotos] = useState(
     {} as { [photoId: string]: OnPhotoUploadProgressInputs }
@@ -134,7 +136,9 @@ export default function ImageUploader({
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-      acceptedFiles.forEach((file) => uploadPhoto(file, onPhotoUploadProgress));
+      acceptedFiles.forEach((file) =>
+        uploadPhoto({ file, onPhotoUploadProgress, tags })
+      );
       fileRejections.forEach((fileRejection) => {
         onPhotoUploadError({
           photoId: uuidv4(),
