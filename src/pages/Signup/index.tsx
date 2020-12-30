@@ -9,13 +9,13 @@ import ImageUploader from '../../components/ImageUploader';
 import Title from '../../components/Title';
 import GetUser, { GetUserResponse } from '../../queries/GetUser';
 import CreateUser, {
-  CreateUserResult,
+  CreateUserResponse,
   User as CreateUserInput,
 } from '../../mutations/CreateUser';
 
 import './Signup.css';
 import { useCurrentUserId } from '../../queries/GetCurrentUserId';
-import { currentUserIdVar, googleIdVar } from '../../cache';
+import { currentUserIdVar, googleIdVar, tokenIdVar } from '../../cache';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../../constants';
 
 type Props = RouteComponentProps;
@@ -63,7 +63,7 @@ export default function Signup({ history, location: { search } }: Props) {
     []
   );
 
-  const [createUser, { error, loading }] = useMutation<CreateUserResult>(
+  const [createUser, { error, loading }] = useMutation<CreateUserResponse>(
     CreateUser,
     {
       variables: {
@@ -72,19 +72,26 @@ export default function Signup({ history, location: { search } }: Props) {
       },
 
       update: (cache, { data }) => {
-        if (data?.createUser) {
+        if (data?.createUser?.user) {
           cache.writeQuery<GetUserResponse>({
             query: GetUser,
             data: {
-              user: data?.createUser,
+              user: data?.createUser?.user,
             },
           });
         }
       },
 
-      onCompleted({ createUser: { id } }) {
+      onCompleted({
+        createUser: {
+          user: { id },
+          sessionToken,
+        },
+      }) {
         currentUserIdVar(id);
+        tokenIdVar(`Bearer ${sessionToken}`);
         localStorage.setItem(`${PREFIX}currentUserId`, id);
+        localStorage.setItem(`${PREFIX}tokenId`, `Bearer ${sessionToken}`);
         history.push('/profile');
       },
     }

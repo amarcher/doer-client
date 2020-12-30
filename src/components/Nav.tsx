@@ -7,33 +7,48 @@ import Button from './Button';
 import { GOOGLE } from '../constants';
 import { currentUserIdVar, googleIdVar, tokenIdVar } from '../cache';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
-import GetUser, { GetUserResponse } from '../queries/GetUser';
+import Login, { LoginResponse } from '../queries/Login';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../constants';
 
 import './Nav.css';
+import GetUser, { GetUserResponse } from '../queries/GetUser';
 
 export default function Nav() {
   const history = useHistory();
   const location = useLocation();
   const currentUserId = useCurrentUserId();
+  const tokenId = useReactiveVar(tokenIdVar);
   const googleId = useReactiveVar(googleIdVar);
   const isSignup = location.pathname.includes('signup');
 
-  const { client } = useQuery<GetUserResponse>(GetUser, {
-    variables: {
-      id: googleId,
+  const { client } = useQuery<LoginResponse>(Login, {
+    skip: !tokenId || !googleId || !!currentUserId,
+
+    onCompleted: ({ login: { user, sessionToken } }) => {
+      if (tokenId && user && !currentUserId) {
+        currentUserIdVar(user.id);
+        tokenIdVar(`Bearer ${sessionToken}`);
+        localStorage.setItem(`${PREFIX}currentUserId`, user.id);
+        localStorage.setItem(`${PREFIX}tokenId`, `Bearer ${sessionToken}`);
+        client.writeQuery<GetUserResponse>({
+          query: GetUser,
+          variables: {
+            id: user.id,
+          },
+          data: {
+            user,
+          },
+        });
+      }
     },
 
-    skip: !googleId || !!currentUserId,
+    onError: ({ message }) => {
+      console.log({ error: message });
 
-    onCompleted: ({ user }) => {
-      if (!user && !isSignup) {
+      if (message.indexOf('create this user') > -1) {
         history.push(
           `/signup?redirect=${encodeURIComponent(window.location.pathname)}`
         );
-      } else if (googleId && user && !currentUserId) {
-        currentUserIdVar(user.id);
-        localStorage.setItem(`${PREFIX}currentUserId`, user.id);
       }
     },
   });
@@ -43,6 +58,7 @@ export default function Nav() {
       googleIdVar(googleId);
       tokenIdVar(tokenId);
       currentUserIdVar(undefined);
+      localStorage.removeItem(`${PREFIX}currentUserId`);
 
       if (tokenId && googleId) {
         localStorage.setItem(`${PREFIX}tokenId`, tokenId);
@@ -50,7 +66,6 @@ export default function Nav() {
       } else {
         localStorage.removeItem(`${PREFIX}tokenId`);
         localStorage.removeItem(`${PREFIX}googleId`);
-        localStorage.removeItem(`${PREFIX}currentUserId`);
         client.resetStore();
         history.push('/');
       }
@@ -67,7 +82,7 @@ export default function Nav() {
       <nav className="nav__content">
         <ul className="nav__list">
           <li className="nav__list-item">
-            {(currentUserId || (!currentUserId && googleId && isSignup)) && (
+            {(currentUserId || (!currentUserId && tokenId && isSignup)) && (
               <GoogleLogout
                 clientId={GOOGLE.CLIENT_ID}
                 onLogoutSuccess={onGoogleResponse}
@@ -78,7 +93,7 @@ export default function Nav() {
                 )}
               />
             )}
-            {!currentUserId && !googleId && (
+            {!currentUserId && !tokenId && (
               <GoogleLogin
                 clientId={GOOGLE.CLIENT_ID}
                 render={({ onClick, disabled }) => (
