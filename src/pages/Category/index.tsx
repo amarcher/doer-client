@@ -7,6 +7,7 @@ import Button from '../../components/Button';
 import PreloadedImage from '../../components/PreloadedImage';
 import Title from '../../components/Title';
 import GetCategory, { GetCategoryResponse } from '../../queries/GetCategory';
+import logo from '../../logo.svg';
 
 import './Category.css';
 
@@ -30,11 +31,7 @@ export default function Category({
       <Title>{data?.category.name}</Title>
 
       <div className="Category__hero">
-        <PreloadedImage
-          src="https://miro.medium.com/max/2438/1*TsArd-pBgSQqMXyFV5C-Wg.jpeg"
-          height={500}
-          width={500}
-        />
+        <PreloadedImage src={logo} height={500} width={500} useImg />
       </div>
 
       {loading && 'Loading...'}
