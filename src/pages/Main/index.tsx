@@ -9,6 +9,7 @@ import Title from '../../components/Title';
 import GetCategories, {
   GetCategoriesResponse,
 } from '../../queries/GetCategories';
+import logo from '../../logo.svg';
 
 import './Main.css';
 
@@ -24,11 +25,7 @@ export default function Main() {
       <Title>{APP_NAME}</Title>
 
       <div className="Main__hero">
-        <PreloadedImage
-          src="https://miro.medium.com/max/2438/1*TsArd-pBgSQqMXyFV5C-Wg.jpeg"
-          height={500}
-          width={500}
-        />
+        <PreloadedImage src={logo} height={500} width={500} useImg />
       </div>
 
       {loading && <p>Loading ...</p>}
