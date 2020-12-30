@@ -7,7 +7,7 @@ import Button from './Button';
 import { GOOGLE } from '../constants';
 import { currentUserIdVar, googleIdVar, tokenIdVar } from '../cache';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
-import GetUser, { GetUserResponse } from '../queries/GetUser';
+import Login, { LoginResponse } from '../queries/Login';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../constants';
 
 import './Nav.css';
@@ -19,21 +19,25 @@ export default function Nav() {
   const googleId = useReactiveVar(googleIdVar);
   const isSignup = location.pathname.includes('signup');
 
-  const { client } = useQuery<GetUserResponse>(GetUser, {
-    variables: {
-      id: googleId,
-    },
-
+  const { client } = useQuery<LoginResponse>(Login, {
     skip: !googleId || !!currentUserId,
 
-    onCompleted: ({ user }) => {
-      if (!user && !isSignup) {
+    onCompleted: ({ user, sessionToken }) => {
+      if (googleId && user && !currentUserId) {
+        currentUserIdVar(user.id);
+        tokenIdVar(sessionToken);
+        localStorage.setItem(`${PREFIX}currentUserId`, user.id);
+        localStorage.setItem(`${PREFIX}tokenId`, sessionToken);
+      }
+    },
+
+    onError: ({ message }) => {
+      console.log({ error: message });
+
+      if (message.indexOf('create this user') > -1) {
         history.push(
           `/signup?redirect=${encodeURIComponent(window.location.pathname)}`
         );
-      } else if (googleId && user && !currentUserId) {
-        currentUserIdVar(user.id);
-        localStorage.setItem(`${PREFIX}currentUserId`, user.id);
       }
     },
   });

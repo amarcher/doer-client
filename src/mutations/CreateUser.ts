@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 import UserWithFollowsFragment from '../fragments/UserWithFollowsFragment';
+export type { LoginResponse as CreateUserResponse } from '../queries/Login';
 
 export interface User {
   id: string;
@@ -18,10 +19,6 @@ export interface UserWithFollows extends User {
   following: User[];
 }
 
-export interface CreateUserResult {
-  createUser: UserWithFollows;
-}
-
 export default gql`
   mutation createUser(
     $createUserInput: CreateUserInput!
@@ -31,7 +28,10 @@ export default gql`
       createUserInput: $createUserInput
       imageUploadInput: $imageUploadInput
     ) {
-      ...UserWithFollowsFragment
+      user {
+        ...UserWithFollowsFragment
+      }
+      sessionToken
     }
   }
   ${UserWithFollowsFragment}
