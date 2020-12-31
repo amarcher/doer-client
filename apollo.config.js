@@ -1,6 +1,5 @@
 module.exports = {
   client: {
-    name: 'Doer [Web]',
-    service: 'doer-client',
+    service: 'Doer-rf069o',
   },
 };
