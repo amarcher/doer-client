@@ -4,3 +4,12 @@
   justify-content: center;
   margin: 10px 0;
 }
+
+.Signup__google_thumbnail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+  margin: 10px;
+}

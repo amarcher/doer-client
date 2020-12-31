@@ -5,7 +5,7 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 
 import Button from './Button';
 import { GOOGLE } from '../constants';
-import { currentUserIdVar, googleIdVar, tokenIdVar } from '../cache';
+import { currentUserIdVar, googleProfileObjVar, tokenIdVar } from '../cache';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
 import Login, { LoginResponse } from '../queries/Login';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../constants';
@@ -18,11 +18,11 @@ export default function Nav() {
   const location = useLocation();
   const currentUserId = useCurrentUserId();
   const tokenId = useReactiveVar(tokenIdVar);
-  const googleId = useReactiveVar(googleIdVar);
+  const googleProfileObj = useReactiveVar(googleProfileObjVar);
   const isSignup = location.pathname.includes('signup');
 
   const { client } = useQuery<LoginResponse>(Login, {
-    skip: !tokenId || !googleId || !!currentUserId,
+    skip: !tokenId || !googleProfileObj || !!currentUserId,
 
     onCompleted: ({ login: { user, sessionToken } }) => {
       if (tokenId && user && !currentUserId) {
@@ -43,29 +43,32 @@ export default function Nav() {
     },
 
     onError: ({ message }) => {
-      console.log({ error: message });
-
       if (message.indexOf('create this user') > -1) {
         history.push(
-          `/signup?redirect=${encodeURIComponent(window.location.pathname)}`
+          `/signup?redirect=${encodeURIComponent(
+            location.pathname + '?' + location.search
+          )}`
         );
       }
     },
   });
 
   const onGoogleResponse = useCallback(
-    ({ tokenId, googleId } = {}) => {
-      googleIdVar(googleId);
+    ({ tokenId, profileObj, ...rest } = {}) => {
+      googleProfileObjVar(profileObj ? JSON.stringify(profileObj) : undefined);
       tokenIdVar(tokenId);
       currentUserIdVar(undefined);
       localStorage.removeItem(`${PREFIX}currentUserId`);
 
-      if (tokenId && googleId) {
+      if (tokenId && profileObj) {
         localStorage.setItem(`${PREFIX}tokenId`, tokenId);
-        localStorage.setItem(`${PREFIX}googleId`, googleId);
+        localStorage.setItem(
+          `${PREFIX}googleProfileObj`,
+          JSON.stringify(profileObj)
+        );
       } else {
         localStorage.removeItem(`${PREFIX}tokenId`);
-        localStorage.removeItem(`${PREFIX}googleId`);
+        localStorage.removeItem(`${PREFIX}googleProfileObj`);
         client.resetStore();
         history.push('/');
       }

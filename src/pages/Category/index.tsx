@@ -7,7 +7,7 @@ import Button from '../../components/Button';
 import PreloadedImage from '../../components/PreloadedImage';
 import Title from '../../components/Title';
 import GetCategory, { GetCategoryResponse } from '../../queries/GetCategory';
-import logo from '../../logo.svg';
+import logo from '../../logo2.svg';
 
 import './Category.css';
 

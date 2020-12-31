@@ -9,7 +9,7 @@ import Title from '../../components/Title';
 import GetCategories, {
   GetCategoriesResponse,
 } from '../../queries/GetCategories';
-import logo from '../../logo.svg';
+import logo from '../../logo2.svg';
 
 import './Main.css';
 

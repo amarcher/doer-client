@@ -18,9 +18,9 @@ import './index.css';
 
 const httpLink = new HttpLink({
   uri:
+    'http://localhost:4000/graphql' ||
     'https://capxun.com/graphql' ||
-    'http://52.13.54.231:4000/graphql' ||
-    'http://localhost:4000/graphql',
+    'http://52.13.54.231:4000/graphql',
 });
 
 const authMiddleware = new ApolloLink((operation, forward) => {

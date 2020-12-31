@@ -4,7 +4,9 @@ import { LOCAL_STORAGE_PREFIX as PREFIX } from './constants';
 export const currentUserIdVar = makeVar(
   localStorage.getItem(`${PREFIX}currentUserId`)
 );
-export const googleIdVar = makeVar(localStorage.getItem(`${PREFIX}googleId`));
+export const googleProfileObjVar = makeVar(
+  localStorage.getItem(`${PREFIX}googleProfileObj`)
+);
 export const tokenIdVar = makeVar(localStorage.getItem(`${PREFIX}tokenId`));
 
 export const cache: InMemoryCache = new InMemoryCache({
@@ -16,9 +18,9 @@ export const cache: InMemoryCache = new InMemoryCache({
             return currentUserIdVar();
           },
         },
-        googleId: {
+        googleProfileObj: {
           read() {
-            return googleIdVar();
+            return googleProfileObjVar();
           },
         },
         tokenId: {
@@ -34,7 +36,7 @@ export const cache: InMemoryCache = new InMemoryCache({
 export const typeDefs = gql`
   extend type Query {
     currentUserId: string
-    googleId: string
+    googleProfileObj: string
     tokenId: string
   }
 `;

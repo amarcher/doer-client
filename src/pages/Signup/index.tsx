@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useMutation, useReactiveVar } from '@apollo/client';
 import { RouteComponentProps } from 'react-router';
 import { decode } from 'querystring';
@@ -15,12 +15,12 @@ import CreateUser, {
 
 import './Signup.css';
 import { useCurrentUserId } from '../../queries/GetCurrentUserId';
-import { currentUserIdVar, googleIdVar, tokenIdVar } from '../../cache';
+import { currentUserIdVar, googleProfileObjVar, tokenIdVar } from '../../cache';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../../constants';
 
 type Props = RouteComponentProps;
 
-interface ImageUploadInput {
+export interface ImageUploadInput {
   publicId?: string;
   hostedUrl?: string;
   timeTaken?: number;
@@ -29,27 +29,36 @@ interface ImageUploadInput {
 export default function Signup({ history, location: { search } }: Props) {
   const { redirect = '%2F' } = decode(search?.substr(1));
   const currentUserId = useCurrentUserId();
-  const googleId = useReactiveVar(googleIdVar);
+  const googleProfileObj = useReactiveVar(googleProfileObjVar);
+  const googleProfile = useMemo(
+    () => (googleProfileObj ? JSON.parse(googleProfileObj) : {}),
+    [googleProfileObj]
+  );
 
   useEffect(() => {
     if (currentUserId) {
       history.push(decodeURIComponent(redirect as string));
-    } else if (!googleId) {
+    } else if (!googleProfileObj) {
       history.replace('/');
     }
-  }, [currentUserId, googleId, history, redirect]);
+  }, [currentUserId, googleProfileObj, history, redirect]);
 
   const [createUserInput, setCreateUserInput] = useState({
-    firstName: '',
-    lastName: '',
-    username: '',
-    email: '',
+    firstName: googleProfile.givenName || '',
+    lastName: googleProfile.familyName || '',
+    email: googleProfile.email || '',
+    username: googleProfile.email?.split('@')[0] || '',
     bio: '',
   } as CreateUserInput);
 
-  const [imageUploadInput, setImageUploadInput] = useState(
-    {} as ImageUploadInput
-  );
+  const [imageUploadInput, setImageUploadInput] = useState({
+    hostedUrl: googleProfile.imageUrl || '',
+    timeTaken: Date.now(),
+  } as ImageUploadInput);
+
+  const images = useMemo(() => ({ photo: { ...imageUploadInput } }), [
+    imageUploadInput,
+  ]);
 
   const onChange = useCallback(
     ({ target }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -130,6 +139,7 @@ export default function Signup({ history, location: { search } }: Props) {
         <ImageUploader
           onPhotoUploaded={onPhotoUploaded}
           onPhotoRemoved={onPhotoRemoved}
+          images={images}
           height={480}
           width={480}
           maxFiles={1}
