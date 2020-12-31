@@ -12,6 +12,7 @@ interface Props {
   src?: string;
   height?: number;
   width?: number;
+  className?: string;
 }
 
 export default function ImageUploadThumbnail({
@@ -21,6 +22,7 @@ export default function ImageUploadThumbnail({
   onDeletePhoto,
   width = 300,
   height = 300,
+  className,
 }: Props) {
   return (
     <div className="ImageUploadThumbnail">
@@ -33,7 +35,12 @@ export default function ImageUploadThumbnail({
           x
         </Button>
       )}
-      <PreloadedImage src={src} height={height} width={width} />
+      <PreloadedImage
+        src={src}
+        height={height}
+        width={width}
+        className={className}
+      />
       {percent && percent < 100 && (
         <div className="ImageUploadThumbnail__progress_bar">
           <div

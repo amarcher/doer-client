@@ -25,6 +25,7 @@ interface Props {
     publicId: string;
   }) => void;
   images?: Images;
+  thumbnailClassName?: string;
   onPhotoRemoved?: (publicId: string) => void;
   height?: number;
   maxFiles?: number;
@@ -74,6 +75,7 @@ function stopPropagation(e: React.SyntheticEvent) {
 export default function ImageUploader({
   onPhotoUploaded,
   onPhotoRemoved,
+  thumbnailClassName,
   height = 300,
   width = 300,
   withCaption,
@@ -218,6 +220,7 @@ export default function ImageUploader({
                   onDeletePhoto={onDelete}
                   height={height}
                   width={width}
+                  className={thumbnailClassName}
                 />
                 {withCaption && response?.body.url && (
                   <input
