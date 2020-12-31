@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import { useDropzone, FileRejection, FileError } from 'react-dropzone';
 import {
   uploadPhoto,
@@ -8,8 +8,11 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { CLOUDINARY } from '../constants';
 import ImageUploadThumbnail from './ImageUploadThumbnail';
+import { ImageUploadInput } from '../pages/Signup';
 
 import './ImageUploader.css';
+
+type Images = Record<string, ImageUploadInput>;
 
 interface Props {
   onPhotoUploaded: ({
@@ -21,11 +24,13 @@ interface Props {
     url?: string;
     publicId: string;
   }) => void;
+  images?: Images;
   onPhotoRemoved?: (publicId: string) => void;
   height?: number;
   maxFiles?: number;
   width?: number;
   withCaption?: boolean;
+  tags?: string[];
 }
 
 function getFileErrorMessage(code: FileError['code']) {
@@ -35,6 +40,31 @@ function getFileErrorMessage(code: FileError['code']) {
     'too-many-files': 'Too many files',
     'file-invalid-type': 'Invalid file type',
   }[code];
+}
+
+function formatImagesAsOnPhotoUploadProgressInputs(images?: Images) {
+  if (!images || !Object.keys(images).length)
+    return {} as { [photoId: string]: OnPhotoUploadProgressInputs };
+
+  return Object.keys(images).reduce((progressInputs, photoId) => {
+    const image = images[photoId];
+    progressInputs[photoId] = {
+      photoId,
+      percent: 100,
+      response: {
+        body: {
+          secure_url:
+            image.hostedUrl && image.hostedUrl.indexOf('https') > -1
+              ? image.hostedUrl
+              : '',
+          url: image.hostedUrl || '',
+          public_id: photoId,
+        },
+        status: 'complete',
+      },
+    };
+    return progressInputs;
+  }, {} as { [photoId: string]: OnPhotoUploadProgressInputs });
 }
 
 function stopPropagation(e: React.SyntheticEvent) {
@@ -48,6 +78,8 @@ export default function ImageUploader({
   width = 500,
   withCaption,
   maxFiles,
+  tags,
+  images,
 }: Props) {
   const [photos, setPhotos] = useState(
     {} as { [photoId: string]: OnPhotoUploadProgressInputs }
@@ -55,6 +87,14 @@ export default function ImageUploader({
   const [captions, setCaptions] = useState({} as { [photoId: string]: string });
   const [errors, setErrors] = useState(
     {} as { [photoId: string]: FileRejection }
+  );
+
+  const dedupedPhotos = useMemo(
+    () => ({
+      ...photos,
+      ...formatImagesAsOnPhotoUploadProgressInputs(images),
+    }),
+    [photos, images]
   );
 
   const onPhotoUploadProgress = useCallback(
@@ -75,9 +115,9 @@ export default function ImageUploader({
 
       if (response) {
         const {
-          body: { url, public_id: publicId },
+          body: { url, secure_url, public_id: publicId },
         } = response;
-        onPhotoUploaded({ publicId, url });
+        onPhotoUploaded({ publicId, url: secure_url || url });
       }
     },
     [onPhotoUploaded]
@@ -134,7 +174,9 @@ export default function ImageUploader({
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-      acceptedFiles.forEach((file) => uploadPhoto(file, onPhotoUploadProgress));
+      acceptedFiles.forEach((file) =>
+        uploadPhoto({ file, onPhotoUploadProgress, tags })
+      );
       fileRejections.forEach((fileRejection) => {
         onPhotoUploadError({
           photoId: uuidv4(),
@@ -142,10 +184,10 @@ export default function ImageUploader({
         });
       });
     },
-    [onPhotoUploadProgress, onPhotoUploadError]
+    [onPhotoUploadProgress, onPhotoUploadError, tags]
   );
 
-  const disabled = !!maxFiles && Object.keys(photos).length >= maxFiles;
+  const disabled = !!maxFiles && Object.keys(dedupedPhotos).length >= maxFiles;
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -166,29 +208,31 @@ export default function ImageUploader({
           </p>
         )}
         <div className="ImageUploader__thumbnails">
-          {Object.values(photos).map(({ photoId, percent, response }) => (
-            <div key={photoId} className="ImageUploader__thumbnail">
-              <ImageUploadThumbnail
-                id={photoId}
-                src={response?.body.url}
-                percent={percent}
-                onDeletePhoto={onDelete}
-                height={height}
-                width={width}
-              />
-              {withCaption && response?.body.url && (
-                <input
-                  className="ImageUploader__caption"
-                  type="text"
-                  name={photoId}
-                  placeholder="caption"
-                  value={captions[photoId] || ''}
-                  onClick={stopPropagation}
-                  onChange={onChangeCaption}
+          {Object.values(dedupedPhotos).map(
+            ({ photoId, percent, response }) => (
+              <div key={photoId} className="ImageUploader__thumbnail">
+                <ImageUploadThumbnail
+                  id={photoId}
+                  src={response?.body.secure_url || response?.body.url}
+                  percent={percent}
+                  onDeletePhoto={onDelete}
+                  height={height}
+                  width={width}
                 />
-              )}
-            </div>
-          ))}
+                {withCaption && response?.body.url && (
+                  <input
+                    className="ImageUploader__caption"
+                    type="text"
+                    name={photoId}
+                    placeholder="caption"
+                    value={captions[photoId] || ''}
+                    onClick={stopPropagation}
+                    onChange={onChangeCaption}
+                  />
+                )}
+              </div>
+            )
+          )}
           {Object.keys(errors).map((photoId) => (
             <div key={photoId} className="ImageUploader__thumbnail">
               <ImageUploadThumbnail

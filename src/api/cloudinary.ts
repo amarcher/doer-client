@@ -9,6 +9,7 @@ import {
 export interface UploadedPhotoResponse {
   body: {
     url: string;
+    secure_url: string;
     public_id: string;
     delete_token?: string;
     [key: string]: any;
@@ -30,12 +31,16 @@ export function deletePhoto(token: string) {
     .send({ token });
 }
 
-export function uploadPhoto(
-  file: File,
-  onPhotoUploadProgress: (inputs: OnPhotoUploadProgressInputs) => void
-) {
+export function uploadPhoto({
+  file,
+  onPhotoUploadProgress,
+  tags,
+}: {
+  file: File;
+  onPhotoUploadProgress: (inputs: OnPhotoUploadProgressInputs) => void;
+  tags?: string[];
+}) {
   const photoId = uuidv4();
-  const { name } = file;
 
   return (
     request
@@ -44,8 +49,8 @@ export function uploadPhoto(
       .field('file', file)
       .field('multiple', true)
       /* .field('return_delete_token', true) // TODO: return delete token when using signed image upload */
-      .field('tags', name ? name : 'myphotoalbum')
-      .field('context', name ? `photo=${name}` : '')
+      /* .field('moderation', 'aws_rek') // TODO: moderate images when using signed image upload */
+      .field('tags', tags?.length ? tags.join(',') : 'myphotoalbum')
       .on('progress', ({ percent = 0 }: { percent: number }) =>
         onPhotoUploadProgress({ photoId, percent })
       )
