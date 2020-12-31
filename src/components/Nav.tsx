@@ -49,6 +49,15 @@ export default function Nav() {
             location.pathname + '?' + location.search
           )}`
         );
+      } else if (
+        message.indexOf('Session token does not exist for this user') > -1
+      ) {
+        localStorage.removeItem(`${PREFIX}currentUserId`);
+        localStorage.removeItem(`${PREFIX}tokenId`);
+        localStorage.removeItem(`${PREFIX}googleProfileObj`);
+        googleProfileObjVar(undefined);
+        tokenIdVar(undefined);
+        currentUserIdVar(undefined);
       }
     },
   });
