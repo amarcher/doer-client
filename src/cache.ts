@@ -35,8 +35,8 @@ export const cache: InMemoryCache = new InMemoryCache({
 
 export const typeDefs = gql`
   extend type Query {
-    currentUserId: string
-    googleProfileObj: string
-    tokenId: string
+    currentUserId: String
+    googleProfileObj: String
+    tokenId: String
   }
 `;
