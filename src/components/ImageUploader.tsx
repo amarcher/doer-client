@@ -53,6 +53,10 @@ function formatImagesAsOnPhotoUploadProgressInputs(images?: Images) {
       percent: 100,
       response: {
         body: {
+          secure_url:
+            image.hostedUrl && image.hostedUrl.indexOf('https') > -1
+              ? image.hostedUrl
+              : '',
           url: image.hostedUrl || '',
           public_id: photoId,
         },
@@ -111,9 +115,9 @@ export default function ImageUploader({
 
       if (response) {
         const {
-          body: { url, public_id: publicId },
+          body: { url, secure_url, public_id: publicId },
         } = response;
-        onPhotoUploaded({ publicId, url });
+        onPhotoUploaded({ publicId, url: secure_url || url });
       }
     },
     [onPhotoUploaded]
@@ -209,7 +213,7 @@ export default function ImageUploader({
               <div key={photoId} className="ImageUploader__thumbnail">
                 <ImageUploadThumbnail
                   id={photoId}
-                  src={response?.body.url}
+                  src={response?.body.secure_url || response?.body.url}
                   percent={percent}
                   onDeletePhoto={onDelete}
                   height={height}

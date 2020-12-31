@@ -9,6 +9,7 @@ import {
 export interface UploadedPhotoResponse {
   body: {
     url: string;
+    secure_url: string;
     public_id: string;
     delete_token?: string;
     [key: string]: any;
