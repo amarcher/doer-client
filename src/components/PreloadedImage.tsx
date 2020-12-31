@@ -65,8 +65,9 @@ export default function PreloadedImage({
     () => ({
       height,
       width,
+      display: useImg ? 'flex' : 'block',
     }),
-    [height, width]
+    [height, width, useImg]
   );
 
   const imgCoverStyle = useMemo(

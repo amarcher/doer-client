@@ -12,7 +12,7 @@ type CarouselProps = {
   height?: number;
 };
 
-function Carousel({ children, height = 500, width = 500 }: CarouselProps) {
+function Carousel({ children, height = 300, width = 300 }: CarouselProps) {
   const totalSlides = React.Children.count(children);
 
   return (
@@ -44,9 +44,9 @@ type CarouselContainerProps = {
 };
 
 export default function CarouselContainer({
-  height = 500,
+  height = 300,
   images,
-  width = 500,
+  width = 300,
 }: CarouselContainerProps) {
   return (
     <Carousel height={height} width={width}>

@@ -25,7 +25,7 @@ export default function Main() {
       <Title>{APP_NAME}</Title>
 
       <div className="Main__hero">
-        <PreloadedImage src={logo} height={500} width={500} useImg />
+        <PreloadedImage src={logo} height={300} width={300} useImg />
       </div>
 
       {loading && <p>Loading ...</p>}

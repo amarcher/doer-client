@@ -37,7 +37,7 @@ export default function Profile({
           <Title>{data?.user?.firstName}</Title>
 
           <div className="Profile__hero">
-            <PreloadedImage src={src} height={500} width={500} />
+            <PreloadedImage src={src} height={300} width={300} />
           </div>
         </>
       )}

@@ -20,7 +20,10 @@
   background-color: transparent;
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-position: center center;
   opacity: 1;
   top: 0;
   right: 0;

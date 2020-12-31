@@ -19,8 +19,8 @@ export default function ImageUploadThumbnail({
   percent,
   src = '',
   onDeletePhoto,
-  width = 500,
-  height = 500,
+  width = 300,
+  height = 300,
 }: Props) {
   return (
     <div className="ImageUploadThumbnail">

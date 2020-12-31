@@ -141,8 +141,8 @@ export default function Signup({
           onPhotoUploaded={onPhotoUploaded}
           onPhotoRemoved={onPhotoRemoved}
           images={images}
-          height={480}
-          width={480}
+          height={280}
+          width={280}
           maxFiles={1}
         />
       </div>

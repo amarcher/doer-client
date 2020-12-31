@@ -31,7 +31,7 @@ export default function Category({
       <Title>{data?.category.name}</Title>
 
       <div className="Category__hero">
-        <PreloadedImage src={logo} height={500} width={500} useImg />
+        <PreloadedImage src={logo} height={300} width={300} useImg />
       </div>
 
       {loading && 'Loading...'}
