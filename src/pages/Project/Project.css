@@ -16,3 +16,7 @@
 .Project__title {
   margin-bottom: 10px;
 }
+
+.Project__create_button {
+  margin: 20px;
+}

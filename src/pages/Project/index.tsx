@@ -68,7 +68,10 @@ export default function Project({
 
       {currentUserId && data?.project?.projectExecutions && (
         <div>
-          <Button href={`/create?projectId=${projectId}`}>
+          <Button
+            href={`/create?projectId=${projectId}`}
+            className="Project__create_button"
+          >
             Start Your Own Attempt
           </Button>
         </div>
