@@ -9,12 +9,13 @@ import { currentUserIdVar, googleProfileObjVar, tokenIdVar } from '../cache';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
 import Login, { LoginResponse } from '../queries/Login';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../constants';
+import GetUser, { GetUserResponse } from '../queries/GetUser';
+import { deauthenticate } from '../utils/auth';
 
 import './Nav.css';
-import GetUser, { GetUserResponse } from '../queries/GetUser';
 
 export default function Nav() {
-  const history = useHistory();
+  const { push } = useHistory();
   const location = useLocation();
   const currentUserId = useCurrentUserId();
   const tokenId = useReactiveVar(tokenIdVar);
@@ -44,20 +45,12 @@ export default function Nav() {
 
     onError: ({ message }) => {
       if (message.indexOf('create this user') > -1) {
-        history.push(
-          `/signup?redirect=${encodeURIComponent(
-            location.pathname + '?' + location.search
-          )}`
-        );
-      } else if (
-        message.indexOf('Session token does not exist for this user') > -1
-      ) {
-        localStorage.removeItem(`${PREFIX}currentUserId`);
-        localStorage.removeItem(`${PREFIX}tokenId`);
-        localStorage.removeItem(`${PREFIX}googleProfileObj`);
-        googleProfileObjVar(undefined);
-        tokenIdVar(undefined);
-        currentUserIdVar(undefined);
+        push({
+          pathname: '/signup',
+          state: {
+            redirect: location,
+          },
+        });
       }
     },
   });
@@ -76,13 +69,12 @@ export default function Nav() {
           JSON.stringify(profileObj)
         );
       } else {
-        localStorage.removeItem(`${PREFIX}tokenId`);
-        localStorage.removeItem(`${PREFIX}googleProfileObj`);
+        deauthenticate();
         client.resetStore();
-        history.push('/');
+        push('/');
       }
     },
-    [client, history]
+    [client, push]
   );
 
   const onGoogleFailure = useCallback(({ error } = {}) => {
@@ -120,9 +112,11 @@ export default function Nav() {
               />
             )}
           </li>
-          <li className="nav__list-item">
-            <Button href="/">Main</Button>
-          </li>
+          {!isSignup && (
+            <li className="nav__list-item">
+              <Button href="/">Main</Button>
+            </li>
+          )}
           {currentUserId && (
             <li className="nav__list-item">
               <Button href="/profile">Profile</Button>

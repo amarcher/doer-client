@@ -8,6 +8,7 @@ import Category from './pages/Category';
 import Create from './pages/Create';
 import Profile from './pages/Profile';
 import Project from './pages/Project';
+import Login from './pages/Login';
 import Signup from './pages/Signup';
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/category/:categoryId" component={Category} />
         <Route path="/project/:projectId" component={Project} />
         <PrivateRoute path="/create" component={Create} />
+        <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
       </main>
     </Router>

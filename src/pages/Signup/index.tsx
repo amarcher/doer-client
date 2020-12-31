@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useMutation, useReactiveVar } from '@apollo/client';
 import { RouteComponentProps } from 'react-router';
-import { decode } from 'querystring';
 
 import usePageTitle from '../../hooks/usePageTitle';
 import Button from '../../components/Button';
@@ -18,7 +17,7 @@ import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 import { currentUserIdVar, googleProfileObjVar, tokenIdVar } from '../../cache';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../../constants';
 
-type Props = RouteComponentProps;
+type Props = RouteComponentProps<{}, any, { redirect?: Location }>;
 
 export interface ImageUploadInput {
   publicId?: string;
@@ -26,8 +25,10 @@ export interface ImageUploadInput {
   timeTaken?: number;
 }
 
-export default function Signup({ history, location: { search } }: Props) {
-  const { redirect = '%2F' } = decode(search?.substr(1));
+export default function Signup({
+  history: { push, replace },
+  location: { state },
+}: Props) {
   const currentUserId = useCurrentUserId();
   const googleProfileObj = useReactiveVar(googleProfileObjVar);
   const googleProfile = useMemo(
@@ -36,12 +37,12 @@ export default function Signup({ history, location: { search } }: Props) {
   );
 
   useEffect(() => {
-    if (currentUserId) {
-      history.push(decodeURIComponent(redirect as string));
-    } else if (!googleProfileObj) {
-      history.replace('/');
+    if (currentUserId && state?.redirect) {
+      push(state?.redirect);
+    } else if (currentUserId || !googleProfileObj) {
+      replace('/');
     }
-  }, [currentUserId, googleProfileObj, history, redirect]);
+  }, [currentUserId, googleProfileObj, push, replace, state?.redirect]);
 
   const [createUserInput, setCreateUserInput] = useState({
     firstName: googleProfile.givenName || '',
@@ -101,7 +102,7 @@ export default function Signup({ history, location: { search } }: Props) {
         tokenIdVar(`Bearer ${sessionToken}`);
         localStorage.setItem(`${PREFIX}currentUserId`, id);
         localStorage.setItem(`${PREFIX}tokenId`, `Bearer ${sessionToken}`);
-        history.push('/profile');
+        push('/profile');
       },
     }
   );

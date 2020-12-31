@@ -33,6 +33,7 @@ export default function PreloadedImage({
   width = '',
 }: Props) {
   const preloader = useRef(new Image());
+  preloader.current.referrerPolicy = 'no-referrer';
   preloader.current.src = src;
   const [loaded, setLoaded] = useState(preloader.current.complete);
 
@@ -47,10 +48,17 @@ export default function PreloadedImage({
   preloader.current.onload = onLoad;
 
   useEffect(() => {
+    const { current } = preloader;
     if (src) {
-      setLoaded(false);
-      preloader.current.src = src;
+      current.src = src;
+      setLoaded(current.complete);
     }
+
+    return () => {
+      if (current?.onload) {
+        current.onload = null;
+      }
+    };
   }, [src]);
 
   const containerStyle = useMemo(
@@ -97,6 +105,7 @@ export default function PreloadedImage({
           src={src}
           height={height}
           width={width}
+          referrerPolicy="no-referrer"
         />
         <div className="preloaded-image__cover" style={imgCoverStyle} />
       </div>

@@ -19,9 +19,10 @@ const PrivateRoute = ({ component: Component, ...rest }: RouteProps) => {
         ) : (
           <Redirect
             to={{
-              pathname: `/login?redirect=${encodeURIComponent(
-                props.location.pathname
-              )}`,
+              pathname: '/login',
+              state: {
+                redirect: props.location,
+              },
             }}
           />
         )

@@ -9,27 +9,76 @@ import {
   HttpLink,
   from,
 } from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
+import { RetryLink } from '@apollo/client/link/retry';
 
 import App from './App';
 import { cache, tokenIdVar, typeDefs } from './cache';
-import { LOCAL_STORAGE_PREFIX as PREFIX } from './constants';
+import { LOCAL_STORAGE_PREFIX as PREFIX, GRAPHQL_ENDPOINT } from './constants';
+import { deauthenticate } from './utils/auth';
 
 import './index.css';
 
+const local =
+  typeof window !== undefined && window.location.hostname === `localhost`;
+const dev = process.env.NODE_ENV === `development`;
+
 const httpLink = new HttpLink({
-  uri:
-    'https://capxun.com/graphql' ||
-    'http://localhost:4000/graphql' ||
-    'http://52.13.54.231:4000/graphql',
+  uri: local && dev ? GRAPHQL_ENDPOINT.DEV : GRAPHQL_ENDPOINT.PROD,
 });
 
-const authMiddleware = new ApolloLink((operation, forward) => {
+const errorLink = onError(
+  ({ graphQLErrors, networkError, operation, forward }) => {
+    if (graphQLErrors)
+      graphQLErrors.forEach(({ message, locations, path }) => {
+        console.log(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        );
+
+        if (
+          message.includes('Session token does not exist for this user') ||
+          message.includes('Token used too late') ||
+          message.includes('Wrong number of segments in token')
+        ) {
+          deauthenticate();
+
+          const oldHeaders = operation.getContext().headers;
+          operation.setContext({
+            headers: {
+              ...oldHeaders,
+              authorization: '',
+            },
+          });
+
+          return forward(operation);
+        }
+      });
+
+    if (networkError) {
+      console.log(`[Network error]: ${networkError}`);
+    }
+  }
+);
+
+const retryLink = new RetryLink({
+  delay: {
+    initial: 100,
+    max: 2000,
+    jitter: true,
+  },
+  attempts: {
+    max: 5,
+    retryIf: (error) => !!error,
+  },
+});
+
+const authLink = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
   operation.setContext(({ headers = {} }) => ({
     headers: {
       ...headers,
       authorization:
-        localStorage.getItem(`${PREFIX}tokenId`) || tokenIdVar() || '',
+        tokenIdVar() || localStorage.getItem(`${PREFIX}tokenId`) || '',
     },
   }));
 
@@ -45,9 +94,8 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
     'client-name': 'Doer [Web]',
     'client-version': '1.0.0',
   },
-  resolvers: {},
   typeDefs,
-  link: from([authMiddleware, httpLink]),
+  link: from([authLink, retryLink, errorLink, httpLink]),
   connectToDevTools: true,
 });
 

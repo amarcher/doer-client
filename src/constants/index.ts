@@ -16,3 +16,9 @@ export const GOOGLE = {
   CLIENT_ID:
     '265278411016-t8k5660som1regreqb8p2rrd2ctlee79.apps.googleusercontent.com',
 };
+
+export const GRAPHQL_ENDPOINT = {
+  PROD: 'https://capxun.com/graphql',
+  DEV: 'http://localhost:4000/graphql',
+  DEPRECATED_PROD: 'http://52.13.54.231:4000/graphql',
+};
