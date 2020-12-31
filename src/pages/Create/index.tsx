@@ -123,7 +123,7 @@ export default function Create({ history, location: { search } }: Props) {
         [publicId]: {
           hostedUrl:
             hostedUrl || prevImageUploadInputs[publicId]?.hostedUrl || '',
-          caption: caption || publicId,
+          caption,
           timeTaken: Date.now(),
         },
       }));
