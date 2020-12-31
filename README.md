@@ -1,4 +1,5 @@
 # doer-client
+
 Client for the Doer App
 
 ## Local Development
@@ -7,8 +8,7 @@ Client for the Doer App
 Start the doer-backend: `cd doer-backend && npm start`
 
 Clone this repository
-Start the doer-cleint: `cd doer-client && yarn start` 
-
+Start the doer-cleint: `cd doer-client && yarn start`
 
 ## Other Details
 
@@ -25,6 +25,10 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
+
+#### `yarn codegen`
+
+Introspects the queries that have been uploaded to the apollo registry to define queries and types. [More detail](https://www.apollographql.com/docs/devtools/cli/).
 
 #### `yarn test`
 
