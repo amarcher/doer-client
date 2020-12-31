@@ -5,11 +5,44 @@
   margin: 10px 0;
 }
 
-.Signup__google_thumbnail {
+.Signup__photo {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   flex: 0 0 auto;
   margin: 10px;
+}
+
+.Signup__form {
+  width: 300px;
+  margin: 10px auto;
+}
+
+.Signup__label {
+  display: flex;
+  margin: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.Signup__input {
+  flex: 1 1 auto;
+  width: 100%;
+  padding: 4px;
+}
+
+.Signup__label_text {
+  flex: 0 0 auto;
+  font-size: 0.7em;
+  margin-bottom: 1px;
+}
+
+.Signup__create_button {
+  margin: 20px;
+}
+
+.Signup__upload_thumbnail {
+  border-radius: 50%;
 }

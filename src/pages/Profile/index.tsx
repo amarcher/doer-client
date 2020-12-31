@@ -26,9 +26,7 @@ export default function Profile({
 
   usePageTitle(data?.user?.firstName || '');
 
-  const src =
-    data?.user?.profilePic?.hostedUrl ||
-    'https://embark.com/wp-content/uploads/2019/08/Derick-Yang.png';
+  const src = data?.user?.profilePic?.hostedUrl || '';
 
   return (
     <>
@@ -37,7 +35,12 @@ export default function Profile({
           <Title>{data?.user?.firstName}</Title>
 
           <div className="Profile__hero">
-            <PreloadedImage src={src} height={300} width={300} />
+            <PreloadedImage
+              src={src}
+              height={300}
+              width={300}
+              className="Profile__photo"
+            />
           </div>
         </>
       )}

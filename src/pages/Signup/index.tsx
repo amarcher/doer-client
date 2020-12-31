@@ -11,11 +11,11 @@ import CreateUser, {
   CreateUserResponse,
   User as CreateUserInput,
 } from '../../mutations/CreateUser';
-
-import './Signup.css';
 import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 import { currentUserIdVar, googleProfileObjVar, tokenIdVar } from '../../cache';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../../constants';
+
+import './Signup.css';
 
 type Props = RouteComponentProps<{}, any, { redirect?: Location }>;
 
@@ -136,10 +136,11 @@ export default function Signup({
     <form onSubmit={onSubmit}>
       <Title>Create Your Profile</Title>
 
-      <div className="Create__hero">
+      <div className="Signup__hero">
         <ImageUploader
           onPhotoUploaded={onPhotoUploaded}
           onPhotoRemoved={onPhotoRemoved}
+          thumbnailClassName="Signup__upload_thumbnail"
           images={images}
           height={280}
           width={280}
@@ -150,68 +151,75 @@ export default function Signup({
       {loading && 'Loading ...'}
       {error && `ERROR: ${error?.message}`}
 
-      <label className="Create__label">
-        Username:{' '}
-        <input
-          name="username"
-          type="text"
-          onChange={onChange}
-          value={createUserInput.username || ''}
-          placeholder="Username"
-          required
-        />
-      </label>
+      <div className="Signup__form">
+        <label className="Signup__label">
+          <span className="Signup__label_text">Username: </span>
+          <input
+            className="Signup__input"
+            name="username"
+            type="text"
+            onChange={onChange}
+            value={createUserInput.username || ''}
+            placeholder="Username"
+            required
+          />
+        </label>
 
-      <label className="Create__label">
-        First Name:{' '}
-        <input
-          name="firstName"
-          type="text"
-          onChange={onChange}
-          value={createUserInput.firstName || ''}
-          placeholder="First"
-          required
-        />
-      </label>
+        <label className="Signup__label">
+          <span className="Signup__label_text">First Name: </span>
+          <input
+            className="Signup__input"
+            name="firstName"
+            type="text"
+            onChange={onChange}
+            value={createUserInput.firstName || ''}
+            placeholder="First"
+            required
+          />
+        </label>
 
-      <label className="Create__label">
-        Last Name:{' '}
-        <input
-          name="lastName"
-          type="text"
-          onChange={onChange}
-          value={createUserInput.lastName || ''}
-          placeholder="Last"
-          required
-        />
-      </label>
+        <label className="Signup__label">
+          <span className="Signup__label_text">Last Name: </span>
+          <input
+            className="Signup__input"
+            name="lastName"
+            type="text"
+            onChange={onChange}
+            value={createUserInput.lastName || ''}
+            placeholder="Last"
+            required
+          />
+        </label>
 
-      <label className="Create__label">
-        Email:{' '}
-        <input
-          name="email"
-          type="text"
-          onChange={onChange}
-          value={createUserInput.email || ''}
-          placeholder="Email"
-          required
-        />
-      </label>
+        <label className="Signup__label">
+          <span className="Signup__label_text">Email: </span>
+          <input
+            className="Signup__input"
+            name="email"
+            type="text"
+            onChange={onChange}
+            value={createUserInput.email || ''}
+            placeholder="Email"
+            required
+          />
+        </label>
 
-      <label className="Create__label">
-        Bio:{' '}
-        <textarea
-          name="bio"
-          onChange={onChange}
-          value={createUserInput.bio || ''}
-          placeholder="How did you start doing?"
-          required
-        />
-      </label>
+        <label className="Signup__label">
+          <span className="Signup__label_text">Bio: </span>
+          <textarea
+            className="Signup__input"
+            name="bio"
+            onChange={onChange}
+            value={createUserInput.bio || ''}
+            placeholder="How did you start doing?"
+            required
+          />
+        </label>
 
-      <p>
-        <Button onPress={createUser}>Create</Button>
-      </p>
+        <div className="Signup__create_button">
+          <Button onPress={createUser}>Create</Button>
+        </div>
+      </div>
     </form>
   );
 }
