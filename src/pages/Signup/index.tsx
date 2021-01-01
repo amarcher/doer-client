@@ -6,11 +6,14 @@ import usePageTitle from '../../hooks/usePageTitle';
 import Button from '../../components/Button';
 import ImageUploader from '../../components/ImageUploader';
 import Title from '../../components/Title';
-import GetUser, { GetUserResponse } from '../../queries/GetUser';
-import CreateUser, {
-  CreateUserResponse,
-  User as CreateUserInput,
-} from '../../mutations/CreateUser';
+import GetUser from '../../queries/GetUser';
+import { GetUser as GetUserResponse } from '../../queries/__generated__/GetUser';
+import CreateUser from '../../mutations/CreateUser';
+import {
+  CreateUserInput,
+  ImageUploadInput,
+} from '../../../__generated__/globalTypes';
+import { CreateUser as CreateUserResponse } from '../../mutations/__generated__/CreateUser';
 import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 import { currentUserIdVar, googleProfileObjVar, tokenIdVar } from '../../cache';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../../constants';
@@ -19,11 +22,7 @@ import './Signup.css';
 
 type Props = RouteComponentProps<{}, any, { redirect?: Location }>;
 
-export interface ImageUploadInput {
-  publicId?: string;
-  hostedUrl?: string;
-  timeTaken?: number;
-}
+const emptyImageUploadInput = {} as { [photoId: string]: ImageUploadInput };
 
 export default function Signup({
   history: { push, replace },
@@ -52,14 +51,16 @@ export default function Signup({
     bio: '',
   } as CreateUserInput);
 
-  const [imageUploadInput, setImageUploadInput] = useState({
-    hostedUrl: googleProfile.imageUrl || '',
-    timeTaken: Date.now(),
-  } as ImageUploadInput);
-
-  const images = useMemo(() => ({ photo: { ...imageUploadInput } }), [
-    imageUploadInput,
-  ]);
+  const [imageUploadInputs, setImageUploadInputs] = useState(
+    googleProfile.imageUrl
+      ? ({
+          googlePhoto: {
+            hostedUrl: googleProfile.imageUrl,
+            timeTaken: Date.now(),
+          },
+        } as { [photo: string]: ImageUploadInput })
+      : emptyImageUploadInput
+  );
 
   const onChange = useCallback(
     ({ target }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -78,7 +79,7 @@ export default function Signup({
     {
       variables: {
         createUserInput,
-        imageUploadInput,
+        imageUploadInput: Object.values(imageUploadInputs)[0],
       },
 
       update: (cache, { data }) => {
@@ -92,12 +93,10 @@ export default function Signup({
         }
       },
 
-      onCompleted({
-        createUser: {
-          user: { id },
-          sessionToken,
-        },
-      }) {
+      onCompleted({ createUser }) {
+        const id = createUser?.user?.id || '';
+        const sessionToken = createUser?.sessionToken;
+
         currentUserIdVar(id);
         tokenIdVar(`Bearer ${sessionToken}`);
         localStorage.setItem(`${PREFIX}currentUserId`, id);
@@ -117,17 +116,19 @@ export default function Signup({
 
   const onPhotoUploaded = useCallback(
     ({ publicId, url: hostedUrl }: { publicId: string; url?: string }) => {
-      setImageUploadInput((prevImageUploadInput?: ImageUploadInput) => ({
-        ...prevImageUploadInput,
-        hostedUrl: hostedUrl || prevImageUploadInput?.hostedUrl || '',
-        timeTaken: Date.now(),
+      setImageUploadInputs((prevImageUploadInputs) => ({
+        ...prevImageUploadInputs,
+        [publicId]: {
+          hostedUrl: hostedUrl || '',
+          timeTaken: Date.now(),
+        },
       }));
     },
     []
   );
 
-  const onPhotoRemoved = useCallback((removedPublicId) => {
-    setImageUploadInput({});
+  const onPhotoRemoved = useCallback(() => {
+    setImageUploadInputs(emptyImageUploadInput);
   }, []);
 
   usePageTitle('Create Your Profile');
@@ -141,7 +142,7 @@ export default function Signup({
           onPhotoUploaded={onPhotoUploaded}
           onPhotoRemoved={onPhotoRemoved}
           thumbnailClassName="Signup__upload_thumbnail"
-          images={images}
+          images={imageUploadInputs}
           height={280}
           width={280}
           maxFiles={1}

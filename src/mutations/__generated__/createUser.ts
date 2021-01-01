@@ -6,20 +6,20 @@
 import { CreateUserInput, ImageUploadInput } from "./../../../__generated__/globalTypes";
 
 // ====================================================
-// GraphQL mutation operation: createUser
+// GraphQL mutation operation: CreateUser
 // ====================================================
 
-export interface createUser_createUser_user_profilePic {
+export interface CreateUser_createUser_user_profilePic {
   __typename: "Image";
   hostedUrl: string;
 }
 
-export interface createUser_createUser_user_followers_profilePic {
+export interface CreateUser_createUser_user_followers_profilePic {
   __typename: "Image";
   hostedUrl: string;
 }
 
-export interface createUser_createUser_user_followers {
+export interface CreateUser_createUser_user_followers {
   __typename: "User";
   firstName: string | null;
   lastName: string | null;
@@ -27,15 +27,15 @@ export interface createUser_createUser_user_followers {
   email: string;
   bio: string | null;
   id: string;
-  profilePic: createUser_createUser_user_followers_profilePic | null;
+  profilePic: CreateUser_createUser_user_followers_profilePic | null;
 }
 
-export interface createUser_createUser_user_following_profilePic {
+export interface CreateUser_createUser_user_following_profilePic {
   __typename: "Image";
   hostedUrl: string;
 }
 
-export interface createUser_createUser_user_following {
+export interface CreateUser_createUser_user_following {
   __typename: "User";
   firstName: string | null;
   lastName: string | null;
@@ -43,10 +43,10 @@ export interface createUser_createUser_user_following {
   email: string;
   bio: string | null;
   id: string;
-  profilePic: createUser_createUser_user_following_profilePic | null;
+  profilePic: CreateUser_createUser_user_following_profilePic | null;
 }
 
-export interface createUser_createUser_user {
+export interface CreateUser_createUser_user {
   __typename: "User";
   firstName: string | null;
   lastName: string | null;
@@ -54,25 +54,25 @@ export interface createUser_createUser_user {
   email: string;
   bio: string | null;
   id: string;
-  profilePic: createUser_createUser_user_profilePic | null;
-  followers: (createUser_createUser_user_followers | null)[];
-  following: (createUser_createUser_user_following | null)[];
+  profilePic: CreateUser_createUser_user_profilePic | null;
+  followers: (CreateUser_createUser_user_followers | null)[];
+  following: (CreateUser_createUser_user_following | null)[];
 }
 
-export interface createUser_createUser {
+export interface CreateUser_createUser {
   __typename: "LoginResponse";
-  user: createUser_createUser_user;
+  user: CreateUser_createUser_user;
   sessionToken: string | null;
 }
 
-export interface createUser {
+export interface CreateUser {
   /**
    * Create a user
    */
-  createUser: createUser_createUser | null;
+  createUser: CreateUser_createUser | null;
 }
 
-export interface createUserVariables {
+export interface CreateUserVariables {
   createUserInput: CreateUserInput;
   imageUploadInput?: ImageUploadInput | null;
 }

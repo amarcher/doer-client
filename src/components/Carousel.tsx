@@ -33,14 +33,16 @@ function Carousel({ children, height = 300, width = 300 }: CarouselProps) {
   );
 }
 
+export interface CarouselImage {
+  caption?: string | null;
+  src: string;
+  key: string | number;
+}
+
 type CarouselContainerProps = {
   height?: number;
   width?: number;
-  images: {
-    caption?: string;
-    src: string;
-    key: string | number;
-  }[];
+  images: CarouselImage[];
 };
 
 export default function CarouselContainer({

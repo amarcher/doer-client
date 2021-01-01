@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDropzone, FileRejection, FileError } from 'react-dropzone';
 import {
   uploadPhoto,
@@ -8,7 +8,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { CLOUDINARY } from '../constants';
 import ImageUploadThumbnail from './ImageUploadThumbnail';
-import { ImageUploadInput } from '../pages/Signup';
+import { ImageUploadInput } from '../../__generated__/globalTypes';
 
 import './ImageUploader.css';
 
@@ -26,7 +26,7 @@ interface Props {
   }) => void;
   images?: Images;
   thumbnailClassName?: string;
-  onPhotoRemoved?: (publicId: string) => void;
+  onPhotoRemoved?: (publicId?: string) => void;
   height?: number;
   maxFiles?: number;
   width?: number;
@@ -44,8 +44,9 @@ function getFileErrorMessage(code: FileError['code']) {
 }
 
 function formatImagesAsOnPhotoUploadProgressInputs(images?: Images) {
-  if (!images || !Object.keys(images).length)
+  if (!images || Object.keys(images).length === 0) {
     return {} as { [photoId: string]: OnPhotoUploadProgressInputs };
+  }
 
   return Object.keys(images).reduce((progressInputs, photoId) => {
     const image = images[photoId];
@@ -84,19 +85,11 @@ export default function ImageUploader({
   images,
 }: Props) {
   const [photos, setPhotos] = useState(
-    {} as { [photoId: string]: OnPhotoUploadProgressInputs }
+    formatImagesAsOnPhotoUploadProgressInputs(images)
   );
   const [captions, setCaptions] = useState({} as { [photoId: string]: string });
   const [errors, setErrors] = useState(
     {} as { [photoId: string]: FileRejection }
-  );
-
-  const dedupedPhotos = useMemo(
-    () => ({
-      ...photos,
-      ...formatImagesAsOnPhotoUploadProgressInputs(images),
-    }),
-    [photos, images]
   );
 
   const onPhotoUploadProgress = useCallback(
@@ -150,7 +143,7 @@ export default function ImageUploader({
         deletePhoto(deleteToken);
       }
 
-      if (onPhotoRemoved && removedPublicId) onPhotoRemoved(removedPublicId);
+      if (onPhotoRemoved) onPhotoRemoved(removedPublicId);
       setErrors(remainingErrors);
       setPhotos(remainingPhotos);
       setCaptions(remainingCaptions);
@@ -189,7 +182,7 @@ export default function ImageUploader({
     [onPhotoUploadProgress, onPhotoUploadError, tags]
   );
 
-  const disabled = !!maxFiles && Object.keys(dedupedPhotos).length >= maxFiles;
+  const disabled = !!maxFiles && Object.keys(photos).length >= maxFiles;
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -210,8 +203,9 @@ export default function ImageUploader({
           </p>
         )}
         <div className="ImageUploader__thumbnails">
-          {Object.values(dedupedPhotos).map(
-            ({ photoId, percent, response }) => (
+          {Object.values(photos).map(({ photoId, percent, response }) => {
+            console.log({ photoId, percent, response });
+            return (
               <div key={photoId} className="ImageUploader__thumbnail">
                 <ImageUploadThumbnail
                   id={photoId}
@@ -234,8 +228,8 @@ export default function ImageUploader({
                   />
                 )}
               </div>
-            )
-          )}
+            );
+          })}
           {Object.keys(errors).map((photoId) => (
             <div key={photoId} className="ImageUploader__thumbnail">
               <ImageUploadThumbnail

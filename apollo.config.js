@@ -1,5 +1,5 @@
 module.exports = {
   client: {
-    service: 'Doer-rf069o',
+    service: 'doer-graph-uo7qcs',
   },
 };

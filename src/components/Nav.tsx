@@ -7,9 +7,11 @@ import Button from './Button';
 import { GOOGLE } from '../constants';
 import { currentUserIdVar, googleProfileObjVar, tokenIdVar } from '../cache';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
-import Login, { LoginResponse } from '../queries/Login';
+import Login from '../queries/Login';
+import { Login as LoginResponse } from '../queries/__generated__/Login';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../constants';
-import GetUser, { GetUserResponse } from '../queries/GetUser';
+import GetUser from '../queries/GetUser';
+import { GetUser as GetUserResponse } from '../queries/__generated__/GetUser';
 import { deauthenticate } from '../utils/auth';
 
 import './Nav.css';
@@ -25,7 +27,9 @@ export default function Nav() {
   const { client } = useQuery<LoginResponse>(Login, {
     skip: !tokenId || !googleProfileObj || !!currentUserId,
 
-    onCompleted: ({ login: { user, sessionToken } }) => {
+    onCompleted: ({ login }) => {
+      const user = login?.user;
+      const sessionToken = login?.sessionToken;
       if (tokenId && user && !currentUserId) {
         currentUserIdVar(user.id);
         tokenIdVar(`Bearer ${sessionToken}`);
