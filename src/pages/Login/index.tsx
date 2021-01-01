@@ -5,12 +5,6 @@ import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 
 type Props = RouteComponentProps<{}, any, { redirect?: Location }>;
 
-export interface ImageUploadInput {
-  publicId?: string;
-  hostedUrl?: string;
-  timeTaken?: number;
-}
-
 export default function Signup({
   history: { push, replace },
   location: { state },

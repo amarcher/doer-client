@@ -7,29 +7,25 @@ import usePageTitle from '../../hooks/usePageTitle';
 import Button from '../../components/Button';
 import ImageUploader from '../../components/ImageUploader';
 import Title from '../../components/Title';
-import CreateProjectExecution, {
-  CreateProjectExecutionResult,
-} from '../../mutations/CreateProjectExecution';
-import GetProject, { GetProjectResponse } from '../../queries/GetProject';
+import CreateProjectExecution from '../../mutations/CreateProjectExecution';
+import { CreateProjectExecution as CreateProjectExecutionResult } from '../../mutations/__generated__/CreateProjectExecution';
+import GetProject from '../../queries/GetProject';
+import {
+  GetProject as GetProjectResponse,
+  GetProject_project,
+} from '../../queries/__generated__/GetProject';
+import {
+  ImageUploadInput,
+  CreateProjectExecutionInput,
+} from '../../../__generated__/globalTypes';
 
 import './Create.css';
 import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 
 type Props = RouteComponentProps;
-interface ProjecteExecutionInput {
-  projectId: number;
-  title: string;
-  startedAt: number;
-}
-interface ImageUploadInput {
-  hostedUrl: string;
-  caption?: string;
-  timeTaken: number;
-}
 
 export default function Create({ history, location: { search } }: Props) {
-  const { projectId: projectIdStr } = decode(search?.substr(1));
-  const projectId = parseInt(projectIdStr as string, 10);
+  const { projectId } = decode(search?.substr(1));
   const currentUserId = useCurrentUserId();
 
   const { data } = useQuery<GetProjectResponse>(GetProject, {
@@ -39,10 +35,11 @@ export default function Create({ history, location: { search } }: Props) {
   });
 
   const [projectExecutionInput, setProjectExecutionInput] = useState({
+    userId: currentUserId,
     projectId,
     title: '',
     startedAt: Date.now(),
-  } as ProjecteExecutionInput);
+  } as CreateProjectExecutionInput);
   const [imageUploadInputs, setImageUploadInputs] = useState(
     {} as { [publicId: string]: ImageUploadInput }
   );
@@ -84,12 +81,12 @@ export default function Create({ history, location: { search } }: Props) {
           query: GetProject,
           data: {
             project: {
-              ...existingProject.project,
+              ...existingProject?.project,
               projectExecutions: [
-                ...existingProject.project.projectExecutions,
+                ...(existingProject?.project?.projectExecutions || []),
                 newProjectExecution,
               ],
-            },
+            } as GetProject_project,
           },
         });
       }
@@ -154,7 +151,7 @@ export default function Create({ history, location: { search } }: Props) {
           height={100}
           width={100}
           withCaption
-          tags={data?.project.name ? [data?.project.name] : undefined}
+          tags={data?.project?.name ? [data.project.name] : undefined}
         />
       </div>
 
@@ -167,7 +164,7 @@ export default function Create({ history, location: { search } }: Props) {
           name="title"
           type="text"
           onChange={onChange}
-          value={projectExecutionInput.title}
+          value={projectExecutionInput?.title || ''}
           placeholder="My Project Execution"
           required
         />

@@ -5,7 +5,8 @@ import { RouteComponentProps } from 'react-router';
 import PreloadedImage from '../../components/PreloadedImage';
 import Title from '../../components/Title';
 import usePageTitle from '../../hooks/usePageTitle';
-import GetUser, { GetUserResponse } from '../../queries/GetUser';
+import GetUser from '../../queries/GetUser';
+import { GetUser as GetUserResponse } from '../../queries/__generated__/GetUser';
 
 import './Profile.css';
 import { useCurrentUserId } from '../../queries/GetCurrentUserId';

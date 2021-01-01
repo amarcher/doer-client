@@ -6,9 +6,8 @@ import { APP_NAME } from '../../constants';
 import PreloadedImage from '../../components/PreloadedImage';
 import Button from '../../components/Button';
 import Title from '../../components/Title';
-import GetCategories, {
-  GetCategoriesResponse,
-} from '../../queries/GetCategories';
+import GetCategories from '../../queries/GetCategories';
+import { GetCategories as GetCategoriesResponse } from '../../queries/__generated__/GetCategories';
 import logo from '../../logo2.svg';
 
 import './Main.css';
@@ -32,13 +31,16 @@ export default function Main() {
       {error && <p>ERROR: {error?.message}</p>}
       {data?.categories && <p>Choose a category:</p>}
       {data?.categories &&
-        data.categories.map(({ name, id, projects }) => (
-          <p key={id}>
-            <Button href={`/category/${id}`}>
-              {name} ({projects.length})
-            </Button>
-          </p>
-        ))}
+        data.categories.map((category) => {
+          const { name, id, projects } = category || {};
+          return (
+            <p key={id}>
+              <Button href={`/category/${id}`}>
+                {name} ({projects?.length})
+              </Button>
+            </p>
+          );
+        })}
     </>
   );
 }
