@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone, FileRejection, FileError } from 'react-dropzone';
 import {
   uploadPhoto,
@@ -12,7 +12,7 @@ import { ImageUploadInput } from '../../__generated__/globalTypes';
 
 import './ImageUploader.css';
 
-type Images = Record<string, ImageUploadInput>;
+export type Images = Record<string, ImageUploadInput>;
 
 interface Props {
   onPhotoUploaded: ({
@@ -41,6 +41,18 @@ function getFileErrorMessage(code: FileError['code']) {
     'too-many-files': 'Too many files',
     'file-invalid-type': 'Invalid file type',
   }[code];
+}
+
+function formatImagesAsCaptions(images?: Images) {
+  if (!images || Object.keys(images).length === 0) {
+    return {} as { [photoId: string]: string };
+  }
+
+  return Object.keys(images).reduce((captions, photoId) => {
+    const caption = images[photoId].caption || '';
+    captions[photoId] = caption;
+    return captions;
+  }, {} as { [photoId: string]: string });
 }
 
 function formatImagesAsOnPhotoUploadProgressInputs(images?: Images) {
@@ -87,7 +99,15 @@ export default function ImageUploader({
   const [photos, setPhotos] = useState(
     formatImagesAsOnPhotoUploadProgressInputs(images)
   );
-  const [captions, setCaptions] = useState({} as { [photoId: string]: string });
+  useEffect(() => {
+    setPhotos(formatImagesAsOnPhotoUploadProgressInputs(images));
+  }, [images]);
+
+  const [captions, setCaptions] = useState(formatImagesAsCaptions(images));
+  useEffect(() => {
+    setCaptions(formatImagesAsCaptions(images));
+  }, [images]);
+
   const [errors, setErrors] = useState(
     {} as { [photoId: string]: FileRejection }
   );
@@ -204,7 +224,6 @@ export default function ImageUploader({
         )}
         <div className="ImageUploader__thumbnails">
           {Object.values(photos).map(({ photoId, percent, response }) => {
-            console.log({ photoId, percent, response });
             return (
               <div key={photoId} className="ImageUploader__thumbnail">
                 <ImageUploadThumbnail
