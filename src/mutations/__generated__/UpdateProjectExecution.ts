@@ -19,12 +19,20 @@ export interface UpdateProjectExecution_updateProjectExecution_images_image {
   hostedUrl: string;
   id: string;
   timeTaken: any | null;
+  imageTags: (string | null)[] | null;
+  publicId: string | null;
 }
 
 export interface UpdateProjectExecution_updateProjectExecution_images {
   __typename: "ProjectExecutionImage";
   caption: string | null;
+  order: number | null;
   image: UpdateProjectExecution_updateProjectExecution_images_image;
+}
+
+export interface UpdateProjectExecution_updateProjectExecution_project {
+  __typename: "Project";
+  name: string;
 }
 
 export interface UpdateProjectExecution_updateProjectExecution {
@@ -36,6 +44,7 @@ export interface UpdateProjectExecution_updateProjectExecution {
   user: UpdateProjectExecution_updateProjectExecution_user | null;
   images: (UpdateProjectExecution_updateProjectExecution_images | null)[];
   projectId: string;
+  project: UpdateProjectExecution_updateProjectExecution_project | null;
 }
 
 export interface UpdateProjectExecution {

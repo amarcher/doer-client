@@ -108,13 +108,14 @@ export default function Create({ history, location: { search } }: Props) {
   const onPhotoUploaded = useCallback(
     ({
       publicId,
-      url: hostedUrl,
+      hostedUrl,
       caption,
-    }: {
-      publicId: string;
-      url?: string;
-      caption?: string;
-    }) => {
+      imageTags,
+    }: Partial<ImageUploadInput>) => {
+      if (!publicId) {
+        return;
+      }
+
       setImageUploadInputs((prevImageUploadInputs) => ({
         ...prevImageUploadInputs,
         [publicId]: {
@@ -122,6 +123,7 @@ export default function Create({ history, location: { search } }: Props) {
             hostedUrl || prevImageUploadInputs[publicId]?.hostedUrl || '',
           caption,
           timeTaken: Date.now(),
+          imageTags,
         },
       }));
     },

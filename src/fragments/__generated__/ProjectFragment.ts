@@ -19,12 +19,20 @@ export interface ProjectFragment_projectExecutions_images_image {
   hostedUrl: string;
   id: string;
   timeTaken: any | null;
+  imageTags: (string | null)[] | null;
+  publicId: string | null;
 }
 
 export interface ProjectFragment_projectExecutions_images {
   __typename: "ProjectExecutionImage";
   caption: string | null;
+  order: number | null;
   image: ProjectFragment_projectExecutions_images_image;
+}
+
+export interface ProjectFragment_projectExecutions_project {
+  __typename: "Project";
+  name: string;
 }
 
 export interface ProjectFragment_projectExecutions {
@@ -36,6 +44,7 @@ export interface ProjectFragment_projectExecutions {
   user: ProjectFragment_projectExecutions_user | null;
   images: (ProjectFragment_projectExecutions_images | null)[];
   projectId: string;
+  project: ProjectFragment_projectExecutions_project | null;
 }
 
 export interface ProjectFragment {

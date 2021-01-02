@@ -25,7 +25,7 @@
   -o-background-size: cover;
   background-position: center center;
   opacity: 1;
-  top: 0;
+  top: -1px;
   right: 0;
   bottom: 0;
   left: 0;

@@ -13,12 +13,18 @@ export default gql`
     }
     images {
       caption
+      order
       image {
         hostedUrl
         id
         timeTaken
+        imageTags
+        publicId
       }
     }
     projectId
+    project {
+      name
+    }
   }
 `;

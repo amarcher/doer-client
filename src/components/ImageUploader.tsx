@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { useDropzone, FileRejection, FileError } from 'react-dropzone';
 import {
   uploadPhoto,
@@ -15,16 +15,10 @@ import './ImageUploader.css';
 export type Images = Record<string, ImageUploadInput>;
 
 interface Props {
-  onPhotoUploaded: ({
-    url,
-    publicId,
-    caption,
-  }: {
-    caption?: string;
-    url?: string;
-    publicId: string;
-  }) => void;
+  onPhotoUploaded: (imageUploadInput: Partial<ImageUploadInput>) => void;
   images?: Images;
+  getImageOrder?: (publicId: string) => number;
+  imageOrder?: string[];
   thumbnailClassName?: string;
   onPhotoRemoved?: (publicId?: string) => void;
   height?: number;
@@ -95,6 +89,7 @@ export default function ImageUploader({
   maxFiles,
   tags,
   images,
+  getImageOrder,
 }: Props) {
   const [photos, setPhotos] = useState(
     formatImagesAsOnPhotoUploadProgressInputs(images)
@@ -132,7 +127,10 @@ export default function ImageUploader({
         const {
           body: { url, secure_url, public_id: publicId },
         } = response;
-        onPhotoUploaded({ publicId, url: secure_url || url });
+        onPhotoUploaded({
+          publicId,
+          hostedUrl: secure_url || url,
+        });
       }
     },
     [onPhotoUploaded]
@@ -211,6 +209,14 @@ export default function ImageUploader({
     disabled,
   });
 
+  const sortedPhotos = useMemo(() => {
+    return getImageOrder
+      ? Object.values(photos).sort(
+          (a, b) => getImageOrder(a.photoId) - getImageOrder(b.photoId)
+        )
+      : Object.values(photos);
+  }, [getImageOrder, photos]);
+
   return (
     <div>
       <div {...getRootProps()} className="ImageUploader__root">
@@ -223,7 +229,7 @@ export default function ImageUploader({
           </p>
         )}
         <div className="ImageUploader__thumbnails">
-          {Object.values(photos).map(({ photoId, percent, response }) => {
+          {sortedPhotos.map(({ photoId, percent, response }) => {
             return (
               <div key={photoId} className="ImageUploader__thumbnail">
                 <ImageUploadThumbnail

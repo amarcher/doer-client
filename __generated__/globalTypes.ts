@@ -29,6 +29,8 @@ export interface ImageUploadInput {
   hostedUrl: string;
   caption?: string | null;
   timeTaken: any;
+  publicId?: string | null;
+  imageTags?: (string | null)[] | null;
 }
 
 //==============================================================

@@ -13,6 +13,7 @@ import {
   GetProjectExecution as GetProjectExecutionResponse,
   GetProjectExecution_projectExecution_images,
 } from '../../queries/__generated__/GetProjectExecution';
+import { ImageUploadInput } from '../../../__generated__/globalTypes';
 
 import './Edit.css';
 
@@ -28,16 +29,30 @@ function getImageUploadInputsFromImages(
   return images?.reduce((imageUploadInputs: Images, image) => {
     if (image) {
       imageUploadInputs[image.image.id] = {
-        hostedUrl: image.image.hostedUrl,
+        ...image.image,
         caption: image.caption,
-        timeTaken: Date.now(),
       };
     }
     return imageUploadInputs;
   }, {} as Images);
 }
 
-export default function Edit({ history, location: { search } }: Props) {
+function getImageUploadInputOrderFromImages(
+  images?: (GetProjectExecution_projectExecution_images | null)[]
+) {
+  if (!images) {
+    return {};
+  }
+
+  return images.reduce((imageUploadInputOrder, image) => {
+    if (image) {
+      imageUploadInputOrder[image.image.id] = image.order || 0;
+    }
+    return imageUploadInputOrder;
+  }, {} as { [id: string]: number });
+}
+
+export default function Edit({ location: { search } }: Props) {
   const { projectExecutionId } = decode(search?.substr(1));
 
   const { data } = useQuery<GetProjectExecutionResponse>(GetProjectExecution, {
@@ -71,6 +86,15 @@ export default function Edit({ history, location: { search } }: Props) {
     );
   }, [data?.projectExecution?.images]);
 
+  const [imageUploadInputOrder, setImageUploadInputOrder] = useState(
+    getImageUploadInputOrderFromImages(data?.projectExecution?.images)
+  );
+  useEffect(() => {
+    setImageUploadInputOrder(
+      getImageUploadInputOrderFromImages(data?.projectExecution?.images)
+    );
+  }, [data?.projectExecution?.images]);
+
   const onChange = useCallback(
     ({ target }: React.ChangeEvent<HTMLInputElement>) => {
       if (target && target.name) {
@@ -101,15 +125,11 @@ export default function Edit({ history, location: { search } }: Props) {
   );
 
   const onPhotoUploaded = useCallback(
-    ({
-      publicId,
-      url: hostedUrl,
-      caption,
-    }: {
-      publicId: string;
-      url?: string;
-      caption?: string;
-    }) => {
+    ({ publicId, hostedUrl, caption }: Partial<ImageUploadInput>) => {
+      if (!publicId) {
+        return;
+      }
+
       setImageUploadInputs((prevImageUploadInputs) => ({
         ...prevImageUploadInputs,
         [publicId]: {
@@ -121,6 +141,13 @@ export default function Edit({ history, location: { search } }: Props) {
       }));
     },
     []
+  );
+
+  const getImageOrder = useCallback(
+    (publicId: string) => {
+      return imageUploadInputOrder[publicId] || 0;
+    },
+    [imageUploadInputOrder]
   );
 
   const onPhotoRemoved = useCallback((removedPublicId) => {
@@ -154,7 +181,12 @@ export default function Edit({ history, location: { search } }: Props) {
           width={100}
           withCaption
           images={imageUploadInputs}
-          // tags={} // TODO: get tags
+          getImageOrder={getImageOrder}
+          tags={
+            data?.projectExecution?.project?.name
+              ? [data?.projectExecution?.project?.name]
+              : undefined
+          }
         />
       </div>
 
