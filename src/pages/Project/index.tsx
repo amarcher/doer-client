@@ -50,6 +50,7 @@ export default function Project({
   });
 
   usePageTitle(data?.project?.name);
+
   const currentUserId = useCurrentUserId();
   const projectExecutions = data?.project?.projectExecutions;
 
@@ -64,6 +65,12 @@ export default function Project({
             <div className="Project__title">
               "{title}" by{' '}
               {<Button href={`/profile/${user?.id}`}>{user?.firstName}</Button>}
+              {user?.id === currentUserId && (
+                <div className="Project__edit_link">
+                  (<Button href={`/edit?projectExecutionId=${id}`}>Edit</Button>
+                  )
+                </div>
+              )}
             </div>
             {images && <Carousel images={getImagesForCarousel(images)} />}
           </div>

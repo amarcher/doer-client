@@ -20,3 +20,8 @@
 .Project__create_button {
   margin: 20px;
 }
+
+.Project__edit_link {
+  display: inline-block;
+  margin-left: 3px;
+}

@@ -35,4 +35,5 @@ export interface ProjectExecutionFragment {
   completedAt: any | null;
   user: ProjectExecutionFragment_user | null;
   images: (ProjectExecutionFragment_images | null)[];
+  projectId: string;
 }

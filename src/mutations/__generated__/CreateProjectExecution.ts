@@ -37,6 +37,7 @@ export interface CreateProjectExecution_createProjectExecution {
   completedAt: any | null;
   user: CreateProjectExecution_createProjectExecution_user | null;
   images: (CreateProjectExecution_createProjectExecution_images | null)[];
+  projectId: string;
 }
 
 export interface CreateProjectExecution {

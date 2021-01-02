@@ -35,6 +35,7 @@ export interface GetProject_project_projectExecutions {
   completedAt: any | null;
   user: GetProject_project_projectExecutions_user | null;
   images: (GetProject_project_projectExecutions_images | null)[];
+  projectId: string;
 }
 
 export interface GetProject_project {
