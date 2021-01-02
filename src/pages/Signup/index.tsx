@@ -115,7 +115,11 @@ export default function Signup({
   );
 
   const onPhotoUploaded = useCallback(
-    ({ publicId, url: hostedUrl }: { publicId: string; url?: string }) => {
+    ({ publicId, hostedUrl }: Partial<ImageUploadInput>) => {
+      if (!publicId) {
+        return;
+      }
+
       setImageUploadInputs((prevImageUploadInputs) => ({
         ...prevImageUploadInputs,
         [publicId]: {

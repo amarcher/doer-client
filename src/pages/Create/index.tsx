@@ -56,6 +56,17 @@ export default function Create({ history, location: { search } }: Props) {
     []
   );
 
+  const [imageUploadInputOrder, setImageUploadInputOrder] = useState(
+    {} as { [id: string]: number }
+  );
+
+  const getImageOrder = useCallback(
+    (publicId?: string | null) => {
+      return publicId ? imageUploadInputOrder[publicId] : 0;
+    },
+    [imageUploadInputOrder]
+  );
+
   const [
     createProjectExecution,
     { error, loading },
@@ -66,7 +77,9 @@ export default function Create({ history, location: { search } }: Props) {
         userId: currentUserId,
         startedAt: Date.now(),
       },
-      imageUploadInputs: Object.values(imageUploadInputs),
+      imageUploadInputs: Object.values(imageUploadInputs).sort(
+        (a, b) => getImageOrder(a.publicId) - getImageOrder(b.publicId)
+      ),
     },
 
     update: (cache, { data }) => {
@@ -108,13 +121,14 @@ export default function Create({ history, location: { search } }: Props) {
   const onPhotoUploaded = useCallback(
     ({
       publicId,
-      url: hostedUrl,
+      hostedUrl,
       caption,
-    }: {
-      publicId: string;
-      url?: string;
-      caption?: string;
-    }) => {
+      imageTags,
+    }: Partial<ImageUploadInput>) => {
+      if (!publicId) {
+        return;
+      }
+
       setImageUploadInputs((prevImageUploadInputs) => ({
         ...prevImageUploadInputs,
         [publicId]: {
@@ -122,8 +136,21 @@ export default function Create({ history, location: { search } }: Props) {
             hostedUrl || prevImageUploadInputs[publicId]?.hostedUrl || '',
           caption,
           timeTaken: Date.now(),
+          imageTags,
+          publicId,
         },
       }));
+
+      setImageUploadInputOrder((prevImageUploadInputOrder) => {
+        if (prevImageUploadInputOrder[publicId] != null) {
+          return prevImageUploadInputOrder;
+        }
+
+        return {
+          ...prevImageUploadInputOrder,
+          [publicId]: Object.keys(prevImageUploadInputOrder).length,
+        };
+      });
     },
     []
   );
@@ -151,6 +178,7 @@ export default function Create({ history, location: { search } }: Props) {
           height={100}
           width={100}
           withCaption
+          getImageOrder={getImageOrder}
           tags={data?.project?.name ? [data.project.name] : undefined}
         />
       </div>
