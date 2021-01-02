@@ -124,6 +124,7 @@ export default function Create({ history, location: { search } }: Props) {
           caption,
           timeTaken: Date.now(),
           imageTags,
+          publicId,
         },
       }));
     },
