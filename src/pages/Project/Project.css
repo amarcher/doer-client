@@ -25,3 +25,8 @@
   display: inline-block;
   margin-left: 3px;
 }
+
+.Project__link,
+.Project__link:hover {
+  text-decoration: none;
+}
