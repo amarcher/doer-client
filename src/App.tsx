@@ -9,6 +9,7 @@ import Create from './pages/Create';
 import Edit from './pages/Edit';
 import Profile from './pages/Profile';
 import Project from './pages/Project';
+import Attempt from './pages/Attempt';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/profile/:id" component={Profile} />
         <Route path="/category/:categoryId" component={Category} />
         <Route path="/project/:projectId" component={Project} />
+        <Route path="/attempt/:projectExecutionId" component={Attempt} />
         <PrivateRoute path="/create" component={Create} />
         <PrivateRoute path="/edit" component={Edit} />
         <Route path="/login" component={Login} />
