@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import { RouteComponentProps } from 'react-router';
 
 import PreloadedImage from '../../components/PreloadedImage';
+import FollowButton from '../../components/FollowButton';
 import Button from '../../components/Button';
 import Title from '../../components/Title';
 import usePageTitle from '../../hooks/usePageTitle';
@@ -53,12 +54,16 @@ export default function Profile({
       <p>{data?.user?.lastName || null}</p>
       <p>{data?.user?.bio || null}</p>
       <p>{data?.user?.username || null}</p>
+      <p>{data?.user?.followers?.length || null} Followers</p>
+      <p>{data?.user?.following?.length || null} Following</p>
 
       {data?.user?.id === currentUserId && (
         <div>
           <Button href="/profile/edit">Edit</Button>
         </div>
       )}
+
+      {data?.user?.id !== currentUserId && <FollowButton user={data?.user} />}
     </>
   );
 }
