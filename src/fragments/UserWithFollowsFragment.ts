@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import PostFragment from './PostFragment';
 import UserFragment from './UserFragment';
 
 export default gql`
@@ -10,10 +11,7 @@ export default gql`
     bio
     id
     profilePic {
-      id
-      hostedUrl
-      timeTaken
-      publicId
+      ...ImageFragment
     }
     followers {
       ...UserFragment
@@ -21,6 +19,18 @@ export default gql`
     following {
       ...UserFragment
     }
+    projectMasteries {
+      projectId
+      masteryLevel
+    }
+    categoryMasteries {
+      categoryId
+      masteryLevel
+    }
+    posts {
+      ...PostFragment
+    }
   }
   ${UserFragment}
+  ${PostFragment}
 `;
