@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useMutation } from '@apollo/client';
 import { UserWithFollowsFragment } from '../fragments/__generated__/UserWithFollowsFragment';
+import GetUser from '../queries/GetUser';
 import FollowUser from '../mutations/FollowUser';
 import UnfollowUser from '../mutations/UnfollowUser';
 import { FollowUser as FollowUserResponse } from '../mutations/__generated__/FollowUser';
@@ -27,6 +28,8 @@ export default function FollowButton({ user }: Props) {
       userId: currentUserId,
       recipientId: user?.id,
     },
+
+    refetchQueries: [{ query: GetUser, variables: { id: user?.id } }],
   });
 
   const [unfollowUser] = useMutation<UnfollowUserResponse>(UnfollowUser, {
@@ -34,6 +37,8 @@ export default function FollowButton({ user }: Props) {
       userId: currentUserId,
       recipientId: user?.id,
     },
+
+    refetchQueries: [{ query: GetUser, variables: { id: user?.id } }],
   });
 
   return (
