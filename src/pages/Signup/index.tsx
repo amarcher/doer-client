@@ -6,6 +6,7 @@ import usePageTitle from '../../hooks/usePageTitle';
 import Button from '../../components/Button';
 import ImageUploader from '../../components/ImageUploader';
 import Title from '../../components/Title';
+import UserForm from '../../components/UserForm';
 import GetUser from '../../queries/GetUser';
 import { GetUser as GetUserResponse } from '../../queries/__generated__/GetUser';
 import CreateUser from '../../mutations/CreateUser';
@@ -156,74 +157,10 @@ export default function Signup({
       {loading && 'Loading ...'}
       {error && `ERROR: ${error?.message}`}
 
-      <div className="Signup__form">
-        <label className="Signup__label">
-          <span className="Signup__label_text">Username: </span>
-          <input
-            className="Signup__input"
-            name="username"
-            type="text"
-            onChange={onChange}
-            value={createUserInput.username || ''}
-            placeholder="Username"
-            required
-          />
-        </label>
+      <UserForm fields={createUserInput} onChange={onChange} />
 
-        <label className="Signup__label">
-          <span className="Signup__label_text">First Name: </span>
-          <input
-            className="Signup__input"
-            name="firstName"
-            type="text"
-            onChange={onChange}
-            value={createUserInput.firstName || ''}
-            placeholder="First"
-            required
-          />
-        </label>
-
-        <label className="Signup__label">
-          <span className="Signup__label_text">Last Name: </span>
-          <input
-            className="Signup__input"
-            name="lastName"
-            type="text"
-            onChange={onChange}
-            value={createUserInput.lastName || ''}
-            placeholder="Last"
-            required
-          />
-        </label>
-
-        <label className="Signup__label">
-          <span className="Signup__label_text">Email: </span>
-          <input
-            className="Signup__input"
-            name="email"
-            type="text"
-            onChange={onChange}
-            value={createUserInput.email || ''}
-            placeholder="Email"
-            required
-          />
-        </label>
-
-        <label className="Signup__label">
-          <span className="Signup__label_text">Bio: </span>
-          <textarea
-            className="Signup__input"
-            name="bio"
-            onChange={onChange}
-            value={createUserInput.bio || ''}
-            placeholder="How did you start doing?"
-            required
-          />
-        </label>
-
-        <div className="Signup__create_button">
-          <Button onPress={createUser}>Create</Button>
-        </div>
+      <div className="Signup__create_button">
+        <Button onPress={createUser}>Create</Button>
       </div>
     </form>
   );

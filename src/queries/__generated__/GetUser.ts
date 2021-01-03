@@ -9,7 +9,10 @@
 
 export interface GetUser_user_profilePic {
   __typename: "Image";
+  id: string;
   hostedUrl: string;
+  timeTaken: any | null;
+  publicId: string | null;
 }
 
 export interface GetUser_user_followers_profilePic {

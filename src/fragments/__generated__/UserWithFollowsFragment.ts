@@ -9,7 +9,10 @@
 
 export interface UserWithFollowsFragment_profilePic {
   __typename: "Image";
+  id: string;
   hostedUrl: string;
+  timeTaken: any | null;
+  publicId: string | null;
 }
 
 export interface UserWithFollowsFragment_followers_profilePic {
