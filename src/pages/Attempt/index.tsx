@@ -32,9 +32,6 @@ export default function Attempt({
 
   usePageTitle(data?.projectExecution?.title || '');
 
-  console.log(data?.projectExecution?.images);
-  console.log(getImagesForCarousel(data?.projectExecution?.images));
-
   return (
     <>
       <Title>{data?.projectExecution?.title || ''}</Title>
@@ -44,7 +41,7 @@ export default function Attempt({
 
       <div>
         by{' '}
-        <Button href={`/profile/${data?.projectExecution?.user?.id}`}>
+        <Button href={`/profile/${data?.projectExecution?.user?.id}/view`}>
           {data?.projectExecution?.user?.firstName}
         </Button>
         {data?.projectExecution?.user?.id === currentUserId && (

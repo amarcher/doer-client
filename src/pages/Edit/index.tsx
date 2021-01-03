@@ -5,10 +5,11 @@ import { decode } from 'querystring';
 
 import usePageTitle from '../../hooks/usePageTitle';
 import Button from '../../components/Button';
-import ImageUploader, { Images } from '../../components/ImageUploader';
+import ImageUploader from '../../components/ImageUploader';
 import UpdateProjectExecution from '../../mutations/UpdateProjectExecution';
 import { UpdateProjectExecution as UpdateProjectExecutionResult } from '../../mutations/__generated__/UpdateProjectExecution';
 import GetProjectExecution from '../../queries/GetProjectExecution';
+import { getImageUploadInputsFromImages } from '../../utils/images';
 import {
   GetProjectExecution as GetProjectExecutionResponse,
   GetProjectExecution_projectExecution_images,
@@ -18,24 +19,6 @@ import { ImageUploadInput } from '../../../__generated__/globalTypes';
 import './Edit.css';
 
 type Props = RouteComponentProps;
-
-function getImageUploadInputsFromImages(
-  images?: (GetProjectExecution_projectExecution_images | null)[]
-) {
-  if (!images) {
-    return {} as Images;
-  }
-
-  return images?.reduce((imageUploadInputs: Images, image) => {
-    if (image) {
-      imageUploadInputs[image.image.id] = {
-        ...image.image,
-        caption: image.caption,
-      };
-    }
-    return imageUploadInputs;
-  }, {} as Images);
-}
 
 function getImageUploadInputOrderFromImages(
   images?: (GetProjectExecution_projectExecution_images | null)[]

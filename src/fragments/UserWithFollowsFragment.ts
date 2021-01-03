@@ -10,7 +10,10 @@ export default gql`
     bio
     id
     profilePic {
+      id
       hostedUrl
+      timeTaken
+      publicId
     }
     followers {
       ...UserFragment

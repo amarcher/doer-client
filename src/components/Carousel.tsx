@@ -21,16 +21,14 @@ function Carousel({ children, height = 300, width = 300 }: CarouselProps) {
       naturalSlideHeight={height}
       totalSlides={totalSlides}
     >
-      <div onClick={(e) => e.stopPropagation()}>
-        {totalSlides > 1 && <DotGroup />}
-        <Slider>
-          {React.Children.map(children, (child, index) => (
-            <Slide index={index} key={index}>
-              {child}
-            </Slide>
-          ))}
-        </Slider>
-      </div>
+      {totalSlides > 1 && <DotGroup />}
+      <Slider>
+        {React.Children.map(children, (child, index) => (
+          <Slide index={index} key={index}>
+            {child}
+          </Slide>
+        ))}
+      </Slider>
     </CarouselProvider>
   );
 }

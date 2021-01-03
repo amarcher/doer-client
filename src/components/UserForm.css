@@ -1,0 +1,24 @@
+.UserForm__form {
+  width: 300px;
+  margin: 10px auto;
+}
+
+.UserForm__label {
+  display: flex;
+  margin: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.UserForm__input {
+  flex: 1 1 auto;
+  width: 100%;
+  padding: 4px;
+}
+
+.UserForm__label_text {
+  flex: 0 0 auto;
+  font-size: 0.7em;
+  margin-bottom: 1px;
+}

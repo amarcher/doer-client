@@ -11,7 +11,10 @@ import { CreateUserInput, ImageUploadInput } from "./../../../__generated__/glob
 
 export interface CreateUser_createUser_user_profilePic {
   __typename: "Image";
+  id: string;
   hostedUrl: string;
+  timeTaken: any | null;
+  publicId: string | null;
 }
 
 export interface CreateUser_createUser_user_followers_profilePic {

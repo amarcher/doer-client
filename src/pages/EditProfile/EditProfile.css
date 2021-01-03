@@ -1,11 +1,11 @@
-.Signup__hero {
+.EditProfile__hero {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 10px 0;
 }
 
-.Signup__photo {
+.EditProfile__photo {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -14,15 +14,15 @@
   margin: 10px;
 }
 
-.Signup__form {
+.EditProfile__form {
   width: 300px;
   margin: 10px auto;
 }
 
-.Signup__create_button {
+.EditProfile__save_button {
   margin: 20px;
 }
 
-.Signup__upload_thumbnail {
+.EditProfile__upload_thumbnail {
   border-radius: 50%;
 }

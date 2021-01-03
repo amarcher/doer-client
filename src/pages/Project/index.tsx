@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useQuery } from '@apollo/client';
 import { RouteComponentProps } from 'react-router';
 
@@ -19,6 +19,7 @@ export default function Project({
   match: {
     params: { projectId },
   },
+  history: { push },
 }: Props) {
   const { data, loading, error } = useQuery<GetProjectResponse>(GetProject, {
     variables: {
@@ -38,12 +39,12 @@ export default function Project({
       {projectExecutions?.map((projectExecution) => {
         const { id, title, images, user } = projectExecution || {};
         return (
-          <Button href={`/attempt/${id}`} className="Project__link">
+          <div className="Project__link">
             <div className="Project__execution" key={id}>
               <div className="Project__title">
-                "{title}" by{' '}
+                "<Button href={`/attempt/${id}`}>{title}</Button>" by{' '}
                 {
-                  <Button href={`/profile/${user?.id}`} preventDefault>
+                  <Button href={`/profile/${user?.id}/view`} preventDefault>
                     {user?.firstName}
                   </Button>
                 }
@@ -62,7 +63,7 @@ export default function Project({
               </div>
               {images && <Carousel images={getImagesForCarousel(images)} />}
             </div>
-          </Button>
+          </div>
         );
       })}
 
