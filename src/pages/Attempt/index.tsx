@@ -14,6 +14,7 @@ import ClapButton from '../../components/ClapButton';
 import PostForm from '../../components/PostForm';
 
 import './Attempt.css';
+import Loading from '../../components/Loading';
 
 type Props = RouteComponentProps<{ projectExecutionId: string }>;
 
@@ -34,12 +35,17 @@ export default function Attempt({
 
   usePageTitle(data?.projectExecution?.title || '');
 
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>ERROR: {error?.message}</div>;
+  }
+
   return (
     <>
       <Title>{data?.projectExecution?.title || ''}</Title>
-
-      {loading && 'Loading ...'}
-      {error && `ERROR: ${error?.message}`}
 
       <div>
         by{' '}

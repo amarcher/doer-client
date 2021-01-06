@@ -3,12 +3,12 @@ import { useQuery } from '@apollo/client';
 
 import usePageTitle from '../../hooks/usePageTitle';
 import { APP_NAME } from '../../constants';
-import PreloadedImage from '../../components/PreloadedImage';
 import Button from '../../components/Button';
+import Logo from '../../components/Logo';
 import Title from '../../components/Title';
 import GetCategories from '../../queries/GetCategories';
 import { GetCategories as GetCategoriesResponse } from '../../queries/__generated__/GetCategories';
-import logo from '../../logo2.svg';
+import Loading from '../../components/Loading';
 
 import './Main.css';
 
@@ -19,16 +19,22 @@ export default function Main() {
 
   usePageTitle();
 
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>ERROR: {error?.message}</div>;
+  }
+
   return (
     <>
       <Title>{APP_NAME}</Title>
 
       <div className="Main__hero">
-        <PreloadedImage src={logo} height={300} width={300} useImg />
+        <Logo />
       </div>
 
-      {loading && <p>Loading ...</p>}
-      {error && <p>ERROR: {error?.message}</p>}
       {data?.categories && <p>Choose a category:</p>}
       {data?.categories &&
         data.categories.map((category) => {

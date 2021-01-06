@@ -52,14 +52,14 @@ export default function Edit({ location: { search } }: Props) {
     []
   );
 
-  const [
-    updateProjectExecution,
-    { error, loading },
-  ] = useMutation<UpdateProjectExecutionResult>(UpdateProjectExecution, {
-    variables: {
-      ...updateProjectExecutionInput,
-    },
-  });
+  const [updateProjectExecution] = useMutation<UpdateProjectExecutionResult>(
+    UpdateProjectExecution,
+    {
+      variables: {
+        ...updateProjectExecutionInput,
+      },
+    }
+  );
 
   const onSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -94,9 +94,6 @@ export default function Edit({ location: { search } }: Props) {
           )
         );
       })}
-
-      {loading && 'Loading ...'}
-      {error && `ERROR: ${error?.message}`}
 
       <p>
         <Button onPress={updateProjectExecution}>Save</Button>

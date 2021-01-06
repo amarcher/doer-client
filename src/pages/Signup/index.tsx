@@ -18,6 +18,7 @@ import { CreateUser as CreateUserResponse } from '../../mutations/__generated__/
 import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 import { currentUserIdVar, googleProfileObjVar, tokenIdVar } from '../../cache';
 import { LOCAL_STORAGE_PREFIX as PREFIX } from '../../constants';
+import Loading from '../../components/Loading';
 
 import './Signup.css';
 
@@ -138,6 +139,14 @@ export default function Signup({
 
   usePageTitle('Create Your Profile');
 
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>ERROR: {error?.message}</div>;
+  }
+
   return (
     <form onSubmit={onSubmit}>
       <Title>Create Your Profile</Title>
@@ -153,9 +162,6 @@ export default function Signup({
           maxFiles={1}
         />
       </div>
-
-      {loading && 'Loading ...'}
-      {error && `ERROR: ${error?.message}`}
 
       <UserForm fields={createUserInput} onChange={onChange} />
 

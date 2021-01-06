@@ -67,48 +67,48 @@ export default function Create({ history, location: { search } }: Props) {
     [imageUploadInputOrder]
   );
 
-  const [
-    createProjectExecution,
-    { error, loading },
-  ] = useMutation<CreateProjectExecutionResult>(CreateProjectExecution, {
-    variables: {
-      projectExecutionInput: {
-        ...projectExecutionInput,
-        userId: currentUserId,
-        startedAt: Date.now(),
+  const [createProjectExecution] = useMutation<CreateProjectExecutionResult>(
+    CreateProjectExecution,
+    {
+      variables: {
+        projectExecutionInput: {
+          ...projectExecutionInput,
+          userId: currentUserId,
+          startedAt: Date.now(),
+        },
+        imageUploadInputs: Object.values(imageUploadInputs).sort(
+          (a, b) => getImageOrder(a.publicId) - getImageOrder(b.publicId)
+        ),
       },
-      imageUploadInputs: Object.values(imageUploadInputs).sort(
-        (a, b) => getImageOrder(a.publicId) - getImageOrder(b.publicId)
-      ),
-    },
 
-    update: (cache, { data }) => {
-      const newProjectExecution = data?.createProjectExecution;
-      const existingProject = cache.readQuery<GetProjectResponse>({
-        query: GetProject,
-        variables: { id: projectId },
-      });
-
-      if (existingProject && newProjectExecution) {
-        cache.writeQuery<GetProjectResponse>({
+      update: (cache, { data }) => {
+        const newProjectExecution = data?.createProjectExecution;
+        const existingProject = cache.readQuery<GetProjectResponse>({
           query: GetProject,
-          data: {
-            project: {
-              ...existingProject?.project,
-              projectExecutions: [
-                ...(existingProject?.project?.projectExecutions || []),
-                newProjectExecution,
-              ],
-            } as GetProject_project,
-          },
+          variables: { id: projectId },
         });
-      }
-    },
 
-    onCompleted: () => {
-      history.push(`/project/${projectId}`);
-    },
-  });
+        if (existingProject && newProjectExecution) {
+          cache.writeQuery<GetProjectResponse>({
+            query: GetProject,
+            data: {
+              project: {
+                ...existingProject?.project,
+                projectExecutions: [
+                  ...(existingProject?.project?.projectExecutions || []),
+                  newProjectExecution,
+                ],
+              } as GetProject_project,
+            },
+          });
+        }
+      },
+
+      onCompleted: () => {
+        history.push(`/project/${projectId}`);
+      },
+    }
+  );
 
   const onSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -182,9 +182,6 @@ export default function Create({ history, location: { search } }: Props) {
           tags={data?.project?.name ? [data.project.name] : undefined}
         />
       </div>
-
-      {loading && 'Loading ...'}
-      {error && `ERROR: ${error?.message}`}
 
       <label className="Create__label">
         Title:{' '}

@@ -10,6 +10,7 @@ import GetProject from '../../queries/GetProject';
 import { GetProject as GetProjectResponse } from '../../queries/__generated__/GetProject';
 import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 import { getImagesForCarousel } from '../../utils/images';
+import Loading from '../../components/Loading';
 
 import './Project.css';
 
@@ -20,6 +21,7 @@ export default function Project({
     params: { projectId },
   },
 }: Props) {
+  const currentUserId = useCurrentUserId();
   const { data, loading, error } = useQuery<GetProjectResponse>(GetProject, {
     variables: {
       id: projectId,
@@ -28,8 +30,15 @@ export default function Project({
 
   usePageTitle(data?.project?.name);
 
-  const currentUserId = useCurrentUserId();
   const projectExecutions = data?.project?.projectExecutions;
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>ERROR: {error?.message}</div>;
+  }
 
   return (
     <>
@@ -38,7 +47,7 @@ export default function Project({
       {projectExecutions?.map((projectExecution) => {
         const { id, title, images, user } = projectExecution || {};
         return (
-          <div className="Project__link">
+          <div className="Project__link" key={id}>
             <div className="Project__execution" key={id}>
               <div className="Project__title">
                 "<Button href={`/attempt/${id}`}>{title}</Button>" by{' '}
@@ -67,9 +76,6 @@ export default function Project({
       {projectExecutions?.length === 0 && (
         <div className="Project__title">No projects yet</div>
       )}
-
-      {loading && 'Loading ...'}
-      {error && `ERROR: ${error?.message}`}
 
       {currentUserId && data?.project?.projectExecutions && (
         <div>

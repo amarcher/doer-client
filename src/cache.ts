@@ -30,6 +30,15 @@ export const cache: InMemoryCache = new InMemoryCache({
         },
       },
     },
+    ProjectExecution: {
+      fields: {
+        posts: {
+          merge(_, incoming) {
+            return incoming;
+          },
+        },
+      },
+    },
   },
 });
 

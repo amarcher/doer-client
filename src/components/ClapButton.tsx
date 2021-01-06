@@ -1,16 +1,16 @@
 import React, { useMemo } from 'react';
 import { useMutation } from '@apollo/client';
-import GetPost from '../queries/GetPost';
-import { PostFragment } from '../fragments/__generated__/PostFragment';
+import { PostFragment as PostFragmentType } from '../fragments/__generated__/PostFragment';
 import Clap from '../mutations/Clap';
 import { Clap as ClapResponse } from '../mutations/__generated__/Clap';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
 import Button from './Button';
 
 import './ClapButton.css';
+import PostFragment from '../fragments/PostFragment';
 
 type Props = {
-  post?: PostFragment | null;
+  post?: PostFragmentType | null;
 };
 
 export default function ClapButton({ post }: Props) {
@@ -27,7 +27,37 @@ export default function ClapButton({ post }: Props) {
       postId: post?.id,
     },
 
-    refetchQueries: [{ query: GetPost, variables: { postId: post?.id } }],
+    optimisticResponse: {
+      clap: post?.clapCount || 0 + 1,
+    },
+
+    update(cache, { data }) {
+      const newClapCount = data?.clap;
+      const fragmentOptions = {
+        fragment: PostFragment,
+        fragmentName: 'PostFragment',
+        id: `Post:${post?.id}`,
+      };
+
+      if (post && newClapCount) {
+        const existingPost = cache.readFragment<PostFragmentType>(
+          fragmentOptions
+        );
+
+        if (existingPost) {
+          cache.writeFragment({
+            ...fragmentOptions,
+            data: {
+              ...existingPost,
+              clapCount: newClapCount,
+              claps: [...existingPost.claps, { userId: currentUserId }],
+            },
+          });
+        }
+      }
+    },
+
+    onError: console.log,
   });
 
   return (

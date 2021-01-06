@@ -1,8 +1,55 @@
+.PostForm {
+  position: relative;
+}
+
 .PostForm__hero {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 10px 0;
+}
+
+.PostForm__delete_buttons {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  z-index: 2;
+}
+
+.PostForm__delete_button {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  color: white;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.PostForm__delete_confirmation_buttons {
+  background-color: white;
+  padding: 2px;
+}
+
+.PostForm__confirm_delete_button {
+  background-color: rgba(121, 5, 5, 0.5);
+  border-radius: 5px;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  padding: 2px;
+  margin-left: 4px;
+}
+
+.PostForm__cancel_delete_button {
+  background-color: rgba(117, 117, 117, 0.5);
+  border-radius: 5px;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  padding: 2px;
+  margin-left: 4px;
 }
 
 .PostForm__label {

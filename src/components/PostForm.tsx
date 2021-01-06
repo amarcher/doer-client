@@ -1,11 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useMutation } from '@apollo/client';
 
 import Button from './Button';
 import ImageUploader from './ImageUploader';
 import { ImageUploadInput } from '../../__generated__/globalTypes';
 import { getImageUploadInputsFromImages } from '../utils/images';
-import './PostForm.css';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
 import { PostFragment as PostFragmentType } from '../fragments/__generated__/PostFragment';
 import GetProjectExecution from '../queries/GetProjectExecution';
@@ -17,6 +16,11 @@ import { UpdatePost as UpdatePostResponse } from '../mutations/__generated__/Upd
 import UpdatePost from '../mutations/UpdatePost';
 import ProjectExecutionFragment from '../fragments/ProjectExecutionFragment';
 import { ProjectExecutionFragment as ProjectExecutionFragmentType } from '../fragments/__generated__/ProjectExecutionFragment';
+import DeletePost from '../mutations/DeletePost';
+import { DeletePost as DeletePostResponse } from '../mutations/__generated__/DeletePost';
+import useBooleanState from '../hooks/useBooleanState';
+
+import './PostForm.css';
 
 interface Props {
   projectExecutionId?: string;
@@ -48,6 +52,11 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
     userId: currentUserId,
     projectExecutionId,
   });
+  const {
+    state: showConfirmDeletePost,
+    setTrue: setShowConfirmDeletePostTrue,
+    setFalse: setShowConfirmDeletePostFalse,
+  } = useBooleanState(false);
 
   useEffect(() => {
     setPostInput({
@@ -100,6 +109,15 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
     });
   }, [currentUserId, projectExecutionId]);
 
+  const projectExecutionFragmentForUpdate = useMemo(
+    () => ({
+      id: `ProjectExecution:${projectExecutionId}`,
+      fragment: ProjectExecutionFragment,
+      fragmentName: 'ProjectExecutionFragment',
+    }),
+    [projectExecutionId]
+  );
+
   const [createPost] = useMutation<CreatePostResponse>(CreatePost, {
     variables: {
       ...postInput,
@@ -110,24 +128,17 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
 
     update(cache, { data }) {
       const newPost = data?.createPost;
-      const fragmentName = 'ProjectExecutionFragment';
-      const currentProjectExecution = cache.readFragment<ProjectExecutionFragmentType>(
-        {
-          id: `ProjectExecution:${projectExecutionId}`,
-          fragment: ProjectExecutionFragment,
-          fragmentName,
-        }
+      const existingProjectExecution = cache.readFragment<ProjectExecutionFragmentType>(
+        projectExecutionFragmentForUpdate
       );
 
-      if (newPost && currentProjectExecution) {
+      if (newPost && existingProjectExecution) {
         cache.writeFragment({
-          id: `ProjectExecution:${projectExecutionId}`,
-          fragment: ProjectExecutionFragment,
+          ...projectExecutionFragmentForUpdate,
           data: {
-            ...currentProjectExecution,
-            posts: [...(currentProjectExecution.posts || []), newPost],
+            ...existingProjectExecution,
+            posts: [...(existingProjectExecution.posts || []), newPost],
           },
-          fragmentName,
         });
       }
     },
@@ -135,6 +146,34 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
     onCompleted: () => {
       resetForm();
       history.push(`/attempt/${projectExecutionId}`);
+    },
+  });
+
+  const [deletePost] = useMutation<DeletePostResponse>(DeletePost, {
+    variables: {
+      postId: post?.id,
+    },
+
+    optimisticResponse: {
+      deletePost: true,
+    },
+
+    update(cache, { data }) {
+      const existingProjectExecution = cache.readFragment<ProjectExecutionFragmentType>(
+        projectExecutionFragmentForUpdate
+      );
+
+      if (existingProjectExecution) {
+        cache.writeFragment({
+          ...projectExecutionFragmentForUpdate,
+          data: {
+            ...existingProjectExecution,
+            posts: existingProjectExecution.posts.filter(
+              (existingPost) => existingPost?.id !== post?.id
+            ),
+          },
+        });
+      }
     },
   });
 
@@ -211,8 +250,36 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
   }, []);
 
   return (
-    <div>
-      <div className="Create__hero">
+    <div className="PostForm">
+      {post && (
+        <div className="PostForm__delete_buttons">
+          {showConfirmDeletePost ? (
+            <div className="PostForm__delete_confirmation_buttons">
+              Delete this post?
+              <Button
+                onPress={setShowConfirmDeletePostFalse}
+                className="PostForm__cancel_delete_button"
+              >
+                Cancel
+              </Button>
+              <Button
+                onPress={deletePost}
+                className="PostForm__confirm_delete_button"
+              >
+                Delete
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onPress={setShowConfirmDeletePostTrue}
+              className="PostForm__delete_button"
+            >
+              x
+            </Button>
+          )}
+        </div>
+      )}
+      <div className="PostForm__hero">
         <ImageUploader
           onPhotoUploaded={onPhotoUploaded}
           onPhotoRemoved={onPhotoRemoved}
@@ -225,7 +292,7 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
         />
       </div>
 
-      <label className="Create__label">
+      <label className="PostForm__label">
         Text:{' '}
         <input
           name="text"

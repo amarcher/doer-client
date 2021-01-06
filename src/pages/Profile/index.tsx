@@ -9,9 +9,10 @@ import Title from '../../components/Title';
 import usePageTitle from '../../hooks/usePageTitle';
 import GetUser from '../../queries/GetUser';
 import { GetUser as GetUserResponse } from '../../queries/__generated__/GetUser';
+import { useCurrentUserId } from '../../queries/GetCurrentUserId';
+import Loading from '../../components/Loading';
 
 import './Profile.css';
-import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 
 type Props = RouteComponentProps<{ id?: string }>;
 
@@ -28,6 +29,14 @@ export default function Profile({
   });
 
   usePageTitle(data?.user?.firstName || '');
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>ERROR: {error?.message}</div>;
+  }
 
   const src = data?.user?.profilePic?.hostedUrl || '';
 
@@ -48,14 +57,15 @@ export default function Profile({
         </>
       )}
 
-      {loading && 'Loading ...'}
-      {error && `ERROR: ${error?.message}`}
       <p>{data?.user?.firstName || null}</p>
       <p>{data?.user?.lastName || null}</p>
       <p>{data?.user?.bio || null}</p>
       <p>{data?.user?.username || null}</p>
-      <p>{data?.user?.followers?.length || null} Followers</p>
-      <p>{data?.user?.following?.length || null} Following</p>
+      <p>
+        {data?.user?.followers?.length || 0} Follower
+        {data?.user?.followers?.length !== 1 && 's'}
+      </p>
+      <p>{data?.user?.following?.length || 0} Following</p>
 
       {data?.user?.id === currentUserId && (
         <div>
