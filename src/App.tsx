@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Nav from './components/Nav';
 import PrivateRoute from './components/PrivateRoute';
@@ -20,18 +20,20 @@ export default function App() {
     <Router>
       <Nav />
       <main>
-        <Route exact path="/" component={Main} />
-        <PrivateRoute exact path="/profile" component={Profile} />
-        <PrivateRoute exact path="/profile/edit" component={EditProfile} />
-        <Route path="/profile/:id/view" component={Profile} />
-        <Route path="/category/:categoryId" component={Category} />
-        <Route path="/project/:projectId" component={Project} />
-        <Route path="/attempt/:projectExecutionId" component={Attempt} />
-        <PrivateRoute path="/create" component={Create} />
-        <PrivateRoute path="/edit" component={Edit} />
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
-        <Route component={NotFound} />
+        <Switch>
+          <Route exact path="/" component={Main} />
+          <PrivateRoute exact path="/profile" component={Profile} />
+          <PrivateRoute exact path="/profile/edit" component={EditProfile} />
+          <Route path="/profile/:id/view" component={Profile} />
+          <Route path="/category/:categoryId" component={Category} />
+          <Route path="/project/:projectId" component={Project} />
+          <Route path="/attempt/:projectExecutionId" component={Attempt} />
+          <PrivateRoute path="/create" component={Create} />
+          <PrivateRoute path="/edit" component={Edit} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
+          <Route path="*" component={NotFound} />
+        </Switch>
       </main>
     </Router>
   );
