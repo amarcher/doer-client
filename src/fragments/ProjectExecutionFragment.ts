@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import PostFragment from '../fragments/PostFragment';
 
 export default gql`
   fragment ProjectExecutionFragment on ProjectExecution {
@@ -22,9 +23,13 @@ export default gql`
         publicId
       }
     }
+    posts {
+      ...PostFragment
+    }
     projectId
     project {
       name
     }
   }
+  ${PostFragment}
 `;

@@ -95,6 +95,11 @@ export interface UpdateUser_updateUser_posts_user {
   profilePic: UpdateUser_updateUser_posts_user_profilePic | null;
 }
 
+export interface UpdateUser_updateUser_posts_claps {
+  __typename: "Clap";
+  userId: string;
+}
+
 export interface UpdateUser_updateUser_posts {
   __typename: "Post";
   id: string;
@@ -105,6 +110,7 @@ export interface UpdateUser_updateUser_posts {
   images: (UpdateUser_updateUser_posts_images | null)[];
   user: UpdateUser_updateUser_posts_user;
   clapCount: number;
+  claps: (UpdateUser_updateUser_posts_claps | null)[];
 }
 
 export interface UpdateUser_updateUser {

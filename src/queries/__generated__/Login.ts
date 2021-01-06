@@ -93,6 +93,11 @@ export interface Login_login_user_posts_user {
   profilePic: Login_login_user_posts_user_profilePic | null;
 }
 
+export interface Login_login_user_posts_claps {
+  __typename: "Clap";
+  userId: string;
+}
+
 export interface Login_login_user_posts {
   __typename: "Post";
   id: string;
@@ -103,6 +108,7 @@ export interface Login_login_user_posts {
   images: (Login_login_user_posts_images | null)[];
   user: Login_login_user_posts_user;
   clapCount: number;
+  claps: (Login_login_user_posts_claps | null)[];
 }
 
 export interface Login_login_user {

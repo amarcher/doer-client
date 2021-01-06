@@ -30,6 +30,57 @@ export interface ProjectFragment_projectExecutions_images {
   image: ProjectFragment_projectExecutions_images_image;
 }
 
+export interface ProjectFragment_projectExecutions_posts_images_image {
+  __typename: "Image";
+  id: string;
+  hostedUrl: string;
+  timeTaken: any | null;
+  publicId: string | null;
+  imageTags: (string | null)[] | null;
+}
+
+export interface ProjectFragment_projectExecutions_posts_images {
+  __typename: "ProjectExecutionImage";
+  imageId: string;
+  caption: string | null;
+  order: number | null;
+  image: ProjectFragment_projectExecutions_posts_images_image;
+}
+
+export interface ProjectFragment_projectExecutions_posts_user_profilePic {
+  __typename: "Image";
+  hostedUrl: string;
+}
+
+export interface ProjectFragment_projectExecutions_posts_user {
+  __typename: "User";
+  firstName: string | null;
+  lastName: string | null;
+  username: string;
+  email: string;
+  bio: string | null;
+  id: string;
+  profilePic: ProjectFragment_projectExecutions_posts_user_profilePic | null;
+}
+
+export interface ProjectFragment_projectExecutions_posts_claps {
+  __typename: "Clap";
+  userId: string;
+}
+
+export interface ProjectFragment_projectExecutions_posts {
+  __typename: "Post";
+  id: string;
+  userId: string;
+  createdAt: any;
+  text: string;
+  projectExecutionId: string;
+  images: (ProjectFragment_projectExecutions_posts_images | null)[];
+  user: ProjectFragment_projectExecutions_posts_user;
+  clapCount: number;
+  claps: (ProjectFragment_projectExecutions_posts_claps | null)[];
+}
+
 export interface ProjectFragment_projectExecutions_project {
   __typename: "Project";
   name: string;
@@ -43,6 +94,7 @@ export interface ProjectFragment_projectExecutions {
   completedAt: any | null;
   user: ProjectFragment_projectExecutions_user | null;
   images: (ProjectFragment_projectExecutions_images | null)[];
+  posts: (ProjectFragment_projectExecutions_posts | null)[];
   projectId: string;
   project: ProjectFragment_projectExecutions_project | null;
 }

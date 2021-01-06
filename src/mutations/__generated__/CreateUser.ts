@@ -95,6 +95,11 @@ export interface CreateUser_createUser_user_posts_user {
   profilePic: CreateUser_createUser_user_posts_user_profilePic | null;
 }
 
+export interface CreateUser_createUser_user_posts_claps {
+  __typename: "Clap";
+  userId: string;
+}
+
 export interface CreateUser_createUser_user_posts {
   __typename: "Post";
   id: string;
@@ -105,6 +110,7 @@ export interface CreateUser_createUser_user_posts {
   images: (CreateUser_createUser_user_posts_images | null)[];
   user: CreateUser_createUser_user_posts_user;
   clapCount: number;
+  claps: (CreateUser_createUser_user_posts_claps | null)[];
 }
 
 export interface CreateUser_createUser_user {

@@ -9,7 +9,7 @@ import { UnfollowUser as UnfollowUserResponse } from '../mutations/__generated__
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
 import Button from './Button';
 
-import './Button.css';
+import './FollowButton.css';
 
 type Props = {
   user?: UserWithFollowsFragment | null;

@@ -23,7 +23,7 @@ export default function Project({
 }: Props) {
   const { data, loading, error } = useQuery<GetProjectResponse>(GetProject, {
     variables: {
-      id: parseInt(projectId, 10),
+      id: projectId,
     },
   });
 
@@ -43,11 +43,9 @@ export default function Project({
             <div className="Project__execution" key={id}>
               <div className="Project__title">
                 "<Button href={`/attempt/${id}`}>{title}</Button>" by{' '}
-                {
-                  <Button href={`/profile/${user?.id}/view`} preventDefault>
-                    {user?.firstName}
-                  </Button>
-                }
+                <Button href={`/profile/${user?.id}/view`} preventDefault>
+                  {user?.firstName}
+                </Button>
                 {user?.id === currentUserId && (
                   <div className="Project__edit_link">
                     (

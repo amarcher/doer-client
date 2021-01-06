@@ -30,6 +30,57 @@ export interface UpdateProjectExecution_updateProjectExecution_images {
   image: UpdateProjectExecution_updateProjectExecution_images_image;
 }
 
+export interface UpdateProjectExecution_updateProjectExecution_posts_images_image {
+  __typename: "Image";
+  id: string;
+  hostedUrl: string;
+  timeTaken: any | null;
+  publicId: string | null;
+  imageTags: (string | null)[] | null;
+}
+
+export interface UpdateProjectExecution_updateProjectExecution_posts_images {
+  __typename: "ProjectExecutionImage";
+  imageId: string;
+  caption: string | null;
+  order: number | null;
+  image: UpdateProjectExecution_updateProjectExecution_posts_images_image;
+}
+
+export interface UpdateProjectExecution_updateProjectExecution_posts_user_profilePic {
+  __typename: "Image";
+  hostedUrl: string;
+}
+
+export interface UpdateProjectExecution_updateProjectExecution_posts_user {
+  __typename: "User";
+  firstName: string | null;
+  lastName: string | null;
+  username: string;
+  email: string;
+  bio: string | null;
+  id: string;
+  profilePic: UpdateProjectExecution_updateProjectExecution_posts_user_profilePic | null;
+}
+
+export interface UpdateProjectExecution_updateProjectExecution_posts_claps {
+  __typename: "Clap";
+  userId: string;
+}
+
+export interface UpdateProjectExecution_updateProjectExecution_posts {
+  __typename: "Post";
+  id: string;
+  userId: string;
+  createdAt: any;
+  text: string;
+  projectExecutionId: string;
+  images: (UpdateProjectExecution_updateProjectExecution_posts_images | null)[];
+  user: UpdateProjectExecution_updateProjectExecution_posts_user;
+  clapCount: number;
+  claps: (UpdateProjectExecution_updateProjectExecution_posts_claps | null)[];
+}
+
 export interface UpdateProjectExecution_updateProjectExecution_project {
   __typename: "Project";
   name: string;
@@ -43,6 +94,7 @@ export interface UpdateProjectExecution_updateProjectExecution {
   completedAt: any | null;
   user: UpdateProjectExecution_updateProjectExecution_user | null;
   images: (UpdateProjectExecution_updateProjectExecution_images | null)[];
+  posts: (UpdateProjectExecution_updateProjectExecution_posts | null)[];
   projectId: string;
   project: UpdateProjectExecution_updateProjectExecution_project | null;
 }
