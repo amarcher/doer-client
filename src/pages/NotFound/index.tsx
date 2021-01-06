@@ -1,7 +1,6 @@
 import React from 'react';
 
 import usePageTitle from '../../hooks/usePageTitle';
-import { APP_NAME } from '../../constants';
 import PreloadedImage from '../../components/PreloadedImage';
 import Title from '../../components/Title';
 import logo from '../../logo2.svg';

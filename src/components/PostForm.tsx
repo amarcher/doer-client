@@ -7,7 +7,7 @@ import { ImageUploadInput } from '../../__generated__/globalTypes';
 import { getImageUploadInputsFromImages } from '../utils/images';
 import './PostForm.css';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
-import { PostFragment } from '../fragments/__generated__/PostFragment';
+import { PostFragment as PostFragmentType } from '../fragments/__generated__/PostFragment';
 import GetProjectExecution from '../queries/GetProjectExecution';
 import { CreatePost as CreatePostResponse } from '../mutations/__generated__/CreatePost';
 import CreatePost from '../mutations/CreatePost';
@@ -15,10 +15,12 @@ import { useHistory } from 'react-router-dom';
 import { GetProjectExecution_projectExecution_posts_images } from '../queries/__generated__/GetProjectExecution';
 import { UpdatePost as UpdatePostResponse } from '../mutations/__generated__/UpdatePost';
 import UpdatePost from '../mutations/UpdatePost';
+import ProjectExecutionFragment from '../fragments/ProjectExecutionFragment';
+import { ProjectExecutionFragment as ProjectExecutionFragmentType } from '../fragments/__generated__/ProjectExecutionFragment';
 
 interface Props {
   projectExecutionId?: string;
-  post?: PostFragment | null;
+  post?: PostFragmentType | null;
   tags?: string[];
 }
 
@@ -106,14 +108,29 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
       ),
     },
 
-    refetchQueries: [
-      {
-        query: GetProjectExecution,
-        variables: { id: projectExecutionId },
-      },
-    ],
+    update(cache, { data }) {
+      const newPost = data?.createPost;
+      const fragmentName = 'ProjectExecutionFragment';
+      const currentProjectExecution = cache.readFragment<ProjectExecutionFragmentType>(
+        {
+          id: `ProjectExecution:${projectExecutionId}`,
+          fragment: ProjectExecutionFragment,
+          fragmentName,
+        }
+      );
 
-    awaitRefetchQueries: true,
+      if (newPost && currentProjectExecution) {
+        cache.writeFragment({
+          id: `ProjectExecution:${projectExecutionId}`,
+          fragment: ProjectExecutionFragment,
+          data: {
+            ...currentProjectExecution,
+            posts: [...(currentProjectExecution.posts || []), newPost],
+          },
+          fragmentName,
+        });
+      }
+    },
 
     onCompleted: () => {
       resetForm();
@@ -130,6 +147,8 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
       ),
     },
 
+    // TODO: Once backend returns the newly created post
+    // use update() to writeFragment for that post instead of refetching
     refetchQueries: [
       {
         query: GetProjectExecution,
