@@ -19,7 +19,6 @@ export default function Project({
   match: {
     params: { projectId },
   },
-  history: { push },
 }: Props) {
   const { data, loading, error } = useQuery<GetProjectResponse>(GetProject, {
     variables: {
