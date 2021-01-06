@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { CreateUserInput } from '../../__generated__/globalTypes';
+import UserPrivilegeSelect from './UserPrivilegeSelect';
 
 import './UserForm.css';
 
@@ -80,6 +81,11 @@ export default function UserForm({ fields, onChange }: Props) {
           placeholder="How did you start doing?"
           required
         />
+      </label>
+
+      <label className="UserForm__label">
+        <span className="UserForm__label_text">Privilege Level: </span>
+        <UserPrivilegeSelect className="UserForm__select" />
       </label>
     </div>
   );

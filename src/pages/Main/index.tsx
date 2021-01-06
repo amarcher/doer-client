@@ -6,6 +6,7 @@ import { APP_NAME } from '../../constants';
 import Button from '../../components/Button';
 import Logo from '../../components/Logo';
 import Title from '../../components/Title';
+import CreateCategoryForm from '../../components/CategoryForm';
 import GetCategories from '../../queries/GetCategories';
 import { GetCategories as GetCategoriesResponse } from '../../queries/__generated__/GetCategories';
 import Loading from '../../components/Loading';
@@ -47,6 +48,8 @@ export default function Main() {
             </p>
           );
         })}
+
+      <CreateCategoryForm />
     </>
   );
 }

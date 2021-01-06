@@ -1,9 +1,9 @@
-.UserForm__form {
+.CategoryForm__form {
   width: 300px;
   margin: 10px auto;
 }
 
-.UserForm__label {
+.CategoryForm__label {
   display: flex;
   margin: 10px;
   flex-direction: column;
@@ -11,19 +11,24 @@
   justify-content: space-between;
 }
 
-.UserForm__input {
-  flex: 1 1 auto;
+.CategoryForm__input_and_button {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   width: 100%;
+}
+
+.CategoryForm__input {
+  flex: 1 1 auto;
   padding: 4px;
 }
 
-.UserForm__select {
-  flex: 1 1 auto;
-  width: 100%;
+.CategoryForm__submit_button {
+  flex: 0 0 auto;
   padding: 4px;
 }
 
-.UserForm__label_text {
+.CategoryForm__label_text {
   flex: 0 0 auto;
   font-size: 0.7em;
   margin-bottom: 1px;

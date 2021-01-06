@@ -2,6 +2,12 @@ export const APP_NAME = 'Doer';
 
 export const LOCAL_STORAGE_PREFIX = '__doer__';
 
+export enum PRIVILEGES {
+  USER = 'user',
+  PROJECT_ADMIN = 'projectAdmin',
+  ADMIN = 'admin',
+}
+
 export const CLOUDINARY = {
   CLOUD_NAME: 'dvpj3g082',
   UPLOAD_PRESET: 'oq1lpyoe',
