@@ -13,6 +13,7 @@ import Project from './pages/Project';
 import Attempt from './pages/Attempt';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import NotFound from './pages/NotFound';
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
         <PrivateRoute path="/edit" component={Edit} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
+        <Route component={NotFound} />
       </main>
     </Router>
   );
