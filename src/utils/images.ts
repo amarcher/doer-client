@@ -1,5 +1,6 @@
 import { CarouselImage } from '../components/Carousel';
 import { Images } from '../components/ImageUploader';
+import { PostFragment_images } from '../fragments/__generated__/PostFragment';
 import { GetProject_project_projectExecutions_images as ProjectExecutionImage } from '../queries/__generated__/GetProject';
 import { GetUser_user_profilePic } from '../queries/__generated__/GetUser';
 
@@ -25,7 +26,7 @@ export function getImagesForCarousel(
 }
 
 export function getImageUploadInputsFromImages(
-  images?: (ProjectExecutionImage | null)[]
+  images?: (PostFragment_images | null)[]
 ) {
   if (!images) {
     return {} as Images;
@@ -33,9 +34,13 @@ export function getImageUploadInputsFromImages(
 
   return images?.reduce((imageUploadInputs: Images, image) => {
     if (image) {
-      imageUploadInputs[image.image.id] = {
-        ...image.image,
-        caption: image.caption,
+      const {
+        caption,
+        image: { __typename, id, ...img },
+      } = image;
+      imageUploadInputs[id] = {
+        ...img,
+        caption,
       };
     }
     return imageUploadInputs;

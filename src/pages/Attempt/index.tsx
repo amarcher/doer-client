@@ -9,9 +9,11 @@ import Carousel from '../../components/Carousel';
 import GetProjectExecution from '../../queries/GetProjectExecution';
 import { GetProjectExecution as GetProjectExecutionResponse } from '../../queries/__generated__/GetProjectExecution';
 import { getImagesForCarousel } from '../../utils/images';
+import { useCurrentUserId } from '../../queries/GetCurrentUserId';
+import ClapButton from '../../components/ClapButton';
+import PostForm from '../../components/PostForm';
 
 import './Attempt.css';
-import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 
 type Props = RouteComponentProps<{ projectExecutionId: string }>;
 
@@ -58,15 +60,35 @@ export default function Attempt({
         )}
       </div>
 
-      <div className="Attempt__hero">
-        {data?.projectExecution?.images && (
-          <Carousel
-            images={getImagesForCarousel(data?.projectExecution?.images)}
-            height={300}
-            width={300}
-          />
-        )}
-      </div>
+      {data?.projectExecution?.posts?.map((post) => (
+        <div key={post?.id} className="Attempt__post">
+          <div className="Attempt__hero">
+            {post && (
+              <>
+                <Carousel
+                  images={getImagesForCarousel(post.images)}
+                  height={300}
+                  width={300}
+                />
+                <div>{post.text}</div>
+              </>
+            )}
+          </div>
+          {currentUserId !== data?.projectExecution?.user?.id && (
+            <ClapButton post={post} />
+          )}
+        </div>
+      ))}
+      {currentUserId === data?.projectExecution?.user?.id && (
+        <PostForm
+          projectExecutionId={data?.projectExecution?.id}
+          tags={
+            data?.projectExecution?.project?.name
+              ? [data.projectExecution.project.name]
+              : undefined
+          }
+        />
+      )}
     </>
   );
 }

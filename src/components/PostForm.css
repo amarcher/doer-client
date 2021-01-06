@@ -1,0 +1,11 @@
+.PostForm__hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.PostForm__label {
+  display: block;
+  margin: 10px;
+}

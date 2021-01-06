@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: PostFragment
+// GraphQL query operation: GetPost
 // ====================================================
 
-export interface PostFragment_images_image {
+export interface GetPost_post_images_image {
   __typename: "Image";
   id: string;
   hostedUrl: string;
@@ -16,20 +16,20 @@ export interface PostFragment_images_image {
   imageTags: (string | null)[] | null;
 }
 
-export interface PostFragment_images {
+export interface GetPost_post_images {
   __typename: "ProjectExecutionImage";
   imageId: string;
   caption: string | null;
   order: number | null;
-  image: PostFragment_images_image;
+  image: GetPost_post_images_image;
 }
 
-export interface PostFragment_user_profilePic {
+export interface GetPost_post_user_profilePic {
   __typename: "Image";
   hostedUrl: string;
 }
 
-export interface PostFragment_user {
+export interface GetPost_post_user {
   __typename: "User";
   firstName: string | null;
   lastName: string | null;
@@ -37,23 +37,34 @@ export interface PostFragment_user {
   email: string;
   bio: string | null;
   id: string;
-  profilePic: PostFragment_user_profilePic | null;
+  profilePic: GetPost_post_user_profilePic | null;
 }
 
-export interface PostFragment_claps {
+export interface GetPost_post_claps {
   __typename: "Clap";
   userId: string;
 }
 
-export interface PostFragment {
+export interface GetPost_post {
   __typename: "Post";
   id: string;
   userId: string;
   createdAt: any;
   text: string;
   projectExecutionId: string;
-  images: (PostFragment_images | null)[];
-  user: PostFragment_user;
+  images: (GetPost_post_images | null)[];
+  user: GetPost_post_user;
   clapCount: number;
-  claps: (PostFragment_claps | null)[];
+  claps: (GetPost_post_claps | null)[];
+}
+
+export interface GetPost {
+  /**
+   * Get an individual post
+   */
+  post: GetPost_post | null;
+}
+
+export interface GetPostVariables {
+  postId: string;
 }

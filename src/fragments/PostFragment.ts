@@ -21,6 +21,9 @@ export default gql`
       ...UserFragment
     }
     clapCount
+    claps {
+      userId
+    }
   }
   ${ImageFragment}
   ${UserFragment}

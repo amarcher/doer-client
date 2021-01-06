@@ -93,6 +93,11 @@ export interface UserWithFollowsFragment_posts_user {
   profilePic: UserWithFollowsFragment_posts_user_profilePic | null;
 }
 
+export interface UserWithFollowsFragment_posts_claps {
+  __typename: "Clap";
+  userId: string;
+}
+
 export interface UserWithFollowsFragment_posts {
   __typename: "Post";
   id: string;
@@ -103,6 +108,7 @@ export interface UserWithFollowsFragment_posts {
   images: (UserWithFollowsFragment_posts_images | null)[];
   user: UserWithFollowsFragment_posts_user;
   clapCount: number;
+  claps: (UserWithFollowsFragment_posts_claps | null)[];
 }
 
 export interface UserWithFollowsFragment {

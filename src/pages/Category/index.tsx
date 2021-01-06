@@ -21,7 +21,7 @@ export default function Category({
 }: Props) {
   const { data, loading, error } = useQuery<GetCategoryResponse>(GetCategory, {
     variables: {
-      id: parseInt(categoryId, 10),
+      id: categoryId,
     },
   });
 

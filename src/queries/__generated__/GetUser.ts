@@ -93,6 +93,11 @@ export interface GetUser_user_posts_user {
   profilePic: GetUser_user_posts_user_profilePic | null;
 }
 
+export interface GetUser_user_posts_claps {
+  __typename: "Clap";
+  userId: string;
+}
+
 export interface GetUser_user_posts {
   __typename: "Post";
   id: string;
@@ -103,6 +108,7 @@ export interface GetUser_user_posts {
   images: (GetUser_user_posts_images | null)[];
   user: GetUser_user_posts_user;
   clapCount: number;
+  claps: (GetUser_user_posts_claps | null)[];
 }
 
 export interface GetUser_user {
