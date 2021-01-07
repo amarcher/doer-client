@@ -98,6 +98,32 @@ export interface UserWithFollowsFragment_posts_claps {
   userId: string;
 }
 
+export interface UserWithFollowsFragment_posts_comments_user_profilePic {
+  __typename: "Image";
+  hostedUrl: string;
+}
+
+export interface UserWithFollowsFragment_posts_comments_user {
+  __typename: "User";
+  firstName: string | null;
+  lastName: string | null;
+  username: string;
+  email: string;
+  bio: string | null;
+  id: string;
+  profilePic: UserWithFollowsFragment_posts_comments_user_profilePic | null;
+}
+
+export interface UserWithFollowsFragment_posts_comments {
+  __typename: "Comment";
+  id: string;
+  createdAt: any;
+  text: string;
+  postId: string;
+  userId: string;
+  user: UserWithFollowsFragment_posts_comments_user;
+}
+
 export interface UserWithFollowsFragment_posts {
   __typename: "Post";
   id: string;
@@ -109,6 +135,7 @@ export interface UserWithFollowsFragment_posts {
   user: UserWithFollowsFragment_posts_user;
   clapCount: number;
   claps: (UserWithFollowsFragment_posts_claps | null)[];
+  comments: (UserWithFollowsFragment_posts_comments | null)[];
 }
 
 export interface UserWithFollowsFragment {

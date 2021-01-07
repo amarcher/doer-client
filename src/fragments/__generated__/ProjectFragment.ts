@@ -68,6 +68,32 @@ export interface ProjectFragment_projectExecutions_posts_claps {
   userId: string;
 }
 
+export interface ProjectFragment_projectExecutions_posts_comments_user_profilePic {
+  __typename: "Image";
+  hostedUrl: string;
+}
+
+export interface ProjectFragment_projectExecutions_posts_comments_user {
+  __typename: "User";
+  firstName: string | null;
+  lastName: string | null;
+  username: string;
+  email: string;
+  bio: string | null;
+  id: string;
+  profilePic: ProjectFragment_projectExecutions_posts_comments_user_profilePic | null;
+}
+
+export interface ProjectFragment_projectExecutions_posts_comments {
+  __typename: "Comment";
+  id: string;
+  createdAt: any;
+  text: string;
+  postId: string;
+  userId: string;
+  user: ProjectFragment_projectExecutions_posts_comments_user;
+}
+
 export interface ProjectFragment_projectExecutions_posts {
   __typename: "Post";
   id: string;
@@ -79,6 +105,7 @@ export interface ProjectFragment_projectExecutions_posts {
   user: ProjectFragment_projectExecutions_posts_user;
   clapCount: number;
   claps: (ProjectFragment_projectExecutions_posts_claps | null)[];
+  comments: (ProjectFragment_projectExecutions_posts_comments | null)[];
 }
 
 export interface ProjectFragment_projectExecutions_project {

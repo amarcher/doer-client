@@ -45,6 +45,32 @@ export interface GetPost_post_claps {
   userId: string;
 }
 
+export interface GetPost_post_comments_user_profilePic {
+  __typename: "Image";
+  hostedUrl: string;
+}
+
+export interface GetPost_post_comments_user {
+  __typename: "User";
+  firstName: string | null;
+  lastName: string | null;
+  username: string;
+  email: string;
+  bio: string | null;
+  id: string;
+  profilePic: GetPost_post_comments_user_profilePic | null;
+}
+
+export interface GetPost_post_comments {
+  __typename: "Comment";
+  id: string;
+  createdAt: any;
+  text: string;
+  postId: string;
+  userId: string;
+  user: GetPost_post_comments_user;
+}
+
 export interface GetPost_post {
   __typename: "Post";
   id: string;
@@ -56,6 +82,7 @@ export interface GetPost_post {
   user: GetPost_post_user;
   clapCount: number;
   claps: (GetPost_post_claps | null)[];
+  comments: (GetPost_post_comments | null)[];
 }
 
 export interface GetPost {

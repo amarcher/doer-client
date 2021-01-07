@@ -6,6 +6,7 @@ import usePageTitle from '../../hooks/usePageTitle';
 import Button from '../../components/Button';
 import Title from '../../components/Title';
 import Carousel from '../../components/Carousel';
+import Comments from '../../components/Comments';
 import GetProjectExecution from '../../queries/GetProjectExecution';
 import { GetProjectExecution as GetProjectExecutionResponse } from '../../queries/__generated__/GetProjectExecution';
 import { getImagesForCarousel } from '../../utils/images';
@@ -83,6 +84,7 @@ export default function Attempt({
           {currentUserId !== data?.projectExecution?.user?.id && (
             <ClapButton post={post} />
           )}
+          {<Comments comments={post?.comments} postId={post?.id} />}
         </div>
       ))}
       {currentUserId === data?.projectExecution?.user?.id && (

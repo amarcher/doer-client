@@ -100,6 +100,32 @@ export interface CreateUser_createUser_user_posts_claps {
   userId: string;
 }
 
+export interface CreateUser_createUser_user_posts_comments_user_profilePic {
+  __typename: "Image";
+  hostedUrl: string;
+}
+
+export interface CreateUser_createUser_user_posts_comments_user {
+  __typename: "User";
+  firstName: string | null;
+  lastName: string | null;
+  username: string;
+  email: string;
+  bio: string | null;
+  id: string;
+  profilePic: CreateUser_createUser_user_posts_comments_user_profilePic | null;
+}
+
+export interface CreateUser_createUser_user_posts_comments {
+  __typename: "Comment";
+  id: string;
+  createdAt: any;
+  text: string;
+  postId: string;
+  userId: string;
+  user: CreateUser_createUser_user_posts_comments_user;
+}
+
 export interface CreateUser_createUser_user_posts {
   __typename: "Post";
   id: string;
@@ -111,6 +137,7 @@ export interface CreateUser_createUser_user_posts {
   user: CreateUser_createUser_user_posts_user;
   clapCount: number;
   claps: (CreateUser_createUser_user_posts_claps | null)[];
+  comments: (CreateUser_createUser_user_posts_comments | null)[];
 }
 
 export interface CreateUser_createUser_user {
