@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { useCurrentUserId } from './GetCurrentUserId';
 import { GetUserPrivilege as GetUserPrivilegeResponse } from './__generated__/GetUserPrivilege';
@@ -15,13 +16,20 @@ export default GetUserPrivilege;
 export function useCurrentUserPrivilege() {
   const currentUserId = useCurrentUserId();
 
-  const { data } = useQuery<GetUserPrivilegeResponse>(GetUserPrivilege, {
-    variables: {
-      userId: currentUserId,
-    },
+  const { data, refetch } = useQuery<GetUserPrivilegeResponse>(
+    GetUserPrivilege,
+    {
+      variables: {
+        userId: currentUserId,
+      },
 
-    skip: !currentUserId,
-  });
+      skip: !currentUserId,
+    }
+  );
+
+  useEffect(() => {
+    refetch();
+  }, [currentUserId, refetch]);
 
   return data?.userPrivilege?.privilege;
 }

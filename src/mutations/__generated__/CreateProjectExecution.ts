@@ -70,6 +70,32 @@ export interface CreateProjectExecution_createProjectExecution_posts_claps {
   userId: string;
 }
 
+export interface CreateProjectExecution_createProjectExecution_posts_comments_user_profilePic {
+  __typename: "Image";
+  hostedUrl: string;
+}
+
+export interface CreateProjectExecution_createProjectExecution_posts_comments_user {
+  __typename: "User";
+  firstName: string | null;
+  lastName: string | null;
+  username: string;
+  email: string;
+  bio: string | null;
+  id: string;
+  profilePic: CreateProjectExecution_createProjectExecution_posts_comments_user_profilePic | null;
+}
+
+export interface CreateProjectExecution_createProjectExecution_posts_comments {
+  __typename: "Comment";
+  id: string;
+  createdAt: any;
+  text: string;
+  postId: string;
+  userId: string;
+  user: CreateProjectExecution_createProjectExecution_posts_comments_user;
+}
+
 export interface CreateProjectExecution_createProjectExecution_posts {
   __typename: "Post";
   id: string;
@@ -81,6 +107,7 @@ export interface CreateProjectExecution_createProjectExecution_posts {
   user: CreateProjectExecution_createProjectExecution_posts_user;
   clapCount: number;
   claps: (CreateProjectExecution_createProjectExecution_posts_claps | null)[];
+  comments: (CreateProjectExecution_createProjectExecution_posts_comments | null)[];
 }
 
 export interface CreateProjectExecution_createProjectExecution_project {

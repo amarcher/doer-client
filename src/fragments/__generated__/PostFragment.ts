@@ -45,6 +45,32 @@ export interface PostFragment_claps {
   userId: string;
 }
 
+export interface PostFragment_comments_user_profilePic {
+  __typename: "Image";
+  hostedUrl: string;
+}
+
+export interface PostFragment_comments_user {
+  __typename: "User";
+  firstName: string | null;
+  lastName: string | null;
+  username: string;
+  email: string;
+  bio: string | null;
+  id: string;
+  profilePic: PostFragment_comments_user_profilePic | null;
+}
+
+export interface PostFragment_comments {
+  __typename: "Comment";
+  id: string;
+  createdAt: any;
+  text: string;
+  postId: string;
+  userId: string;
+  user: PostFragment_comments_user;
+}
+
 export interface PostFragment {
   __typename: "Post";
   id: string;
@@ -56,4 +82,5 @@ export interface PostFragment {
   user: PostFragment_user;
   clapCount: number;
   claps: (PostFragment_claps | null)[];
+  comments: (PostFragment_comments | null)[];
 }

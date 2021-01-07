@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import CommentFragment from './CommentFragment';
 import ImageFragment from './ImageFragment';
 import UserFragment from './UserFragment';
 
@@ -24,7 +25,11 @@ export default gql`
     claps {
       userId
     }
+    comments {
+      ...CommentFragment
+    }
   }
+  ${CommentFragment}
   ${ImageFragment}
   ${UserFragment}
 `;
