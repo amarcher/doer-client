@@ -9,6 +9,7 @@ import { PostFragment as PostFragmentType } from '../fragments/__generated__/Pos
 import CreateComment from '../mutations/CreateComment';
 import Avatar from './Avatar';
 import { useCurrentUser } from '../queries/GetUser';
+import { UserWithFollowsFragment } from '../fragments/__generated__/UserWithFollowsFragment';
 
 import './CommentForm.css';
 
@@ -43,6 +44,18 @@ export default function ProjectForm({
 
   const [createComment] = useMutation<CreateCommentResponse>(CreateComment, {
     variables: commentInput,
+
+    optimisticResponse: {
+      createComment: {
+        __typename: 'Comment',
+        id: 'placeholder',
+        createdAt: Date.now(),
+        text: commentInput.text,
+        postId: postId || '',
+        userId: currentUserId || '',
+        user: currentUser || ({} as UserWithFollowsFragment),
+      },
+    },
 
     update(cache, { data }) {
       if (data?.createComment) {
