@@ -7,10 +7,10 @@ import { CreateComment as CreateCommentResponse } from '../mutations/__generated
 import PostFragment from '../fragments/PostFragment';
 import { PostFragment as PostFragmentType } from '../fragments/__generated__/PostFragment';
 import CreateComment from '../mutations/CreateComment';
-
-import './CommentForm.css';
 import Avatar from './Avatar';
 import { useCurrentUser } from '../queries/GetUser';
+
+import './CommentForm.css';
 
 interface Props {
   postId?: string;
@@ -96,16 +96,17 @@ export default function ProjectForm({
   }, [createComment, postId, comment, currentUserId, onSubmit]);
 
   return (
-    <div>
-      <div>
+    <div className="CommentForm">
+      <div className="CommentForm__label">
         <Avatar {...currentUser} height={30} width={30} />
         {comment && onCancel && <Button onPress={onCancel}>Cancel</Button>}
       </div>
-      <textarea
+      <input
         name="text"
         value={commentInput?.text || ''}
         onChange={onChange}
-        className="CommentForm__text_area"
+        className="CommentForm__input"
+        placeholder="Write a comment"
       />
       <Button
         className="CommentForm__submit_button"

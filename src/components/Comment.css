@@ -1,3 +1,50 @@
-.Comment:not(:last-of-type) {
-  border-bottom: 1px solid black;
+.Comment__label {
+  display: flex;
+}
+
+.Comment__container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.Comment__content {
+  align-items: flex-start;
+  border-radius: 5px;
+  background-color: #eeeeee;
+  margin-bottom: 5px;
+  flex: 1 1 auto;
+  padding: 4px;
+}
+
+.Comment__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+}
+
+.Comment__username_and_date {
+  display: flex;
+  align-items: baseline;
+  font-size: 10px;
+  text-align: left;
+}
+
+.Comment__username {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.Comment__createdAt {
+  color: rgb(66, 66, 66);
+}
+
+.Comment__edit_link {
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+.Comment__text {
+  margin-top: 4px;
+  font-size: 12px;
+  text-align: left;
 }
