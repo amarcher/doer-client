@@ -19,6 +19,9 @@ main {
   margin-right: auto;
 }
 
-input {
+input,
+textarea,
+select,
+option {
   font-size: 16px;
 }
