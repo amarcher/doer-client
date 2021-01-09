@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useMutation } from '@apollo/client';
+import moment from 'moment';
 import Button from './Button';
 import { CommentFragment as CommentFragmentType } from '../fragments/__generated__/CommentFragment';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
@@ -10,6 +11,7 @@ import CreateComment from '../mutations/CreateComment';
 import Avatar from './Avatar';
 import { useCurrentUser } from '../queries/GetUser';
 import { UserWithFollowsFragment } from '../fragments/__generated__/UserWithFollowsFragment';
+import { timeAgo } from '../utils/dateTime';
 
 import './CommentForm.css';
 
@@ -28,12 +30,14 @@ export default function ProjectForm({
 }: Props) {
   const currentUserId = useCurrentUserId();
   const currentUser = useCurrentUser();
+  const inputEl = useRef<HTMLInputElement | null>(null);
 
   const [commentInput, setCommentInput] = useState({
     text: comment?.text || '',
     postId,
     userId: currentUserId,
   });
+
   useEffect(() => {
     setCommentInput({
       text: comment?.text || '',
@@ -42,6 +46,12 @@ export default function ProjectForm({
     });
   }, [comment?.text, postId, currentUserId]);
 
+  useEffect(() => {
+    if (comment) {
+      setTimeout(() => inputEl?.current?.focus(), 0);
+    }
+  }, [comment]);
+
   const [createComment] = useMutation<CreateCommentResponse>(CreateComment, {
     variables: commentInput,
 
@@ -49,7 +59,7 @@ export default function ProjectForm({
       createComment: {
         __typename: 'Comment',
         id: 'placeholder',
-        createdAt: Date.now(),
+        createdAt: moment().format(),
         text: commentInput.text,
         postId: postId || '',
         userId: currentUserId || '',
@@ -108,25 +118,56 @@ export default function ProjectForm({
     if (onSubmit) onSubmit();
   }, [createComment, postId, comment, currentUserId, onSubmit]);
 
+  const onKeyUp = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' && !e.altKey) {
+        onSubmitEditOrCreate();
+      }
+    },
+    [onSubmitEditOrCreate]
+  );
+
   return (
-    <div className="CommentForm">
+    <div className="CommentForm__container">
       <div className="CommentForm__label">
         <Avatar {...currentUser} height={30} width={30} />
-        {comment && onCancel && <Button onPress={onCancel}>Cancel</Button>}
       </div>
-      <input
-        name="text"
-        value={commentInput?.text || ''}
-        onChange={onChange}
-        className="CommentForm__input"
-        placeholder="Write a comment"
-      />
-      <Button
-        className="CommentForm__submit_button"
-        onPress={onSubmitEditOrCreate}
-      >
-        {comment ? 'Update' : 'Create'}
-      </Button>
+      <div className="CommentForm__content">
+        <div className="CommentForm__header">
+          <div className="CommentForm__username_and_date">
+            <Button className="CommentForm__username">
+              {currentUser?.firstName} {currentUser?.lastName}
+            </Button>
+          </div>
+          {comment && onCancel && (
+            <>
+              <div className="Comment__createdAt">
+                {timeAgo(comment.createdAt)}
+              </div>
+              <Button onPress={onCancel} className="CommentForm__cancel_link">
+                Cancel
+              </Button>
+            </>
+          )}
+          <Button
+            className="CommentForm__submit_button"
+            onPress={onSubmitEditOrCreate}
+          >
+            {comment ? 'Update' : 'Create'}
+          </Button>
+        </div>
+        <div className="CommentForm__text">
+          <input
+            ref={inputEl}
+            name="text"
+            value={commentInput?.text || ''}
+            onKeyUp={onKeyUp}
+            onChange={onChange}
+            className="CommentForm__input"
+            placeholder="Write a comment"
+          />
+        </div>
+      </div>
     </div>
   );
 }
