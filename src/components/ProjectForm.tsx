@@ -5,10 +5,10 @@ import { PRIVILEGES } from '../constants';
 import CategoryFragment from '../fragments/CategoryFragment';
 import { CategoryFragment as CategoryFragmentType } from '../fragments/__generated__/CategoryFragment';
 import Button from './Button';
-
-import './ProjectForm.css';
 import CreateProject from '../mutations/CreateProject';
 import { CreateProject as CreateProjectResponse } from '../mutations/__generated__/CreateProject';
+
+import './ProjectForm.css';
 
 interface Props {
   categoryId?: string;

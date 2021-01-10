@@ -1,0 +1,35 @@
+.ProjectForm__form {
+  width: 300px;
+  margin: 10px auto;
+}
+
+.ProjectForm__label {
+  display: flex;
+  margin: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.ProjectForm__input_and_button {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.ProjectForm__input {
+  flex: 1 1 auto;
+  padding: 4px;
+}
+
+.ProjectForm__submit_button {
+  flex: 0 0 auto;
+  padding: 4px;
+}
+
+.ProjectForm__label_text {
+  flex: 0 0 auto;
+  font-size: 0.7em;
+  margin-bottom: 1px;
+}

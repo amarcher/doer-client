@@ -11,6 +11,7 @@ import { GetCategory as GetCategoryResponse } from '../../queries/__generated__/
 import Loading from '../../components/Loading';
 
 import './Category.css';
+import ProjectForm from '../../components/ProjectForm';
 
 type Props = RouteComponentProps<{ categoryId: string }>;
 
@@ -51,6 +52,8 @@ export default function Category({
           </p>
         );
       })}
+
+      <ProjectForm categoryId={categoryId} />
     </>
   );
 }
