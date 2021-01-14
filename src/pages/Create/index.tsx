@@ -148,7 +148,7 @@ export default function Create({ history, location: { search } }: Props) {
 
         return {
           ...prevImageUploadInputOrder,
-          [publicId]: Object.keys(prevImageUploadInputOrder).length,
+          [publicId]: Object.keys(prevImageUploadInputOrder).length + 1,
         };
       });
     },

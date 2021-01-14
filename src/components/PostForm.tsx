@@ -232,7 +232,7 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
 
         return {
           ...prevImageUploadInputOrder,
-          [publicId]: Object.keys(prevImageUploadInputOrder).length,
+          [publicId]: Object.keys(prevImageUploadInputOrder).length + 1,
         };
       });
     },
