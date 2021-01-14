@@ -153,7 +153,7 @@ export default function ProjectForm({
             className="CommentForm__submit_button"
             onPress={onSubmitEditOrCreate}
           >
-            {comment ? 'Update' : 'Create'}
+            {comment ? 'Update' : 'Post'}
           </Button>
         </div>
         <div className="CommentForm__text">

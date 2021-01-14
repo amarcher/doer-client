@@ -1,0 +1,28 @@
+.Modal__header {
+  min-height: 20px;
+  border-bottom: 1px solid black;
+  margin: -20px -20px 10px;
+  padding: 10px 40px;
+  font-weight: bold;
+  position: relative;
+}
+
+.Modal__content {
+  margin: 0 -20px 0;
+  padding: 20px;
+}
+
+.Modal__close_button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.Modal__title {
+  flex: 1 0 auto;
+}
+
+.ReactModal__Overlay--after-open {
+  z-index: 10;
+  background-color: rgba(114, 114, 114, 0.95) !important;
+}

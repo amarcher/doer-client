@@ -13,9 +13,9 @@ import { getImagesForCarousel } from '../../utils/images';
 import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 import ClapButton from '../../components/ClapButton';
 import PostForm from '../../components/PostForm';
+import Loading from '../../components/Loading';
 
 import './Attempt.css';
-import Loading from '../../components/Loading';
 
 type Props = RouteComponentProps<{ projectExecutionId: string }>;
 

@@ -28,7 +28,7 @@ export function useCurrentUserPrivilege() {
   );
 
   useEffect(() => {
-    refetch();
+    if (currentUserId) refetch();
   }, [currentUserId, refetch]);
 
   return data?.userPrivilege?.privilege;

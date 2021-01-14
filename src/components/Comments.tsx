@@ -15,8 +15,8 @@ export default function Comments({ comments, postId }: Props) {
     <div className="Comments">
       {comments
         ?.filter((comment) => !!comment)
-        .map((comment) => (
-          <Comment {...comment} />
+        .map((comment, index) => (
+          <Comment {...comment} key={comment?.id || `comment_${index}`} />
         ))}
       <CommentForm postId={postId} />
     </div>

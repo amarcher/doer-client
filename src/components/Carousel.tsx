@@ -1,10 +1,10 @@
 import React from 'react';
 import { CarouselProvider, DotGroup, Slider, Slide } from 'pure-react-carousel';
 
+import PreloadedImage from './PreloadedImage';
+
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import './Carousel.css';
-
-import PreloadedImage from './PreloadedImage';
 
 type CarouselProps = {
   children: React.ReactNode;

@@ -27,7 +27,7 @@ export function useCurrentUser() {
   });
 
   useEffect(() => {
-    refetch();
+    if (currentUserId) refetch();
   }, [currentUserId, refetch]);
 
   return data?.user;

@@ -9,9 +9,9 @@ import GetCategory from '../../queries/GetCategory';
 import Logo from '../../components/Logo';
 import { GetCategory as GetCategoryResponse } from '../../queries/__generated__/GetCategory';
 import Loading from '../../components/Loading';
+import ProjectForm from '../../components/ProjectForm';
 
 import './Category.css';
-import ProjectForm from '../../components/ProjectForm';
 
 type Props = RouteComponentProps<{ categoryId: string }>;
 

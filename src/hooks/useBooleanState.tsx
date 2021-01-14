@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-export default function useBooleanState(defaultState: boolean) {
+export default function useLoginModal(defaultState: boolean) {
   const [bool, setBool] = useState(defaultState);
   const setTrue = useCallback(() => {
     setBool(true);

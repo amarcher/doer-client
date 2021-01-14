@@ -18,9 +18,9 @@ import {
   ImageUploadInput,
   CreateProjectExecutionInput,
 } from '../../../__generated__/globalTypes';
+import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 
 import './Create.css';
-import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 
 type Props = RouteComponentProps;
 
