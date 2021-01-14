@@ -7,6 +7,7 @@ import './ImageUploadThumbnail.css';
 
 interface Props {
   id: string;
+  order?: number;
   onDeletePhoto?: (publicId: string) => void;
   percent: number;
   src?: string;
@@ -17,6 +18,7 @@ interface Props {
 
 export default function ImageUploadThumbnail({
   id,
+  order,
   percent,
   src = '',
   onDeletePhoto,
@@ -35,6 +37,9 @@ export default function ImageUploadThumbnail({
         >
           x
         </Button>
+      )}
+      {order != null && (
+        <div className="ImageUploadThumbnail__order">{order}</div>
       )}
       <PreloadedImage
         src={src}

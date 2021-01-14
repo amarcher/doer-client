@@ -179,6 +179,7 @@ export default function Create({ history, location: { search } }: Props) {
           width={100}
           withCaption
           getImageOrder={getImageOrder}
+          images={imageUploadInputs}
           tags={data?.project?.name ? [data.project.name] : undefined}
         />
       </div>

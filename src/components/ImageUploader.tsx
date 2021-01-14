@@ -229,7 +229,7 @@ export default function ImageUploader({
           </p>
         )}
         <div className="ImageUploader__thumbnails">
-          {sortedPhotos.map(({ photoId, percent, response }) => {
+          {sortedPhotos.map(({ photoId, percent, response }, index) => {
             return (
               <div key={photoId} className="ImageUploader__thumbnail">
                 <ImageUploadThumbnail
@@ -240,6 +240,7 @@ export default function ImageUploader({
                   height={height}
                   width={width}
                   className={thumbnailClassName}
+                  order={getImageOrder ? getImageOrder(photoId) : index}
                 />
                 {withCaption && response?.body.url && (
                   <input

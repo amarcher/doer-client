@@ -88,6 +88,7 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
   const [imageUploadInputOrder, setImageUploadInputOrder] = useState(
     getImageUploadInputOrderFromImages(post?.images)
   );
+
   useEffect(() => {
     setImageUploadInputOrder(getImageUploadInputOrderFromImages(post?.images));
   }, [post?.images]);
