@@ -31,6 +31,7 @@ export default function ImageUploadThumbnail({
           preventDefault
           onPress={() => onDeletePhoto(id)}
           className="ImageUploadThumbnail__button"
+          title="Remove"
         >
           x
         </Button>

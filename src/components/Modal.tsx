@@ -43,7 +43,11 @@ export default function Modal({
       style={customStyles}
     >
       <div className="Modal__header">
-        <Button className="Modal__close_button" onPress={onRequestClose}>
+        <Button
+          className="Modal__close_button"
+          onPress={onRequestClose}
+          title="Close"
+        >
           x
         </Button>
         <div className="Modal__title">{title}</div>

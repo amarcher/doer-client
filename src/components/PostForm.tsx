@@ -273,6 +273,7 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
             <Button
               onPress={setShowConfirmDeletePostTrue}
               className="PostForm__delete_button"
+              title="Remove"
             >
               x
             </Button>
