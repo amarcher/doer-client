@@ -28,7 +28,11 @@ export default function App() {
 
   return (
     <LoginContext.Provider
-      value={{ isLoginModalOpen, openLoginModal, closeLoginModal }}
+      value={{
+        isLoginModalOpen,
+        openLoginModal,
+        closeLoginModal,
+      }}
     >
       <Router>
         <LoginModal

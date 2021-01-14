@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useMutation } from '@apollo/client';
 import UserWithFollowsFragment from '../fragments/UserWithFollowsFragment';
 import { UserWithFollowsFragment as UserWithFollowsFragmentType } from '../fragments/__generated__/UserWithFollowsFragment';
@@ -9,6 +9,7 @@ import { FollowUser as FollowUserResponse } from '../mutations/__generated__/Fol
 import { UnfollowUser as UnfollowUserResponse } from '../mutations/__generated__/UnfollowUser';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
 import Button from './Button';
+import useLoginModal from '../hooks/useLoginModal';
 
 import './FollowButton.css';
 
@@ -18,6 +19,7 @@ type Props = {
 
 export default function FollowButton({ user }: Props) {
   const currentUserId = useCurrentUserId();
+  const { openLoginModal } = useLoginModal();
 
   const isFollowing = useMemo(
     () => user?.followers.some((follower) => follower?.id === currentUserId),
@@ -67,11 +69,14 @@ export default function FollowButton({ user }: Props) {
     },
   });
 
+  const followOrUnfollow = useCallback(() => {
+    isFollowing ? unfollowUser() : followUser();
+  }, [followUser, unfollowUser, isFollowing]);
+
   return (
     <Button
       className="FollowButton"
-      disabled={!user || !currentUserId}
-      onPress={isFollowing ? unfollowUser : followUser}
+      onPress={currentUserId ? followOrUnfollow : openLoginModal}
     >
       {isFollowing ? 'Unfollow' : 'Follow'}
     </Button>

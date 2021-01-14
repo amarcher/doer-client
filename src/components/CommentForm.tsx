@@ -127,6 +127,10 @@ export default function ProjectForm({
     [onSubmitEditOrCreate]
   );
 
+  if (!currentUserId) {
+    return null;
+  }
+
   return (
     <div className="CommentForm__container">
       <div className="CommentForm__label">
