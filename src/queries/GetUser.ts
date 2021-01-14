@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import UserWithFollowsFragment from '../fragments/UserWithFollowsFragment';
 import { useCurrentUserId } from './GetCurrentUserId';
@@ -17,6 +17,7 @@ export default GetUser;
 
 export function useCurrentUser() {
   const currentUserId = useCurrentUserId();
+  const prevUserId = useRef(currentUserId);
 
   const { data, refetch } = useQuery<GetUserResult>(GetUser, {
     variables: {
@@ -27,7 +28,11 @@ export function useCurrentUser() {
   });
 
   useEffect(() => {
-    if (currentUserId) refetch();
+    prevUserId.current = currentUserId;
+  }, [currentUserId]);
+
+  useEffect(() => {
+    if (currentUserId && currentUserId !== prevUserId.current) refetch();
   }, [currentUserId, refetch]);
 
   return data?.user;
