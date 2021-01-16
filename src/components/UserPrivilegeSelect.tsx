@@ -26,14 +26,30 @@ export default function UserPrivilegeSelect({ className }: Props) {
       privilege,
     },
 
+    optimisticResponse: {
+      updateUserPriv: {
+        __typename: 'UserPrivilege',
+        privilege,
+        userId: currentUserId,
+      },
+    },
+
     update(cache, { data }) {
-      cache.writeQuery<GetUserPrivilegeResponse>({
-        query: GetUserPrivilege,
-        variables: {
-          userId: currentUserId,
-        },
-        data,
-      });
+      if (data?.updateUserPriv?.privilege && data?.updateUserPriv?.userId) {
+        cache.writeQuery<GetUserPrivilegeResponse>({
+          query: GetUserPrivilege,
+          data: {
+            userPrivilege: {
+              __typename: 'UserPrivilege',
+              privilege: data.updateUserPriv.privilege,
+              userId: data.updateUserPriv.userId,
+            },
+          },
+          variables: {
+            userId: data.updateUserPriv.userId,
+          },
+        });
+      }
     },
   });
 

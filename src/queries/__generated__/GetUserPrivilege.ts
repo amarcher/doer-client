@@ -10,6 +10,7 @@
 export interface GetUserPrivilege_userPrivilege {
   __typename: "UserPrivilege";
   privilege: string;
+  userId: string;
 }
 
 export interface GetUserPrivilege {

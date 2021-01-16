@@ -7,6 +7,7 @@ const GetUserPrivilege = gql`
   query GetUserPrivilege($userId: ID!) {
     userPrivilege(userId: $userId) {
       privilege
+      userId
     }
   }
 `;
