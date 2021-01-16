@@ -248,6 +248,29 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
       } = prevImageUploadInputs;
       return remaining;
     });
+
+    setImageUploadInputOrder((prevImageUploadInputOrder) => {
+      if (prevImageUploadInputOrder[removedPublicId] == null) {
+        return prevImageUploadInputOrder;
+      }
+
+      const {
+        [removedPublicId]: omittedImageUploadInputOrder,
+        ...remainingImageUploadInputOrder
+      } = prevImageUploadInputOrder;
+
+      return Object.keys(remainingImageUploadInputOrder).reduce(
+        (memo, publicId) => {
+          const prevOrder = remainingImageUploadInputOrder[publicId];
+          memo[publicId] =
+            prevOrder > omittedImageUploadInputOrder
+              ? prevOrder - 1
+              : prevOrder;
+          return memo;
+        },
+        {} as { [id: string]: number }
+      );
+    });
   }, []);
 
   return (
