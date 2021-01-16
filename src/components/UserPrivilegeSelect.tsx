@@ -54,8 +54,8 @@ export default function UserPrivilegeSelect({ className }: Props) {
   });
 
   useEffect(() => {
-    if (privilege) updateUserPriv();
-  }, [privilege, updateUserPriv]);
+    if (privilege && privilege !== currentUserPrivilege) updateUserPriv();
+  }, [currentUserPrivilege, privilege, updateUserPriv]);
 
   const selectUserPriv = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -65,11 +65,7 @@ export default function UserPrivilegeSelect({ className }: Props) {
   );
 
   return (
-    <select
-      onChange={selectUserPriv}
-      defaultValue={privilege}
-      className={className}
-    >
+    <select onChange={selectUserPriv} value={privilege} className={className}>
       {Object.values(PRIVILEGES).map((priv) => (
         <option key={priv} value={priv} id={priv}>
           {priv}
