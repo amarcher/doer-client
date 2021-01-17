@@ -155,6 +155,47 @@ export default function Create({ history, location: { search } }: Props) {
     []
   );
 
+  const onPhotoReordered = useCallback(
+    (publicId: string, nextOrder: number) => {
+      setImageUploadInputOrder((prevImageUploadInputOrder) => {
+        const {
+          [publicId]: prevOrder,
+          remainingImageUploadInputOrder,
+        } = prevImageUploadInputOrder;
+
+        if (prevOrder == null || prevOrder === nextOrder) {
+          return prevImageUploadInputOrder;
+        }
+
+        const orderHasIncreased = prevOrder < nextOrder;
+
+        return Object.keys(remainingImageUploadInputOrder).reduce(
+          (memo, existingPublicId) => {
+            const existingOrder = prevImageUploadInputOrder[existingPublicId];
+            if (
+              orderHasIncreased &&
+              existingOrder > prevOrder &&
+              existingOrder < nextOrder
+            ) {
+              memo[publicId] = existingOrder - 1;
+            } else if (
+              !orderHasIncreased &&
+              existingOrder > nextOrder &&
+              existingOrder < prevOrder
+            ) {
+              memo[publicId] = existingOrder + 1;
+            } else {
+              memo[publicId] = existingOrder;
+            }
+            return memo;
+          },
+          { [publicId]: nextOrder } as { [id: string]: number }
+        );
+      });
+    },
+    []
+  );
+
   const onPhotoRemoved = useCallback((removedPublicId) => {
     setImageUploadInputs((prevImageUploadInputs) => {
       const {
@@ -198,6 +239,7 @@ export default function Create({ history, location: { search } }: Props) {
         <ImageUploader
           onPhotoUploaded={onPhotoUploaded}
           onPhotoRemoved={onPhotoRemoved}
+          onPhotoReordered={onPhotoReordered}
           height={100}
           width={100}
           withCaption

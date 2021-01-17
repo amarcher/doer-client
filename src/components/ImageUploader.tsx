@@ -21,6 +21,7 @@ interface Props {
   imageOrder?: string[];
   thumbnailClassName?: string;
   onPhotoRemoved?: (publicId?: string) => void;
+  onPhotoReordered?: (publicId: string, nextOrder: number) => void;
   height?: number;
   maxFiles?: number;
   width?: number;
