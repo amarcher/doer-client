@@ -7,6 +7,7 @@ import {
 } from '../api/cloudinary';
 import { v4 as uuidv4 } from 'uuid';
 import { CLOUDINARY } from '../constants';
+import isTouchDevice from '../utils/touchDetection';
 import ImageUploadThumbnail from './ImageUploadThumbnail';
 import { ImageUploadInput } from '../../__generated__/globalTypes';
 
@@ -80,9 +81,14 @@ function stopPropagation(e: React.SyntheticEvent) {
   e.stopPropagation();
 }
 
+const UPLOAD_MESSAGE = isTouchDevice()
+  ? 'Touch to select files'
+  : 'Drag files here, or click to select files';
+
 export default function ImageUploader({
   onPhotoUploaded,
   onPhotoRemoved,
+  onPhotoReordered,
   thumbnailClassName,
   height = 300,
   width = 300,
@@ -223,11 +229,7 @@ export default function ImageUploader({
       <div {...getRootProps()} className="ImageUploader__root">
         <input className="ImageUploader" {...getInputProps()} />
         {!disabled && (
-          <p>
-            {isDragActive
-              ? 'Drop the files here...'
-              : 'Drag files here, or click to select files'}
-          </p>
+          <p>{isDragActive ? 'Drop files here to upload' : UPLOAD_MESSAGE}</p>
         )}
         <div className="ImageUploader__thumbnails">
           {sortedPhotos.map(({ photoId, percent, response }) => {
@@ -242,6 +244,7 @@ export default function ImageUploader({
                   width={width}
                   className={thumbnailClassName}
                   order={getImageOrder ? getImageOrder(photoId) : undefined}
+                  onPhotoReordered={onPhotoReordered}
                 />
                 {withCaption && response?.body.url && (
                   <input

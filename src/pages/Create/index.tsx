@@ -160,7 +160,7 @@ export default function Create({ history, location: { search } }: Props) {
       setImageUploadInputOrder((prevImageUploadInputOrder) => {
         const {
           [publicId]: prevOrder,
-          remainingImageUploadInputOrder,
+          ...remainingImageUploadInputOrder
         } = prevImageUploadInputOrder;
 
         if (prevOrder == null || prevOrder === nextOrder) {
@@ -177,19 +177,19 @@ export default function Create({ history, location: { search } }: Props) {
               existingOrder > prevOrder &&
               existingOrder < nextOrder
             ) {
-              memo[publicId] = existingOrder - 1;
+              memo[existingPublicId] = existingOrder - 1;
             } else if (
               !orderHasIncreased &&
               existingOrder > nextOrder &&
               existingOrder < prevOrder
             ) {
-              memo[publicId] = existingOrder + 1;
+              memo[existingPublicId] = existingOrder + 1;
             } else {
-              memo[publicId] = existingOrder;
+              memo[existingPublicId] = existingOrder;
             }
             return memo;
           },
-          { [publicId]: nextOrder } as { [id: string]: number }
+          { [publicId]: nextOrder } as { [publicId: string]: number }
         );
       });
     },
@@ -224,7 +224,7 @@ export default function Create({ history, location: { search } }: Props) {
               : prevOrder;
           return memo;
         },
-        {} as { [id: string]: number }
+        {} as { [publicId: string]: number }
       );
     });
   }, []);

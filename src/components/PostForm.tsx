@@ -37,10 +37,11 @@ function getImageUploadInputOrderFromImages(
 
   return images.reduce((imageUploadInputOrder, image) => {
     if (image) {
-      imageUploadInputOrder[image.image.id] = image.order || 0;
+      imageUploadInputOrder[image.image.publicId || image.image.id] =
+        image.order || 0;
     }
     return imageUploadInputOrder;
-  }, {} as { [id: string]: number });
+  }, {} as { [publicId: string]: number });
 }
 
 export default function PostForm({ projectExecutionId, post, tags }: Props) {
@@ -88,7 +89,6 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
   const [imageUploadInputOrder, setImageUploadInputOrder] = useState(
     getImageUploadInputOrderFromImages(post?.images)
   );
-
   useEffect(() => {
     setImageUploadInputOrder(getImageUploadInputOrderFromImages(post?.images));
   }, [post?.images]);
@@ -123,7 +123,7 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
     variables: {
       ...postInput,
       imageUploadInputs: Object.values(imageUploadInputs).sort(
-        (a, b) => getImageOrder(b.publicId) - getImageOrder(a.publicId)
+        (a, b) => getImageOrder(a.publicId) - getImageOrder(b.publicId)
       ),
     },
 
@@ -183,7 +183,7 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
       postId: post?.id,
       text: postInput.text,
       imageUploadInputs: Object.values(imageUploadInputs).sort(
-        (a, b) => getImageOrder(b.publicId) - getImageOrder(a.publicId)
+        (a, b) => getImageOrder(a.publicId) - getImageOrder(b.publicId)
       ),
     },
 
@@ -245,7 +245,7 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
       setImageUploadInputOrder((prevImageUploadInputOrder) => {
         const {
           [publicId]: prevOrder,
-          remainingImageUploadInputOrder,
+          ...remainingImageUploadInputOrder
         } = prevImageUploadInputOrder;
 
         if (prevOrder == null || prevOrder === nextOrder) {
@@ -260,18 +260,19 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
             if (
               orderHasIncreased &&
               existingOrder > prevOrder &&
-              existingOrder < nextOrder
+              existingOrder <= nextOrder
             ) {
-              memo[publicId] = existingOrder - 1;
+              memo[existingPublicId] = existingOrder - 1;
             } else if (
               !orderHasIncreased &&
-              existingOrder > nextOrder &&
+              existingOrder >= nextOrder &&
               existingOrder < prevOrder
             ) {
-              memo[publicId] = existingOrder + 1;
+              memo[existingPublicId] = existingOrder + 1;
             } else {
-              memo[publicId] = existingOrder;
+              memo[existingPublicId] = existingOrder;
             }
+
             return memo;
           },
           { [publicId]: nextOrder } as { [id: string]: number }
