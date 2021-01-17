@@ -175,21 +175,22 @@ export default function Create({ history, location: { search } }: Props) {
             if (
               orderHasIncreased &&
               existingOrder > prevOrder &&
-              existingOrder < nextOrder
+              existingOrder <= nextOrder
             ) {
               memo[existingPublicId] = existingOrder - 1;
             } else if (
               !orderHasIncreased &&
-              existingOrder > nextOrder &&
+              existingOrder >= nextOrder &&
               existingOrder < prevOrder
             ) {
               memo[existingPublicId] = existingOrder + 1;
             } else {
               memo[existingPublicId] = existingOrder;
             }
+
             return memo;
           },
-          { [publicId]: nextOrder } as { [publicId: string]: number }
+          { [publicId]: nextOrder } as { [id: string]: number }
         );
       });
     },
