@@ -37,11 +37,37 @@
   background-repeat: no-repeat;
 }
 
-.preloaded-image__preloading .preloaded-image,
+.preloaded-image__preloading .preloaded-image:not(.preloaded-image__video),
 .preloaded-image__preloading .preloaded-image__img {
   opacity: 0;
 }
 
 .preloaded-image__preloading .preloaded-image__cover {
   opacity: 1;
+}
+
+.preloaded-image__video {
+  margin: auto;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  visibility: visible;
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@supports (-ms-ime-align: auto) {
+  .preloaded-image__video {
+    object-fit: none;
+    margin: none;
+    position: inherit;
+    z-index: 1;
+    top: 50%;
+    left: 0%;
+    transform: translate(0%, -50%);
+    height: auto;
+    width: 100%;
+  }
 }
