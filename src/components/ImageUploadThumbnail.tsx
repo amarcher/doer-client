@@ -18,7 +18,7 @@ interface Props {
   className?: string;
 }
 
-const type = 'ImageUploadThumbnail';
+export const type = 'ImageUploadThumbnail';
 
 export default function ImageUploadThumbnail({
   id,
@@ -53,7 +53,7 @@ export default function ImageUploadThumbnail({
 
   const [{ isDragging }, drag] = useDrag({
     // item denotes the element type, unique identifier (id) and the index (position)
-    item: { type, id, order },
+    item: { type, id, order, src },
     // collect method is like an event listener, it monitors whether the element is dragged and expose that information
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),

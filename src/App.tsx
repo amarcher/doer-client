@@ -11,6 +11,7 @@ import isTouchDevice from './utils/touchDetection';
 
 import Nav from './components/Nav';
 import PrivateRoute from './components/PrivateRoute';
+import DragPreview from './components/DragPreview';
 import Main from './pages/Main';
 import Category from './pages/Category';
 import Create from './pages/Create';
@@ -68,6 +69,7 @@ export default function App() {
             </Switch>
           </main>
         </Router>
+        <DragPreview />
       </DndProvider>
     </LoginContext.Provider>
   );
