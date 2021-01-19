@@ -6,7 +6,7 @@ import usePageTitle from '../../hooks/usePageTitle';
 import Button from '../../components/Button';
 import Title from '../../components/Title';
 import GetCategory from '../../queries/GetCategory';
-import Logo from '../../components/Logo';
+import Logo from '../../components/Logo2';
 import { GetCategory as GetCategoryResponse } from '../../queries/__generated__/GetCategory';
 import Loading from '../../components/Loading';
 

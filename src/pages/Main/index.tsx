@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import usePageTitle from '../../hooks/usePageTitle';
 import { APP_NAME } from '../../constants';
 import Button from '../../components/Button';
-import Logo from '../../components/Logo';
+import Logo from '../../components/Logo2';
 import Title from '../../components/Title';
 import CreateCategoryForm from '../../components/CategoryForm';
 import GetCategories from '../../queries/GetCategories';

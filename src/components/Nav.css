@@ -2,15 +2,19 @@
   position: -webkit-sticky;
   position: sticky;
   top: 0;
+  left: 10%;
+  right: 10%;
   z-index: 10;
 }
 
 .nav__content {
-  height: 40px;
+  height: 60px;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
-  background-color: #ffffff;
+  background-color: #e2cc9e;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 .nav__list-item {
