@@ -1,6 +1,5 @@
 import React from 'react';
 import { PostFragment as PostFragmentType } from '../fragments/__generated__/PostFragment';
-import { useCurrentUserId } from '../queries/GetCurrentUserId';
 import { getImagesForCarousel } from '../utils/images';
 import ClapButton from '../components/ClapButton';
 import Carousel from '../components/Carousel';
@@ -10,8 +9,7 @@ import { timeAgo } from '../utils/dateTime';
 import './Post.css';
 
 export default function Post(post: Partial<PostFragmentType>) {
-  const currentUserId = useCurrentUserId();
-  const { createdAt, comments, id, text, images, userId } = post;
+  const { createdAt, comments, id, text, images } = post;
 
   return (
     <div className="Post">
@@ -28,8 +26,8 @@ export default function Post(post: Partial<PostFragmentType>) {
           </>
         )}
       </div>
-      {currentUserId !== userId && <ClapButton post={post} />}
-      {<Comments comments={comments} postId={id} />}
+      <ClapButton post={post} />
+      <Comments comments={comments} postId={id} />
     </div>
   );
 }

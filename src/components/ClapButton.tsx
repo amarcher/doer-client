@@ -62,6 +62,14 @@ export default function ClapButton({ post }: Props) {
     onError: console.log,
   });
 
+  if (currentUserId === post?.userId) {
+    return (
+      <div>
+        {post?.clapCount} Clap{post?.clapCount !== 1 ? 's' : ''}
+      </div>
+    );
+  }
+
   return (
     <Button
       className="ClapButton"
