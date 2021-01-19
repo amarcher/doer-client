@@ -27,7 +27,7 @@ export default function PostsForUser() {
   return (
     <div className="PostsForUser">
       {data?.postsForUser?.map((post) => (
-        <div className="PostsForUser__post">
+        <div className="PostsForUser__post" key={post?.id}>
           <div className="PostsForUser__project_title">
             "
             <Button href={`/attempt/${post?.projectExecutionId}`}>
