@@ -30,24 +30,19 @@ export default function Main() {
 
   return (
     <>
-      <Title>{APP_NAME}</Title>
-
-      <div className="Main__hero">
-        <Logo />
-      </div>
-
-      {data?.categories && <p>Choose a category:</p>}
+      <ul>
       {data?.categories &&
         data.categories.map((category) => {
           const { name, id, projects } = category || {};
           return (
-            <p key={id}>
+            <li key={id} className="category-list">
               <Button href={`/category/${id}`}>
                 {name} ({projects?.length})
               </Button>
-            </p>
+            </li>
           );
         })}
+        </ul>
 
       <CreateCategoryForm />
     </>

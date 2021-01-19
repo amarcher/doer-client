@@ -90,7 +90,7 @@ export default function Nav() {
     <div className="nav">
       <nav className="nav__content">
         <ul className="nav__list">
-          <li className="nav__list-item">
+          <li className="nav__list-item" style={{paddingTop:"7px"}}>
             <a href="/"><Logo></Logo></a>
           </li>
           <li className="nav__list-item">
@@ -120,11 +120,6 @@ export default function Nav() {
               />
             )}
           </li>
-          {!isSignup && (
-            <li className="nav__list-item">
-              <Button href="/">Main</Button>
-            </li>
-          )}
           {currentUserId && (
             <li className="nav__list-item">
               <Button href="/profile">Profile</Button>

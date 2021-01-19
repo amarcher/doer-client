@@ -1,6 +1,15 @@
 .Main__hero {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  /* align-items: center; */
+  /* justify-content: center; */
   margin: 10px 0;
+}
+
+.category-list {
+  list-style-type: none;
+  white-space: nowrap;
+  font-family: 'Trebuchet MS';
+  font-size: 40px;
+  user-select: none;
+  padding-top: 14px;
 }
