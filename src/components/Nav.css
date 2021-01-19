@@ -21,19 +21,19 @@
   user-select: none;
 }
 
-.nav__list-item a {
+.nav__list-item > * {
   display: inline-block;
   text-decoration: none;
   transform: scale(1);
   transition: transform 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-.nav__list-item a:visited,
-.nav__list-item a:link {
+.nav__list-item > *:visited,
+.nav__list-item > *:link {
   color: inherit;
 }
 
-.nav__list-item a:hover {
+.nav__list-item > *:hover {
   transform: scale(1.1);
 }
 
