@@ -15,6 +15,7 @@ import { GetUser as GetUserResponse } from '../queries/__generated__/GetUser';
 import { deauthenticate } from '../utils/auth';
 
 import './Nav.css';
+import Logo from './Logo2';
 
 export default function Nav() {
   const { push } = useHistory();
@@ -89,6 +90,11 @@ export default function Nav() {
     <div className="nav">
       <nav className="nav__content">
         <ul className="nav__list">
+          <li className="nav__list-item" style={{ paddingTop: '7px' }}>
+            <a href="/">
+              <Logo />
+            </a>
+          </li>
           <li className="nav__list-item">
             {(currentUserId || (!currentUserId && tokenId && isSignup)) && (
               <GoogleLogout
@@ -116,11 +122,6 @@ export default function Nav() {
               />
             )}
           </li>
-          {!isSignup && (
-            <li className="nav__list-item">
-              <Button href="/">Main</Button>
-            </li>
-          )}
           {currentUserId && (
             <li className="nav__list-item">
               <Button href="/profile">Profile</Button>

@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import usePageTitle from '../../hooks/usePageTitle';
 import { APP_NAME } from '../../constants';
 import Button from '../../components/Button';
-import Logo from '../../components/Logo';
+import Logo from '../../components/Logo2';
 import Title from '../../components/Title';
 import PostsForUser from '../../components/PostsForUser';
 import CreateCategoryForm from '../../components/CategoryForm';
@@ -31,27 +31,19 @@ export default function Main() {
 
   return (
     <>
-      <Title>{APP_NAME}</Title>
-
-      <div className="Main__hero">
-        <Logo />
-      </div>
-
       <PostsForUser />
-
-      {data?.categories && <p>Choose a category:</p>}
-      {data?.categories &&
-        data.categories.map((category) => {
-          const { name, id, projects } = category || {};
-          return (
-            <p key={id}>
-              <Button href={`/category/${id}`}>
-                {name} ({projects?.length})
-              </Button>
-            </p>
-          );
-        })}
-
+      <ul>
+        {data?.categories?.map((category) => {
+            const { name, id, projects } = category || {};
+            return (
+              <li key={id} className="category-list">
+                <Button href={`/category/${id}`}>
+                  {name} ({projects?.length})
+                </Button>
+              </li>
+            );
+          })}
+      </ul>
       <CreateCategoryForm />
     </>
   );
