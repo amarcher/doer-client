@@ -90,8 +90,10 @@ export default function Nav() {
     <div className="nav">
       <nav className="nav__content">
         <ul className="nav__list">
-          <li className="nav__list-item" style={{paddingTop:"7px"}}>
-            <a href="/"><Logo></Logo></a>
+          <li className="nav__list-item" style={{ paddingTop: '7px' }}>
+            <a href="/">
+              <Logo></Logo>
+            </a>
           </li>
           <li className="nav__list-item">
             {(currentUserId || (!currentUserId && tokenId && isSignup)) && (

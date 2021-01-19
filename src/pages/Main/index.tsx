@@ -31,21 +31,21 @@ export default function Main() {
 
   return (
     <>
-    <PostsForUser />
-    <ul>
-      {data?.categories &&
-        data.categories.map((category) => {
-          const { name, id, projects } = category || {};
-          return (
-            <li key={id} className="category-list">
-              <Button href={`/category/${id}`}>
-                {name} ({projects?.length})
-              </Button>
-            </li>
-          );
-        })}
-    </ul>
-    <CreateCategoryForm />
+      <PostsForUser />
+      <ul>
+        {data?.categories &&
+          data.categories.map((category) => {
+            const { name, id, projects } = category || {};
+            return (
+              <li key={id} className="category-list">
+                <Button href={`/category/${id}`}>
+                  {name} ({projects?.length})
+                </Button>
+              </li>
+            );
+          })}
+      </ul>
+      <CreateCategoryForm />
     </>
   );
 }
