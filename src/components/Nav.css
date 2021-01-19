@@ -10,7 +10,7 @@
 .nav__content {
   height: 50px;
   display: flex;
-  justify-content: left;
+  justify-content: flex-start;
   align-items: center;
   padding-left: 5%;
   padding-right: 5%;
