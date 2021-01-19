@@ -33,8 +33,7 @@ export default function Main() {
     <>
       <PostsForUser />
       <ul>
-        {data?.categories &&
-          data.categories.map((category) => {
+        {data?.categories?.map((category) => {
             const { name, id, projects } = category || {};
             return (
               <li key={id} className="category-list">
