@@ -92,7 +92,7 @@ export default function Nav() {
         <ul className="nav__list">
           <li className="nav__list-item" style={{ paddingTop: '7px' }}>
             <a href="/">
-              <Logo></Logo>
+              <Logo />
             </a>
           </li>
           <li className="nav__list-item">
