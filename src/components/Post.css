@@ -1,0 +1,9 @@
+.Post__hero {
+  margin: 10px auto;
+  max-width: 300px;
+}
+
+.Post__created_at {
+  font-size: 10px;
+  color: rgb(66, 66, 66);
+}

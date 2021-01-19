@@ -5,17 +5,12 @@ import { RouteComponentProps } from 'react-router';
 import usePageTitle from '../../hooks/usePageTitle';
 import Button from '../../components/Button';
 import Title from '../../components/Title';
-import Carousel from '../../components/Carousel';
-import Comments from '../../components/Comments';
+import Post from '../../components/Post';
 import GetProjectExecution from '../../queries/GetProjectExecution';
 import { GetProjectExecution as GetProjectExecutionResponse } from '../../queries/__generated__/GetProjectExecution';
-import { getImagesForCarousel } from '../../utils/images';
 import { useCurrentUserId } from '../../queries/GetCurrentUserId';
-import ClapButton from '../../components/ClapButton';
 import PostForm from '../../components/PostForm';
 import Loading from '../../components/Loading';
-
-import './Attempt.css';
 
 type Props = RouteComponentProps<{ projectExecutionId: string }>;
 
@@ -68,24 +63,7 @@ export default function Attempt({
       </div>
 
       {data?.projectExecution?.posts?.map((post) => (
-        <div key={post?.id} className="Attempt__post">
-          <div className="Attempt__hero">
-            {post && (
-              <>
-                <Carousel
-                  images={getImagesForCarousel(post.images)}
-                  height={300}
-                  width={300}
-                />
-                <div>{post.text}</div>
-              </>
-            )}
-          </div>
-          {currentUserId !== data?.projectExecution?.user?.id && (
-            <ClapButton post={post} />
-          )}
-          {<Comments comments={post?.comments} postId={post?.id} />}
-        </div>
+        <Post {...post} key={post?.id} />
       ))}
       {currentUserId === data?.projectExecution?.user?.id && (
         <PostForm
