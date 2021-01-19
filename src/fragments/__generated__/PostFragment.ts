@@ -7,6 +7,11 @@
 // GraphQL fragment: PostFragment
 // ====================================================
 
+export interface PostFragment_projectExecution {
+  __typename: "ProjectExecution";
+  title: string | null;
+}
+
 export interface PostFragment_images_image {
   __typename: "Image";
   id: string;
@@ -78,6 +83,7 @@ export interface PostFragment {
   createdAt: any;
   text: string;
   projectExecutionId: string;
+  projectExecution: PostFragment_projectExecution | null;
   images: (PostFragment_images | null)[];
   user: PostFragment_user;
   clapCount: number;

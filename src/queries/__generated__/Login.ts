@@ -60,6 +60,11 @@ export interface Login_login_user_categoryMasteries {
   masteryLevel: number;
 }
 
+export interface Login_login_user_posts_projectExecution {
+  __typename: "ProjectExecution";
+  title: string | null;
+}
+
 export interface Login_login_user_posts_images_image {
   __typename: "Image";
   id: string;
@@ -131,6 +136,7 @@ export interface Login_login_user_posts {
   createdAt: any;
   text: string;
   projectExecutionId: string;
+  projectExecution: Login_login_user_posts_projectExecution | null;
   images: (Login_login_user_posts_images | null)[];
   user: Login_login_user_posts_user;
   clapCount: number;

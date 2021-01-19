@@ -60,6 +60,11 @@ export interface UserWithFollowsFragment_categoryMasteries {
   masteryLevel: number;
 }
 
+export interface UserWithFollowsFragment_posts_projectExecution {
+  __typename: "ProjectExecution";
+  title: string | null;
+}
+
 export interface UserWithFollowsFragment_posts_images_image {
   __typename: "Image";
   id: string;
@@ -131,6 +136,7 @@ export interface UserWithFollowsFragment_posts {
   createdAt: any;
   text: string;
   projectExecutionId: string;
+  projectExecution: UserWithFollowsFragment_posts_projectExecution | null;
   images: (UserWithFollowsFragment_posts_images | null)[];
   user: UserWithFollowsFragment_posts_user;
   clapCount: number;

@@ -62,6 +62,11 @@ export interface CreateUser_createUser_user_categoryMasteries {
   masteryLevel: number;
 }
 
+export interface CreateUser_createUser_user_posts_projectExecution {
+  __typename: "ProjectExecution";
+  title: string | null;
+}
+
 export interface CreateUser_createUser_user_posts_images_image {
   __typename: "Image";
   id: string;
@@ -133,6 +138,7 @@ export interface CreateUser_createUser_user_posts {
   createdAt: any;
   text: string;
   projectExecutionId: string;
+  projectExecution: CreateUser_createUser_user_posts_projectExecution | null;
   images: (CreateUser_createUser_user_posts_images | null)[];
   user: CreateUser_createUser_user_posts_user;
   clapCount: number;

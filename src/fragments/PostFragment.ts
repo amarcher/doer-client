@@ -10,6 +10,9 @@ export default gql`
     createdAt
     text
     projectExecutionId
+    projectExecution {
+      title
+    }
     images {
       imageId
       caption

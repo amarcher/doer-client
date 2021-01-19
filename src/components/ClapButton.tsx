@@ -11,7 +11,7 @@ import useLoginModal from '../hooks/useLoginModal';
 import './ClapButton.css';
 
 type Props = {
-  post?: PostFragmentType | null;
+  post?: Partial<PostFragmentType> | null;
 };
 
 export default function ClapButton({ post }: Props) {
@@ -19,7 +19,7 @@ export default function ClapButton({ post }: Props) {
   const { openLoginModal } = useLoginModal();
 
   const hasClapped = useMemo(
-    () => post?.claps.some((clap) => clap?.userId === currentUserId),
+    () => post?.claps?.some((clap) => clap?.userId === currentUserId),
     [post?.claps, currentUserId]
   );
 
