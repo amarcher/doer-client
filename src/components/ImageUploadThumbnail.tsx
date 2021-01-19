@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import classNames from 'classnames';
 
 import Button from './Button';
 import PreloadedImage from './PreloadedImage';
@@ -16,12 +17,14 @@ interface Props {
   height?: number;
   width?: number;
   className?: string;
+  isPreview?: boolean;
 }
 
 export const type = 'ImageUploadThumbnail';
 
 export default function ImageUploadThumbnail({
   id,
+  isPreview,
   order,
   percent,
   src = '',
@@ -52,9 +55,7 @@ export default function ImageUploadThumbnail({
   });
 
   const [{ isDragging }, drag] = useDrag({
-    // item denotes the element type, unique identifier (id) and the index (position)
-    item: { type, id, order, src },
-    // collect method is like an event listener, it monitors whether the element is dragged and expose that information
+    item: { type, id, order, src, width, height },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -64,9 +65,10 @@ export default function ImageUploadThumbnail({
 
   return (
     <div
-      className={`ImageUploadThumbnail${
-        isDragging ? 'ImageUploadThumbnail__is_dragging' : ''
-      }`}
+      className={classNames('ImageUploadThumbnail', {
+        ImageUploadThumbnail__is_dragging: isDragging,
+        ImageUploadThumbnail__is_preview: isPreview,
+      })}
       ref={onPhotoReordered ? ref : undefined}
     >
       {onDeletePhoto && (

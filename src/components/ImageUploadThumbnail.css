@@ -2,6 +2,10 @@
   position: relative;
 }
 
+.ImageUploadThumbnail__is_preview {
+  opacity: 0.5;
+}
+
 .ImageUploadThumbnail__is_dragging {
   opacity: 0.5;
 }
