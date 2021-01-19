@@ -127,6 +127,10 @@ export default function ProjectForm({
     [onSubmitEditOrCreate]
   );
 
+  if (!currentUserId) {
+    return null;
+  }
+
   return (
     <div className="CommentForm__container">
       <div className="CommentForm__label">
@@ -153,7 +157,7 @@ export default function ProjectForm({
             className="CommentForm__submit_button"
             onPress={onSubmitEditOrCreate}
           >
-            {comment ? 'Update' : 'Create'}
+            {comment ? 'Update' : 'Post'}
           </Button>
         </div>
         <div className="CommentForm__text">

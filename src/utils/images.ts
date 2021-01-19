@@ -38,7 +38,7 @@ export function getImageUploadInputsFromImages(
         caption,
         image: { __typename, id, ...img },
       } = image;
-      imageUploadInputs[id] = {
+      imageUploadInputs[img.publicId || id] = {
         ...img,
         caption,
       };

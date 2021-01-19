@@ -9,6 +9,11 @@ import { ImageUploadInput } from "./../../../__generated__/globalTypes";
 // GraphQL mutation operation: CreatePost
 // ====================================================
 
+export interface CreatePost_createPost_projectExecution {
+  __typename: "ProjectExecution";
+  title: string | null;
+}
+
 export interface CreatePost_createPost_images_image {
   __typename: "Image";
   id: string;
@@ -80,6 +85,7 @@ export interface CreatePost_createPost {
   createdAt: any;
   text: string;
   projectExecutionId: string;
+  projectExecution: CreatePost_createPost_projectExecution | null;
   images: (CreatePost_createPost_images | null)[];
   user: CreatePost_createPost_user;
   clapCount: number;

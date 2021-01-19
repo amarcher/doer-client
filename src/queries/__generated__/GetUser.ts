@@ -60,6 +60,11 @@ export interface GetUser_user_categoryMasteries {
   masteryLevel: number;
 }
 
+export interface GetUser_user_posts_projectExecution {
+  __typename: "ProjectExecution";
+  title: string | null;
+}
+
 export interface GetUser_user_posts_images_image {
   __typename: "Image";
   id: string;
@@ -131,6 +136,7 @@ export interface GetUser_user_posts {
   createdAt: any;
   text: string;
   projectExecutionId: string;
+  projectExecution: GetUser_user_posts_projectExecution | null;
   images: (GetUser_user_posts_images | null)[];
   user: GetUser_user_posts_user;
   clapCount: number;

@@ -7,6 +7,11 @@
 // GraphQL query operation: GetPost
 // ====================================================
 
+export interface GetPost_post_projectExecution {
+  __typename: "ProjectExecution";
+  title: string | null;
+}
+
 export interface GetPost_post_images_image {
   __typename: "Image";
   id: string;
@@ -78,6 +83,7 @@ export interface GetPost_post {
   createdAt: any;
   text: string;
   projectExecutionId: string;
+  projectExecution: GetPost_post_projectExecution | null;
   images: (GetPost_post_images | null)[];
   user: GetPost_post_user;
   clapCount: number;

@@ -5,19 +5,21 @@ import Clap from '../mutations/Clap';
 import { Clap as ClapResponse } from '../mutations/__generated__/Clap';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
 import Button from './Button';
+import PostFragment from '../fragments/PostFragment';
+import useLoginModal from '../hooks/useLoginModal';
 
 import './ClapButton.css';
-import PostFragment from '../fragments/PostFragment';
 
 type Props = {
-  post?: PostFragmentType | null;
+  post?: Partial<PostFragmentType> | null;
 };
 
 export default function ClapButton({ post }: Props) {
   const currentUserId = useCurrentUserId();
+  const { openLoginModal } = useLoginModal();
 
   const hasClapped = useMemo(
-    () => post?.claps.some((clap) => clap?.userId === currentUserId),
+    () => post?.claps?.some((clap) => clap?.userId === currentUserId),
     [post?.claps, currentUserId]
   );
 
@@ -60,11 +62,18 @@ export default function ClapButton({ post }: Props) {
     onError: console.log,
   });
 
+  if (currentUserId === post?.userId) {
+    return (
+      <div>
+        {post?.clapCount} Clap{post?.clapCount !== 1 ? 's' : ''}
+      </div>
+    );
+  }
+
   return (
     <Button
       className="ClapButton"
-      disabled={!post || !currentUserId}
-      onPress={clap}
+      onPress={currentUserId ? clap : openLoginModal}
     >
       {hasClapped
         ? `Clap Again (${post?.clapCount})`

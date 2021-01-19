@@ -18,9 +18,9 @@ import {
   ImageUploadInput,
   CreateProjectExecutionInput,
 } from '../../../__generated__/globalTypes';
+import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 
 import './Create.css';
-import { useCurrentUserId } from '../../queries/GetCurrentUserId';
 
 type Props = RouteComponentProps;
 
@@ -148,8 +148,50 @@ export default function Create({ history, location: { search } }: Props) {
 
         return {
           ...prevImageUploadInputOrder,
-          [publicId]: Object.keys(prevImageUploadInputOrder).length,
+          [publicId]: Object.keys(prevImageUploadInputOrder).length + 1,
         };
+      });
+    },
+    []
+  );
+
+  const onPhotoReordered = useCallback(
+    (publicId: string, nextOrder: number) => {
+      setImageUploadInputOrder((prevImageUploadInputOrder) => {
+        const {
+          [publicId]: prevOrder,
+          ...remainingImageUploadInputOrder
+        } = prevImageUploadInputOrder;
+
+        if (prevOrder == null || prevOrder === nextOrder) {
+          return prevImageUploadInputOrder;
+        }
+
+        const orderHasIncreased = prevOrder < nextOrder;
+
+        return Object.keys(remainingImageUploadInputOrder).reduce(
+          (memo, existingPublicId) => {
+            const existingOrder = prevImageUploadInputOrder[existingPublicId];
+            if (
+              orderHasIncreased &&
+              existingOrder > prevOrder &&
+              existingOrder <= nextOrder
+            ) {
+              memo[existingPublicId] = existingOrder - 1;
+            } else if (
+              !orderHasIncreased &&
+              existingOrder >= nextOrder &&
+              existingOrder < prevOrder
+            ) {
+              memo[existingPublicId] = existingOrder + 1;
+            } else {
+              memo[existingPublicId] = existingOrder;
+            }
+
+            return memo;
+          },
+          { [publicId]: nextOrder } as { [id: string]: number }
+        );
       });
     },
     []
@@ -163,6 +205,29 @@ export default function Create({ history, location: { search } }: Props) {
       } = prevImageUploadInputs;
       return remaining;
     });
+
+    setImageUploadInputOrder((prevImageUploadInputOrder) => {
+      if (prevImageUploadInputOrder[removedPublicId] == null) {
+        return prevImageUploadInputOrder;
+      }
+
+      const {
+        [removedPublicId]: omittedImageUploadInputOrder,
+        ...remainingImageUploadInputOrder
+      } = prevImageUploadInputOrder;
+
+      return Object.keys(remainingImageUploadInputOrder).reduce(
+        (memo, publicId) => {
+          const prevOrder = remainingImageUploadInputOrder[publicId];
+          memo[publicId] =
+            prevOrder > omittedImageUploadInputOrder
+              ? prevOrder - 1
+              : prevOrder;
+          return memo;
+        },
+        {} as { [publicId: string]: number }
+      );
+    });
   }, []);
 
   usePageTitle('Start Your Own Attempt');
@@ -175,10 +240,12 @@ export default function Create({ history, location: { search } }: Props) {
         <ImageUploader
           onPhotoUploaded={onPhotoUploaded}
           onPhotoRemoved={onPhotoRemoved}
+          onPhotoReordered={onPhotoReordered}
           height={100}
           width={100}
           withCaption
           getImageOrder={getImageOrder}
+          images={imageUploadInputs}
           tags={data?.project?.name ? [data.project.name] : undefined}
         />
       </div>

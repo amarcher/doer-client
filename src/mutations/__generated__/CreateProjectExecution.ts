@@ -32,6 +32,11 @@ export interface CreateProjectExecution_createProjectExecution_images {
   image: CreateProjectExecution_createProjectExecution_images_image;
 }
 
+export interface CreateProjectExecution_createProjectExecution_posts_projectExecution {
+  __typename: "ProjectExecution";
+  title: string | null;
+}
+
 export interface CreateProjectExecution_createProjectExecution_posts_images_image {
   __typename: "Image";
   id: string;
@@ -103,6 +108,7 @@ export interface CreateProjectExecution_createProjectExecution_posts {
   createdAt: any;
   text: string;
   projectExecutionId: string;
+  projectExecution: CreateProjectExecution_createProjectExecution_posts_projectExecution | null;
   images: (CreateProjectExecution_createProjectExecution_posts_images | null)[];
   user: CreateProjectExecution_createProjectExecution_posts_user;
   clapCount: number;

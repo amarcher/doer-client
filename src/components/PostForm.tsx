@@ -37,10 +37,11 @@ function getImageUploadInputOrderFromImages(
 
   return images.reduce((imageUploadInputOrder, image) => {
     if (image) {
-      imageUploadInputOrder[image.image.id] = image.order || 0;
+      imageUploadInputOrder[image.image.publicId || image.image.id] =
+        image.order || 0;
     }
     return imageUploadInputOrder;
-  }, {} as { [id: string]: number });
+  }, {} as { [publicId: string]: number });
 }
 
 export default function PostForm({ projectExecutionId, post, tags }: Props) {
@@ -122,7 +123,7 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
     variables: {
       ...postInput,
       imageUploadInputs: Object.values(imageUploadInputs).sort(
-        (a, b) => getImageOrder(b.publicId) - getImageOrder(a.publicId)
+        (a, b) => getImageOrder(a.publicId) - getImageOrder(b.publicId)
       ),
     },
 
@@ -182,7 +183,7 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
       postId: post?.id,
       text: postInput.text,
       imageUploadInputs: Object.values(imageUploadInputs).sort(
-        (a, b) => getImageOrder(b.publicId) - getImageOrder(a.publicId)
+        (a, b) => getImageOrder(a.publicId) - getImageOrder(b.publicId)
       ),
     },
 
@@ -232,8 +233,50 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
 
         return {
           ...prevImageUploadInputOrder,
-          [publicId]: Object.keys(prevImageUploadInputOrder).length,
+          [publicId]: Object.keys(prevImageUploadInputOrder).length + 1,
         };
+      });
+    },
+    []
+  );
+
+  const onPhotoReordered = useCallback(
+    (publicId: string, nextOrder: number) => {
+      setImageUploadInputOrder((prevImageUploadInputOrder) => {
+        const {
+          [publicId]: prevOrder,
+          ...remainingImageUploadInputOrder
+        } = prevImageUploadInputOrder;
+
+        if (prevOrder == null || prevOrder === nextOrder) {
+          return prevImageUploadInputOrder;
+        }
+
+        const orderHasIncreased = prevOrder < nextOrder;
+
+        return Object.keys(remainingImageUploadInputOrder).reduce(
+          (memo, existingPublicId) => {
+            const existingOrder = prevImageUploadInputOrder[existingPublicId];
+            if (
+              orderHasIncreased &&
+              existingOrder > prevOrder &&
+              existingOrder <= nextOrder
+            ) {
+              memo[existingPublicId] = existingOrder - 1;
+            } else if (
+              !orderHasIncreased &&
+              existingOrder >= nextOrder &&
+              existingOrder < prevOrder
+            ) {
+              memo[existingPublicId] = existingOrder + 1;
+            } else {
+              memo[existingPublicId] = existingOrder;
+            }
+
+            return memo;
+          },
+          { [publicId]: nextOrder } as { [id: string]: number }
+        );
       });
     },
     []
@@ -246,6 +289,29 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
         ...remaining
       } = prevImageUploadInputs;
       return remaining;
+    });
+
+    setImageUploadInputOrder((prevImageUploadInputOrder) => {
+      if (prevImageUploadInputOrder[removedPublicId] == null) {
+        return prevImageUploadInputOrder;
+      }
+
+      const {
+        [removedPublicId]: omittedImageUploadInputOrder,
+        ...remainingImageUploadInputOrder
+      } = prevImageUploadInputOrder;
+
+      return Object.keys(remainingImageUploadInputOrder).reduce(
+        (memo, publicId) => {
+          const prevOrder = remainingImageUploadInputOrder[publicId];
+          memo[publicId] =
+            prevOrder > omittedImageUploadInputOrder
+              ? prevOrder - 1
+              : prevOrder;
+          return memo;
+        },
+        {} as { [id: string]: number }
+      );
     });
   }, []);
 
@@ -273,6 +339,7 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
             <Button
               onPress={setShowConfirmDeletePostTrue}
               className="PostForm__delete_button"
+              title="Remove"
             >
               x
             </Button>
@@ -283,6 +350,7 @@ export default function PostForm({ projectExecutionId, post, tags }: Props) {
         <ImageUploader
           onPhotoUploaded={onPhotoUploaded}
           onPhotoRemoved={onPhotoRemoved}
+          onPhotoReordered={onPhotoReordered}
           height={100}
           width={100}
           withCaption

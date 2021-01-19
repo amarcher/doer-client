@@ -21,6 +21,10 @@ type Props = {
   useImg?: boolean;
 };
 
+function isVideo(src?: string) {
+  return src?.includes('/video/');
+}
+
 export default function PreloadedImage({
   alt = '',
   borderRadius = 10,
@@ -66,8 +70,9 @@ export default function PreloadedImage({
       height,
       width,
       display: useImg ? 'flex' : 'block',
+      borderRadius: isVideo(src) ? borderRadius : undefined,
     }),
-    [height, width, useImg]
+    [height, width, useImg, borderRadius, src]
   );
 
   const imgCoverStyle = useMemo(
@@ -94,7 +99,27 @@ export default function PreloadedImage({
 
   const imgClass = classNames(`preloaded-image${useImg ? '__img' : ''}`, {
     [imageClassName]: !!imageClassName,
+    'preloaded-image__video': isVideo(src),
   });
+
+  if (isVideo(src)) {
+    return (
+      <div className={containerClass} style={containerStyle}>
+        <video
+          playsInline
+          autoPlay
+          loop
+          controls
+          height={height}
+          width={width}
+          title={alt}
+          className={imgClass}
+        >
+          <source src={src} />
+        </video>
+      </div>
+    );
+  }
 
   if (useImg) {
     return (

@@ -1,26 +1,14 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import './Button.css';
+import './ImagedList.css';
 
 type Props = {
-  disabled?: boolean;
-  children?: React.ReactNode;
-  onPress?: () => void;
-  href?: string;
-  title?: string;
-  className?: string;
-  preventDefault?: boolean;
+  imageTitleList
 };
 
-export default function Button({
-  disabled,
-  className,
-  children,
-  title,
-  onPress,
-  preventDefault,
-  href,
+export default function ImagedList({
+  imageTitleList
 }: Props) {
   const history = useHistory();
 
@@ -40,12 +28,14 @@ export default function Button({
     [onPress, href, history, preventDefault]
   );
 
+  const title = typeof children === 'string' ? children : '';
+
   return (
     <button
       type="button"
       className={className ? `Button ${className}` : 'Button'}
       disabled={disabled}
-      title={title || (typeof children === 'string' ? children : '')}
+      title={title}
       onClick={onClick}
     >
       {children}

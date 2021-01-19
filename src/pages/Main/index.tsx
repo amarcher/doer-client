@@ -6,6 +6,7 @@ import { APP_NAME } from '../../constants';
 import Button from '../../components/Button';
 import Logo from '../../components/Logo2';
 import Title from '../../components/Title';
+import PostsForUser from '../../components/PostsForUser';
 import CreateCategoryForm from '../../components/CategoryForm';
 import GetCategories from '../../queries/GetCategories';
 import { GetCategories as GetCategoriesResponse } from '../../queries/__generated__/GetCategories';
@@ -30,7 +31,8 @@ export default function Main() {
 
   return (
     <>
-      <ul>
+    <PostsForUser />
+    <ul>
       {data?.categories &&
         data.categories.map((category) => {
           const { name, id, projects } = category || {};
@@ -42,9 +44,8 @@ export default function Main() {
             </li>
           );
         })}
-        </ul>
-
-      <CreateCategoryForm />
+    </ul>
+    <CreateCategoryForm />
     </>
   );
 }

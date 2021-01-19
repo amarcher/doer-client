@@ -9,6 +9,7 @@
 
 export interface UpdateUserPriv_updateUserPriv {
   __typename: "UserPrivilege";
+  userId: string;
   privilege: string;
 }
 

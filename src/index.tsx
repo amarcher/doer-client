@@ -12,6 +12,7 @@ import {
 import { onError } from '@apollo/client/link/error';
 import { RetryLink } from '@apollo/client/link/retry';
 
+import { ROOT_ELEMENT } from './constants';
 import App from './App';
 import { cache, tokenIdVar, typeDefs } from './cache';
 import { LOCAL_STORAGE_PREFIX as PREFIX, GRAPHQL_ENDPOINT } from './constants';
@@ -103,7 +104,7 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <App />
   </ApolloProvider>,
-  document.getElementById('root')
+  document.getElementById(ROOT_ELEMENT)
 );
 
 // If you want to start measuring performance in your app, pass a function

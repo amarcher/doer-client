@@ -1,5 +1,5 @@
 export const APP_NAME = 'Doer';
-
+export const ROOT_ELEMENT = 'root';
 export const LOCAL_STORAGE_PREFIX = '__doer__';
 
 export enum PRIVILEGES {

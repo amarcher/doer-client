@@ -30,6 +30,11 @@ export interface ProjectFragment_projectExecutions_images {
   image: ProjectFragment_projectExecutions_images_image;
 }
 
+export interface ProjectFragment_projectExecutions_posts_projectExecution {
+  __typename: "ProjectExecution";
+  title: string | null;
+}
+
 export interface ProjectFragment_projectExecutions_posts_images_image {
   __typename: "Image";
   id: string;
@@ -101,6 +106,7 @@ export interface ProjectFragment_projectExecutions_posts {
   createdAt: any;
   text: string;
   projectExecutionId: string;
+  projectExecution: ProjectFragment_projectExecutions_posts_projectExecution | null;
   images: (ProjectFragment_projectExecutions_posts_images | null)[];
   user: ProjectFragment_projectExecutions_posts_user;
   clapCount: number;

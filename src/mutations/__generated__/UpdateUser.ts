@@ -62,6 +62,11 @@ export interface UpdateUser_updateUser_categoryMasteries {
   masteryLevel: number;
 }
 
+export interface UpdateUser_updateUser_posts_projectExecution {
+  __typename: "ProjectExecution";
+  title: string | null;
+}
+
 export interface UpdateUser_updateUser_posts_images_image {
   __typename: "Image";
   id: string;
@@ -133,6 +138,7 @@ export interface UpdateUser_updateUser_posts {
   createdAt: any;
   text: string;
   projectExecutionId: string;
+  projectExecution: UpdateUser_updateUser_posts_projectExecution | null;
   images: (UpdateUser_updateUser_posts_images | null)[];
   user: UpdateUser_updateUser_posts_user;
   clapCount: number;
