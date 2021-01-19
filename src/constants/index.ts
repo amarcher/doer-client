@@ -28,3 +28,5 @@ export const GRAPHQL_ENDPOINT = {
   DEV: 'http://localhost:4000/graphql',
   DEPRECATED_PROD: 'http://52.13.54.231:4000/graphql',
 };
+
+export const HIDE_NAV_AFTER_SCROLL_PX = 100;

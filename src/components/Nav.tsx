@@ -2,20 +2,25 @@ import React, { useCallback } from 'react';
 import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import { useHistory, useLocation } from 'react-router';
 import { useQuery, useReactiveVar } from '@apollo/client';
+import classNames from 'classnames';
 
+import Logo from './Logo2';
 import Button from './Button';
 import { GOOGLE } from '../constants';
 import { currentUserIdVar, googleProfileObjVar, tokenIdVar } from '../cache';
 import { useCurrentUserId } from '../queries/GetCurrentUserId';
 import Login from '../queries/Login';
 import { Login as LoginResponse } from '../queries/__generated__/Login';
-import { LOCAL_STORAGE_PREFIX as PREFIX } from '../constants';
+import {
+  LOCAL_STORAGE_PREFIX as PREFIX,
+  HIDE_NAV_AFTER_SCROLL_PX,
+} from '../constants';
 import GetUser from '../queries/GetUser';
 import { GetUser as GetUserResponse } from '../queries/__generated__/GetUser';
 import { deauthenticate } from '../utils/auth';
+import useScrollDetection from '../hooks/useScrollDetection';
 
 import './Nav.css';
-import Logo from './Logo2';
 
 export default function Nav() {
   const { push } = useHistory();
@@ -23,6 +28,9 @@ export default function Nav() {
   const currentUserId = useCurrentUserId();
   const tokenId = useReactiveVar(tokenIdVar);
   const googleProfileObj = useReactiveVar(googleProfileObjVar);
+  const { isGoingUp, isAboveThreshold } = useScrollDetection(
+    HIDE_NAV_AFTER_SCROLL_PX
+  );
   const isSignup = location.pathname.includes('signup');
 
   const { client } = useQuery<LoginResponse>(Login, {
@@ -87,7 +95,11 @@ export default function Nav() {
   }, []);
 
   return (
-    <div className="nav">
+    <div
+      className={classNames('nav', {
+        nav__hidden: !isGoingUp && isAboveThreshold,
+      })}
+    >
       <nav className="nav__content">
         <ul className="nav__list">
           <li className="nav__list-item" style={{ paddingTop: '7px' }}>
