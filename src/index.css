@@ -24,6 +24,7 @@ main {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+  padding-top: 60px; /* Nav Height */
   padding-bottom: 10px;
 }
 
