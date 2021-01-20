@@ -1,14 +1,15 @@
 .nav {
-  position: -webkit-sticky;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 10;
   background-color: white;
   transition: transform 0.2s ease;
 }
 
 .nav__hidden {
-  transform: translateY(-50px);
+  transform: translateY(-100%);
 }
 
 .nav__content {
