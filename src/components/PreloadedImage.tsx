@@ -108,6 +108,7 @@ export default function PreloadedImage({
         <video
           playsInline
           autoPlay
+          muted
           loop
           controls
           height={height}
